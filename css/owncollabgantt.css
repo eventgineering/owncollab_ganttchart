@@ -1,0 +1,196 @@
+/* Custom gantt styles */
+.gantt_tree_content{
+    font-family: 'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif !important;
+    font-size: 11px !important;
+}
+
+/* Styles for buttons */
+gantt_save_btn_set {
+	width: auto;
+	min-width: 25px;
+	padding: 5px;
+	background-color: rgba(240,240,240,.9);
+	font-weight: 600;
+	color: #555;
+	border: 1px solid rgba(240,240,240,.9);
+	cursor: pointer;
+}
+
+
+/* Styles for the lightbox */
+.gantt_cal_ltitle {
+    padding: 7px 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    background-color: #1D2D44;
+    color: rgb(255, 255, 255);
+    border-radius: 0px;
+    cursor: move !important;
+}
+
+
+/* Styles for task type project */
+.gantt_project {
+    /*background-color: rgba(0,0,0,0) !important;*/
+	background-color: #1D2D44 !important;
+    border: none !important;
+    box-shadow: inset 0px 10px 0px 0px #1D2D44;
+    height: 10px !important;
+    line-height: 10px !important;
+}
+.gantt_project:before {
+    content: " ";
+    border-color: #1D2D44 #fff #fff #fff;
+    border-style: solid;
+    border-width: 8px 10px 0 0px;
+    height: 0px;
+    width: 0px;
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+}
+.gantt_project:after {
+    content: " ";
+    border-color: #1D2D44 #fff #fff #fff;
+    border-style: solid;
+    border-width: 8px 0px 0 10px;
+    height: 0px;
+    width: 0px;
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    right: 0px;
+}
+.gantt_project.gantt_selected {
+    /*background-color: rgba(0,0,0,0) !important;*/
+	background-color: #1D2D44 !important;
+    box-shadow: inset 0px 5px 0px 5px #1D2D44 !important;
+}
+.gantt_project .gantt_task_progress{
+    /*background-color: rgba(0,0,0,0) !important;*/
+	background-color: #999 !important;
+	border-color: #1D2D44 !important;
+	border-style: solid !important;
+	border-width: 1px !important;
+    /*border-right: 1px solid #4b71a4;*/
+}
+
+
+/* Definition of custom buttons in grid */
+.fa{
+	cursor: pointer;
+	font-size: 14px;
+	text-align: center;
+	opacity: 0.2;
+	padding: 5px;
+}
+.fa:hover{
+	opacity: 1;
+}
+.fa-pencil{
+	color: #ffa011;
+}
+.fa-plus{
+	color: #328EA0;
+}
+.fa-times{
+	color: red;
+}
+
+/* Definition of tooltips */
+.tooltip {
+    position: relative;
+    display: inline-block;
+/*    border-bottom: 1px dotted #ccc;
+    color: #006080;*/
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    position: absolute;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    z-index: 99999;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.tooltip:hover .tooltiptext {
+	position: absolute;
+    visibility: visible;
+    opacity: 1;
+	z-index: 99999;
+}
+
+.tooltip-right {
+  top: -5px;
+  left: 125%;  
+}
+
+.tooltip-right::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent #555 transparent transparent;
+}
+
+.tooltip-bottom {
+	position: absolute;
+  top: 135%;
+  left: 50%;  
+  margin-left: -60px;
+  z-index: 99998;
+}
+
+.tooltip-bottom::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #555 transparent;
+	z-index: 99998;
+}
+
+.tooltip-top {
+  bottom: 125%;
+  left: 50%;  
+  margin-left: -60px;
+}
+
+.tooltip-top::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip-left {
+  top: -5px;
+  bottom:auto;
+  right: 128%;  
+}
+.tooltip-left::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent transparent #555;
+}

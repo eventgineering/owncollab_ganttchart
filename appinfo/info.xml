@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<info>
+    <id>owncollab_gantt</id>
+    <name>ownCollab Gantt Chart</name>
+    <description>My first ownCloud app</description>
+    <licence>AGPL</licence>
+    <author>andy</author>
+    <version>0.0.29</version>
+    <namespace>OwnCollab_GanttChart</namespace>
+    <category>other</category>
+    <dependencies>
+        <owncloud min-version="9.1" max-version="9.1"/>
+    </dependencies>
+</info>
