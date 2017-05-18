@@ -48,7 +48,6 @@ class LinkController extends Controller {
     }
 
     /**
-     * @NoAdminRequired
      *
      * @param int $source
      * @param int $target
@@ -59,7 +58,6 @@ class LinkController extends Controller {
     }
 
     /**
-     * @NoAdminRequired
      *
      * @param int $id
      * @param int $source
@@ -73,7 +71,6 @@ class LinkController extends Controller {
     }
 
     /**
-     * @NoAdminRequired
      *
      * @param int $id
      */

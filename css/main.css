@@ -433,10 +433,10 @@ b, strong { font-weight: 600 !important }
 }
 
 .gantt_cal_light {
-    border-radius: 0 !important;
+    /* border-radius: 0 !important; */
     font-family: 'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif !important;
     color: #6b6b6b;
-    box-shadow: 0 0 15px -3px rgba(0, 0, 0, .8) !important;
+    box-shadow: 0 0 15px -3px rgba(0, 0, 0, .8);
 }
 
 .gantt_zoom_line .ui-slider-horizontal {
@@ -701,7 +701,7 @@ b, strong { font-weight: 600 !important }
 }
 
 input[type="checkbox"] {
-    display:none;
+    display:inline;
 }
 
 input[type="checkbox"] + label {

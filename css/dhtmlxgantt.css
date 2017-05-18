@@ -1157,7 +1157,8 @@ div.dhx_modal_cover {
     left: 0;
     background-color: #000;
     opacity: .1;
-    filter: alpha(opacity=10)
+    /* filter: alpha(opacity=10) blur(10px); */
+    filter: blur(10px);
 }
 
 .gantt_custom_button {

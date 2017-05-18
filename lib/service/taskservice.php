@@ -44,9 +44,8 @@ class TaskService {
         }
     }
 
-    public function create($text, $startdate, $duration, $type, $parent, $source, $target, $level, $progress, $open, $enddate) {
+    public function create($text, $startdate, $duration, $type, $parent, $source, $target, $level, $progress, $open, $enddate, $resources) {
         $task = new Task();
-        error_log($task . "\n", 3, "/var/tmp/meine-fehler.log");
         $task->setText($text);
         $task->setStartdate($startdate);
         $task->setDuration($duration);
@@ -58,10 +57,11 @@ class TaskService {
         $task->setProgress($progress);
         $task->setOpen($open);
         $task->setEnddate($enddate);
+        $task->setResources($resources);
         return $this->mapper->insert($task);
     }
 
-    public function update($id, $text, $startdate, $duration, $type, $parent, $source, $target, $level, $progress, $open, $enddate) {
+    public function update($id, $text, $startdate, $duration, $type, $parent, $source, $target, $level, $progress, $open, $enddate, $resources) {
         try {
             $task = $this->mapper->find($id);
             $task->setText($text);
@@ -75,6 +75,7 @@ class TaskService {
             $task->setProgress($progress);
             $task->setOpen($open);
             $task->setEnddate($enddate);
+            $task->setResources($resources);
             return $this->mapper->update($task);
         } catch(Exception $e) {
             $this->handleException($e);

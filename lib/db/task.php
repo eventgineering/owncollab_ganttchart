@@ -18,6 +18,7 @@ class Task extends Entity implements JsonSerializable {
     protected $progress;
     protected $open;
     protected $enddate;
+    protected $resources;
 
     public function jsonSerialize() {
         return [
@@ -33,6 +34,7 @@ class Task extends Entity implements JsonSerializable {
             'progress' => $this->progress,
             'open' => $this->open,
             'end_date' => $this->enddate,
+            'resources' => $this->resources,
         ];
     }
 }

@@ -86,6 +86,14 @@
                 <default></default>
                 <notnull>true</notnull>
             </field>
+            <field>
+                <name>resources</name>
+                <type>text</type>
+                <length>255</length>
+                <default></default>
+                <notnull>true</notnull>
+            </field>
+
         </declaration>
     </table>
     <table>

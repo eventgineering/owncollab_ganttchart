@@ -48,7 +48,6 @@ class TaskController extends Controller {
     }
 
     /**
-     * @NoAdminRequired
      *
      * @param string $text
      * @param string $startdate
@@ -61,13 +60,13 @@ class TaskController extends Controller {
      * @param float $progress
      * @param boolean $open
      * @param string $enddate
+     * @param string $resources
      */
-    public function create($text, $startdate, $duration, $type, $parent, $source, $target, $level, $progress, $open, $enddate) {
-        return $this->service->create($text, $startdate, $duration, $type, $parent, $source, $target, $level, $progress, $open, $enddate);
+    public function create($text, $startdate, $duration, $type, $parent, $source, $target, $level, $progress, $open, $enddate, $resources) {
+        return $this->service->create($text, $startdate, $duration, $type, $parent, $source, $target, $level, $progress, $open, $enddate, $resources);
     }
 
     /**
-     * @NoAdminRequired
      *
      * @param int $id
      * @param string $text
@@ -81,15 +80,15 @@ class TaskController extends Controller {
      * @param float $progress
      * @param boolean $open
      * @param string $enddate
+     * @param string $resources
      */
-    public function update($id, $text, $startdate, $duration, $type, $parent, $source, $target, $level, $progress, $open, $enddate) {
-        return $this->handleNotFound(function () use ($id, $text, $startdate, $duration, $type, $parent, $source, $target, $level, $progress, $open, $enddate) {
-            return $this->service->update($id, $text, $startdate, $duration, $type, $parent, $source, $target, $level, $progress, $open, $enddate);
+    public function update($id, $text, $startdate, $duration, $type, $parent, $source, $target, $level, $progress, $open, $enddate, $resources) {
+        return $this->handleNotFound(function () use ($id, $text, $startdate, $duration, $type, $parent, $source, $target, $level, $progress, $open, $enddate, $resources) {
+            return $this->service->update($id, $text, $startdate, $duration, $type, $parent, $source, $target, $level, $progress, $open, $enddate, $resources);
         });
     }
 
     /**
-     * @NoAdminRequired
      *
      * @param int $id
      */

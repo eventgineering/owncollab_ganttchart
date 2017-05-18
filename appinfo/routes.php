@@ -21,6 +21,7 @@ return [
     'resources' => [
         'task' => ['url' => '/tasks'],
         'link' => ['url' => '/links'],
+        'groupuser' => ['url' => '/groupusers'],
     ],
     'routes' => [
 	   ['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
