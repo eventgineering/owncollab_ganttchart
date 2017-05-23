@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <info>
-    <id>owncollab_gantt</id>
+    <id>owncollab_ganttchart</id>
     <name>ownCollab Gantt Chart</name>
     <description>My first ownCloud app</description>
     <licence>AGPL</licence>

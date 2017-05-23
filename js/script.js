@@ -1,5 +1,5 @@
 /**
- * ownCloud - owncollab_gantt
+ * ownCloud - owncollab_ganttchart
  *
  * This file is licensed under the Affero General Public License version 3 or
  * later. See the COPYING file.
@@ -7,7 +7,7 @@
  * @author andy <info@eventgineering.de>
  * @copyright andy 2016
  */
-var instanceUrl = OC.generateUrl('/apps/owncollab_gantt/');
+var instanceUrl = OC.generateUrl('/apps/owncollab_ganttchart/');
 var arr = {
     data: {},
     links: {},
@@ -40,15 +40,15 @@ var taskId = null;
         alert('test');
 
 
-        OC.AppConfig.getKeys('owncollab_gantt', function(data){
+        OC.AppConfig.getKeys('owncollab_ganttchart', function(data){
              OCGantt.appConfig = data;
             });
         */
         OCGantt.config();
         gantt.init("gantt_chart");
-        OCGantt.tasks = new OCGantt.Tasks(OC.generateUrl('/apps/owncollab_gantt/tasks'));
-        OCGantt.links = new OCGantt.Links(OC.generateUrl('/apps/owncollab_gantt/links'));
-        OCGantt.groupusers = new OCGantt.GroupUsers(OC.generateUrl('/apps/owncollab_gantt/groupusers'));
+        OCGantt.tasks = new OCGantt.Tasks(OC.generateUrl('/apps/owncollab_ganttchart/tasks'));
+        OCGantt.links = new OCGantt.Links(OC.generateUrl('/apps/owncollab_ganttchart/links'));
+        OCGantt.groupusers = new OCGantt.GroupUsers(OC.generateUrl('/apps/owncollab_ganttchart/groupusers'));
         /* OCGantt.groupusers.loadAll().done(function(){
             console.log(OCGantt.groupusers._groupusers);
         }); */

@@ -38,7 +38,7 @@ class PageController extends Controller {
 	 */
 	public function index() {
 		$params = ['user' => $this->userId];
-		return new TemplateResponse('owncollab_gantt', 'main', $params);  // templates/main.php
+		return new TemplateResponse('owncollab_ganttchart', 'main', $params);  // templates/main.php
 	}
 
 	/**
