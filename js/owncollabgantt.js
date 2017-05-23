@@ -301,8 +301,6 @@ OCGantt.lbox.deleteLink = function (tempLinks, source, target) {
     var predecessor = source.substr(0, linkCropStart -1);
     var index = tempLinks.map(function(link){return link.source + link.target + link.type}).indexOf(predecessor + target.toString() + linkType);
     tempLinks.splice(i, 1);
-    console.log(tempLinks);
-    console.log(index);
     return tempLinks;
 }
 
@@ -462,7 +460,6 @@ gantt.showLightbox = function (id) {
         taskId = id;
         var task = gantt.getTask(id);
         var resources = [];
-        console.log(task);
         $("#content-wrapper").addClass("blur");
         var form = OCGantt.lbox.getForm("my-form");
         var starttmp = task.start_date;
@@ -476,6 +473,9 @@ gantt.showLightbox = function (id) {
         OCGantt.lbox.timeInit(endtimeField, task, 'end_date');
         var resourcesField = form.querySelector("[name='resources']");
         var linksField = form.querySelector("[name='links']");
+        arr.links.forEach (function (link){
+            link.active = false;
+        });
         var tempLinks = arr.links;
         $("#links-form").append('<div style="padding: 5px">');
         var fragmentLinks = document.createDocumentFragment();
@@ -622,7 +622,6 @@ gantt.showLightbox = function (id) {
         $(".links :checkbox").change(function () {
             if ($(this).is(':checked') === true) {
                 tempLinks = OCGantt.lbox.addLink(tempLinks, $(this).attr('id'), task.id);
-                console.log(tempLinks);
             } else if ($(this).is(':checked') === false) {
                 tempLinks = OCGantt.lbox.deleteLink(tempLinks, $(this).attr('id'), task.id);
             }
@@ -664,10 +663,17 @@ gantt.showLightbox = function (id) {
                     linksStatus = undefined;
                     $(linksField).html("");
                     $(".links :checkbox").prop('checked', false);
+                    tempLinks.forEach(function (link, index) {
+                        if (link.$new){
+                            tempLinks.splice(index, 1);
+                        }
+                    });
+                    console.log("cancelled");
                 }
                 if (e.which == 13 && linksStatus == 1) {
                     $("#links-form").hide();
                     linksStatus = undefined;
+                    OCGantt.tempLinks = arr.links;
                 }
             });
         });
@@ -720,21 +726,42 @@ OCGantt.lbox.save = function () {
     } else {
         gantt.updateTask(task.id);
     }
-    console.log(OCGantt.lbox.getForm("my-form").querySelector("[name='resources']"));
+    if (OCGantt.tempLinks){
+        OCGantt.tempLinks.forEach(function (link) {
+            if (link.$new){
+                var linkId = gantt.addLink({
+                    source: link.source,
+                    target: link.target,
+                    type: link.type
+                });
+            link.active = false;
+            delete link.$new;
+            }
+        });
+    }
     OCGantt.lbox.getForm("my-form").querySelector("[name='resources']").innerHTML = "";
     gantt.hideLightbox();
 };
 
 OCGantt.lbox.save.resources = function (resources){
-    console.log("test");
     $("#resources-form").hide();
     document.getElementById("my-form").querySelector("[name='resources_hidden']").value = resources;
 };
+
+OCGantt.lbox.save.links = function (links){
+    $("#links-form").hide();
+};
+
 
 OCGantt.lbox.cancel = function () {
     var task = gantt.getTask(taskId);
     if (task.$new)
         gantt.deleteTask(task.id);
+    arr.links.forEach(function (link, index) {
+        if (link.$new){
+            arr.links.splice(index, 1);
+        }
+    });
     gantt.hideLightbox();
     OCGantt.lbox.getForm("my-form").querySelector("[name='resources']").innerHTML = "";
 };
@@ -744,7 +771,7 @@ OCGantt.lbox.cancel.resources = function (resources){
     $("#resources-form").hide();
     document.getElementById("my-form").querySelector("[name='resources']").innerHTML = "";
     OCGantt.displayResources(resources.split(","), document.getElementById("my-form").querySelector("[name='resources']"));
-    $("input:checkbox").prop('checked', false);
+    $("resources :checkbox").prop('checked', false);
     OCGantt.lbox.precheckBoxes(resources.split(","));
 };
 OCGantt.lbox.remove = function () {
@@ -964,7 +991,7 @@ OCGantt.Links.prototype = {
             data: JSON.stringify(link)
         }).done(function (link) {
             self._links.push(link);
-            self._activeLink = link;
+            //self._activeLink = link;
             self.load(link.id);
             arr.links[arr.links.length - 1] = link;
             deferred.resolve();
@@ -1207,33 +1234,45 @@ OCGantt.GroupUsers.prototype = {
 
             {
                 name: "resources", label: "Resources", align: "left", width: OCGantt.columnWidth.resources, resize: true, template: function (item) {
-                    var userGroupArray = item.resources.split(",");
+
                     var returnValue = undefined;
                     var uid = undefined;
                     var gid = undefined;
-                    if ((userGroupArray.length >= 1) && (userGroupArray[0] != "")){ 
-                        for (i = 0; i < userGroupArray.length; i++) {
-                            if (i > 0) {returnValue += ", ";}
-                            if (userGroupArray[i].indexOf("u_") != -1) {
-                                uid = userGroupArray[i].replace("u_", "");
-                            } else if (userGroupArray[i].indexOf("g_") != -1) {
-                                gid = userGroupArray[i].replace("g_", "");
-                            }
-                            if (uid) {
-                                if (i == 0){returnValue = OCGantt.getDisplayname(uid); }
-                                else if (i > 0) {returnValue += OCGantt.getDisplayname(uid);}
-                                uid = undefined;
-                            }
-                            if (gid){
-                                if (i == 0){returnValue = "<strong>" + gid + "</strong>";}
-                                else if (i > 0) {returnValue += "<strong>" + gid + "</strong>";}
+                    if (item.resources){
+                        var userGroupArray = item.resources.split(",");
+                        if ((userGroupArray.length >= 1) && (userGroupArray[0] != "")){ 
+                            for (i = 0; i < userGroupArray.length; i++) {
+                                if (i > 0) {
+                                    returnValue += ", ";
+                                }
+                                if (userGroupArray[i].indexOf("u_") != -1) {
+                                    uid = userGroupArray[i].replace("u_", "");
+                                } else if (userGroupArray[i].indexOf("g_") != -1) {
+                                    gid = userGroupArray[i].replace("g_", "");
+                                }
+                                if (uid) {
+                                    if (i == 0){returnValue = OCGantt.getDisplayname(uid);
+                                    }else if (i > 0) {
+                                        returnValue += OCGantt.getDisplayname(uid);
+                                    }
+                                    uid = undefined;
+                                }
+                                if (gid){
+                                    if (i == 0){
+                                        returnValue = "<strong>" + gid + "</strong>";
+                                    } else if (i > 0) {
+                                        returnValue += "<strong>" + gid + "</strong>";
+                                    }
                                 gid = undefined;
+                                }
                             }
+                        } else if ((userGroupArray.length == 1) && (userGroupArray[0] == "")){
+                            returnValue = "";
                         }
-                    } else if ((userGroupArray.length == 1) && (userGroupArray[0] == "")){
+                    } else if (!item.resources){
+                        item.resources = "";
                         returnValue = "";
                     }
-                    
                     return returnValue;
                 }
             },

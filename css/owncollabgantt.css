@@ -98,42 +98,42 @@ div[contenteditable=true] {
 
 .predecessor_line>.tbl_cell.header.id{
     min-width: 20px;
-    max-width: 10%;
+    max-width: 10% !important;
     text-align: left;
 }
 .predecessor_line>.tbl_cell.header.text{
     min-width: 100px;
-    max-width: 50%;
+    max-width: 50% !important;
     text-align: left;
 }
 .predecessor_line>.tbl_cell.header.type{
     min-width: 20px;
-    max-width: 10%;
+    max-width: 10% !important;
     text-align: center;
 }
 .predecessor_line>.tbl_cell.header.buffer{
     min-width: 20px;
-    max-width: 10%;
+    max-width: 10% !important;
     text-align: center;
 }
 .predecessor_line>.tbl_cell.content.id{
     min-width: 20px;
-    max-width: 10%;
+    max-width: 10% !important;
     text-align: left;
 }
 .predecessor_line>.tbl_cell.content.text{
     min-width: 100px;
-    max-width: 50%;
+    max-width: 50% !important;
     text-align: left;
 }
 .predecessor_line>.tbl_cell.content.type{
     min-width: 20px;
-    max-width: 10%;
+    max-width: 10% !important;
     text-align: center;
 }
 .predecessor_line>.tbl_cell.content.buffer{
     min-width: 20px;
-    max-width: 10%;
+    max-width: 10% !important;
     text-align: right;
 }
 
