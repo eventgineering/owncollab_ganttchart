@@ -15,6 +15,9 @@ OCGantt.lbox.HTML = {};
 OCGantt.isAdmin = OC.isUserAdmin();
 OCGantt.lbox.resources = {};
 OCGantt.lbox.resources.HTML = {};
+OCGantt.lbox.ActiveOverlay = [];
+OCGantt.tempLinks = [];
+OCGantt.linksToRemove = [];
 var target = undefined;
 
 OCGantt.splashScreenIcon = OC.generateUrl('/apps/owncollab_ganttchart/img/loading-dark.gif').replace("index.php/", "");
@@ -52,7 +55,6 @@ OCGantt.init = function () {
 OCGantt.lbox.dateInit = function (datefield, task) {
     var caretPos = 1;
     $(datefield).datepicker({ dateFormat: "dd.mm.yy", minDate: null });
-    //$(datefield).datepicker({ minDate: null});
     if (datefield.id == 'startdate') {
         $(datefield).datepicker('setDate', task.start_date);
     }
@@ -242,9 +244,9 @@ OCGantt.lbox.deleteResources = function (taskResources, resource) {
     return taskResources;
 }
 
-OCGantt.lbox.addLink = function (tempLinks, source, target) {
+OCGantt.lbox.getChecked = function (source){
+    var checkedId = undefined;
     var linkCropStart = source.length - 2;
-    var linkType = source.substr(linkCropStart, 2);
     var predecessor = source.substr(0, linkCropStart -1);
     var checkBoxes = [
         $("#" + predecessor + "_FS"),
@@ -254,14 +256,20 @@ OCGantt.lbox.addLink = function (tempLinks, source, target) {
         ];
     $(checkBoxes).each(function() {
         if (($(this).prop("checked") == true) && ($(this).prop("id") != source)){
-            $(this).trigger( "click" );
+            checkedId = $(this).prop("id");
         }
-        $(this).prop("checked", false);
-        $("#" + predecessor + "_" + linkType).prop("checked", true);
     });
+    return checkedId;
+
+}
+
+OCGantt.lbox.addLink = function (tempLinks, source, target) {
+    var linkCropStart = source.length - 2;
+    var linkType = source.substr(linkCropStart, 2);
+    var predecessor = source.substr(0, linkCropStart -1);
     var link = {};
     link.$new = true;    
-    link.source = predecessor;
+    link.source = predecessor.toString();
     link.target = target.toString();
     switch(linkType){
         case "FS": 
@@ -277,8 +285,8 @@ OCGantt.lbox.addLink = function (tempLinks, source, target) {
             link.type = "2";
             break;
     }
-    tempLinks.push(link);
-    return tempLinks;
+    OCGantt.tempLinks.push(link);
+    return OCGantt.tempLinks;
 }
 
 OCGantt.lbox.deleteLink = function (tempLinks, source, target) {
@@ -299,8 +307,12 @@ OCGantt.lbox.deleteLink = function (tempLinks, source, target) {
             break;
     }
     var predecessor = source.substr(0, linkCropStart -1);
-    var index = tempLinks.map(function(link){return link.source + link.target + link.type}).indexOf(predecessor + target.toString() + linkType);
-    tempLinks.splice(i, 1);
+    var index = tempLinks.map(function(link){ console.log(link); return link.source + link.target + link.type;}).indexOf(predecessor + target.toString() + linkType);
+    if (!tempLinks[index].$new){
+        OCGantt.linksToRemove.push(tempLinks[index]);
+    }
+    console.log(OCGantt.linksToRemove);
+    tempLinks.splice(index, 1);
     return tempLinks;
 }
 
@@ -313,6 +325,7 @@ OCGantt.lbox.precheckBoxes = function (taskResources){
 }
 
 OCGantt.lbox.precheckLinks = function (links, id){
+    $(".links :checkbox").prop('checked', false);
     for (i = 0; i < links.length; i++) {
         if (links[i].target == id){
             switch (links[i].type) {
@@ -457,9 +470,14 @@ OCGantt.lbox.setWidth = function (id){
 //Functions for the lightbox
 gantt.showLightbox = function (id) {
     if (OCGantt.isAdmin === true) {
+        OCGantt.lbox.ActiveOverlay = [];
+        OCGantt.lbox.setActiveOverlay("my-form");
         taskId = id;
-        var task = gantt.getTask(id);
+        var task
+        task = gantt.getTask(id);
         var resources = [];
+        OCGantt.tempLinks = [];
+        OCGantt.linksToRemove = [];
         $("#content-wrapper").addClass("blur");
         var form = OCGantt.lbox.getForm("my-form");
         var starttmp = task.start_date;
@@ -473,10 +491,7 @@ gantt.showLightbox = function (id) {
         OCGantt.lbox.timeInit(endtimeField, task, 'end_date');
         var resourcesField = form.querySelector("[name='resources']");
         var linksField = form.querySelector("[name='links']");
-        arr.links.forEach (function (link){
-            link.active = false;
-        });
-        var tempLinks = arr.links;
+        OCGantt.tempLinks = JSON.parse(JSON.stringify(arr.links));
         $("#links-form").append('<div style="padding: 5px">');
         var fragmentLinks = document.createDocumentFragment();
         var _lineHeader = document.createElement('div'),
@@ -543,7 +558,13 @@ gantt.showLightbox = function (id) {
                 _lineTaskInputFF.id = 'ff_' + arr.data[taskArray]['id'];
                 _lineTaskBuffer.id = 'buffer_' + arr.data[taskArray]['id'];
                 _lineTaskId.innerHTML = '<span class="predecessor_item_id">' + arr.data[taskArray]['id'] + '</span>';
-                _lineTaskText.innerHTML = '<span>' + arr.data[taskArray]['text'] + '</span>';
+                if (arr.data[taskArray]['type'] == "project"){
+                    _lineTaskText.innerHTML = '<span><strong>' + arr.data[taskArray]['text'] + '</strong></span>';
+                } else if (arr.data[taskArray]['type'] == "milestone"){
+                    _lineTaskText.innerHTML = '<span><strong><i>' + arr.data[taskArray]['text'] + '<i></strong></span>';
+                } else {
+                    _lineTaskText.innerHTML = '<span>' + arr.data[taskArray]['text'] + '</span>';
+                }
                 _lineTaskInputFS.innerHTML = '<input type="checkbox" id="' + arr.data[taskArray]['id'] + '_FS" />';
                 _lineTaskInputSS.innerHTML = '<input type="checkbox" id="' + arr.data[taskArray]['id'] + '_SS" />';
                 _lineTaskInputSF.innerHTML = '<input type="checkbox" id="' + arr.data[taskArray]['id'] + '_SF" />';
@@ -603,8 +624,8 @@ gantt.showLightbox = function (id) {
         };
         $("#resources-form div:first-child").append(fragment);
         $("#resources-form div:first").append('<div style="padding: 5px"><div class="tbl">' +
-            '<div class="tbl_cell"><input type="button" id="save-resources" name="save-resources" value="Save"></div>' +
-            '<div class="tbl_cell" align="right" ><input type="button" id="close-resources" name="close-resources" value="Close"></div>' +
+            '<div class="tbl_cell"><input type="button" id="save-resources" name="save-resources" value="Done"></div>' +
+            '<div class="tbl_cell" align="right" ><input type="button" id="close-resources" name="close-resources" value="Cancel"></div>' +
             '</div>');
         $(".resources :checkbox").change(function () {
             $('input[id=' + $(this).attr('id') + ']').prop('checked', $(this).is(':checked'));
@@ -616,68 +637,92 @@ gantt.showLightbox = function (id) {
         });
         $("#links-form div:first-child").append(fragmentLinks);
         $("#links-form div:first").append('<div style="padding: 5px;"><div class="tbl">' +
-            '<div class="tbl_cell"><input type="button" id="save-links" name="save-links" value="Save"></div>' +
-            '<div class="tbl_cell" align="right" ><input type="button" id="close-links" name="close-links" value="Close"></div>' +
+            '<div class="tbl_cell"><input type="button" id="save-links" name="save-links" value="Done"></div>' +
+            '<div class="tbl_cell" align="right" ><input type="button" id="close-links" name="close-links" value="Cancel"></div>' +
             '</div>');
-        $(".links :checkbox").change(function () {
-            if ($(this).is(':checked') === true) {
-                tempLinks = OCGantt.lbox.addLink(tempLinks, $(this).attr('id'), task.id);
-            } else if ($(this).is(':checked') === false) {
-                tempLinks = OCGantt.lbox.deleteLink(tempLinks, $(this).attr('id'), task.id);
+        OCGantt.lbox.keyUpFunction = function(e){
+                        if (e.which == 27){
+                var index = OCGantt.lbox.getActiveOverlay();
+                if (index != undefined){
+                    var overlay = OCGantt.lbox.ActiveOverlay[index].name;
+                    switch (overlay){
+                        case "links-form":
+                            OCGantt.lbox.cancel.links();
+                            break;
+                        case "resources-form":
+                            OCGantt.lbox.cancel.resources(task.resources);
+                            break;
+                        case "my-form":
+                            OCGantt.lbox.cancel();
+                        break;
+                    }
+                }
             }
-        });
+            if (e.which == 13){
+                console.log(index);
+                var index = OCGantt.lbox.getActiveOverlay();
+                if (index != undefined){
+                    var overlay = OCGantt.lbox.ActiveOverlay[index].name;
+                    switch (overlay){
+                        case "links-form":
+                            OCGantt.lbox.save.links();
+                            break;
+                        case "resources-form":
+                            OCGantt.lbox.save.resources(resources);
+                        break;
+                        case "my-form":
+                            OCGantt.lbox.save();
+                            gantt.hideLightbox();
+                        break;
+                    }
+                }
+            }
+        }
+        $(document).keyup(OCGantt.lbox.keyUpFunction);
         OCGantt.lbox.precheckBoxes(groupUserArray);
         $(resourcesField).focus(function () {
+            var tempTask;
+            tempTask = task;
             $("#resources-form").show();
+            OCGantt.lbox.setActiveOverlay("resources-form");
             $("#resources-form").css('max-height', OCGantt.lbox.getMaxHeight('resources-form'));            
             resourcesStatus = 1;
-            $(document).keyup(function (e) {
-                if (e.which == 27 && resourcesStatus == 1) {
-                    $("#resources-form").hide();
-                    resourcesStatus = undefined;
-                    $(resourcesField).html("");
-                    OCGantt.displayResources(task.resources.split(","), resourcesField)
-                    $(".resources :checkbox").prop('checked', false);
-                    OCGantt.lbox.precheckBoxes(task.resources.split(","));
-                }
-                if (e.which == 13 && resourcesStatus == 1) {
-                    $("#resources-form").hide();
-                    resourcesStatus = undefined;
-                    form.querySelector("[name='resources_hidden']").value = resources;
-                }
-            });
         });
-        OCGantt.lbox.precheckLinks(tempLinks, task.id);
         $(linksField).focus(function () {
+            var tempTask;
+            tempTask = task;
             $("#links-form").show();
+            OCGantt.lbox.setActiveOverlay("links-form");
             $("#links-form").css('max-height', OCGantt.lbox.getMaxHeight('links-form'));
             for (var taskArray in arr.data){
                 if (arr.data[taskArray]['id'] != 1){
                     OCGantt.lbox.setWidth(arr.data[taskArray]['id']);
                 }
             }
+            OCGantt.lbox.precheckLinks(OCGantt.tempLinks, tempTask.id);
             linksStatus = 1;
-            $(document).keyup(function (e) {
-                if (e.which == 27 && linksStatus == 1) {
-                    $("#links-form").hide();
-                    linksStatus = undefined;
-                    $(linksField).html("");
-                    $(".links :checkbox").prop('checked', false);
-                    tempLinks.forEach(function (link, index) {
-                        if (link.$new){
-                            tempLinks.splice(index, 1);
-                        }
-                    });
-                    console.log("cancelled");
+        });
+        (function (){
+            var tempTask;
+            tempTask = task;
+            var previuosValue;
+            $(".links :checkbox").on('focus', function() {
+                previousValue = this.checked;
+            }).change(function(){
+                if (previousValue){
+                    console.log($(this).prop("id"));
+                    OCGantt.tempLinks = OCGantt.lbox.deleteLink(OCGantt.tempLinks, $(this).prop("id"), tempTask.id);
                 }
-                if (e.which == 13 && linksStatus == 1) {
-                    $("#links-form").hide();
-                    linksStatus = undefined;
-                    OCGantt.tempLinks = arr.links;
+                if (!previousValue){
+                    var checkedId = OCGantt.lbox.getChecked($(this).prop("id"));
+                    if (checkedId){
+                        $("#"+checkedId).prop("checked", false);
+                        OCGantt.tempLinks = OCGantt.lbox.deleteLink(OCGantt.tempLinks, checkedId, tempTask.id);
+                    }
+                    OCGantt.tempLinks = OCGantt.lbox.addLink(OCGantt.tempLinks, $(this).attr('id'), tempTask.id);
                 }
             });
-        });
-
+        })();
         gantt._center_lightbox(OCGantt.lbox.getForm("my-form"));
         gantt.showCover();
         var input = form.querySelector("[name='description']");
@@ -691,6 +736,8 @@ gantt.showLightbox = function (id) {
         form.querySelector("[name='delete']").onclick = OCGantt.lbox.remove;
         $("#save-resources").click(function () { OCGantt.lbox.save.resources(resources);});
         $("#close-resources").click(function(){OCGantt.lbox.cancel.resources(task.resources);});
+        $("#save-links").click(function () { OCGantt.lbox.save.links();});
+        $("#close-links").click(function(){OCGantt.lbox.cancel.links();});
 
     } else if (OCGantt.isAdmin === false) {
         alert('you are not allowed to make changes in the document');
@@ -704,6 +751,7 @@ gantt.hideLightbox = function () {
     $("#resources-form").empty();
     $("#links-form").empty();
     taskId = null;
+    $(document).unbind("keyup", OCGantt.lbox.keyUpfunction);
 }
 OCGantt.lbox.getForm = function (form) {
     return document.getElementById(form);
@@ -726,6 +774,15 @@ OCGantt.lbox.save = function () {
     } else {
         gantt.updateTask(task.id);
     }
+    var lengthLinksToRemove = OCGantt.linksToRemove.length;
+    console.log(OCGantt.linksToRemove);
+    console.log(lengthLinksToRemove);
+    if (lengthLinksToRemove != -1){
+        OCGantt.linksToRemove.forEach(function (item, index){
+            OCGantt.links._activeLink = OCGantt.linksToRemove[index];
+            gantt.deleteLink(item.id);
+        });
+    }
     if (OCGantt.tempLinks){
         OCGantt.tempLinks.forEach(function (link) {
             if (link.$new){
@@ -744,12 +801,22 @@ OCGantt.lbox.save = function () {
 };
 
 OCGantt.lbox.save.resources = function (resources){
-    $("#resources-form").hide();
+    var index = OCGantt.lbox.getActiveOverlay();
+    if (index != undefined){
+        var overlay = OCGantt.lbox.ActiveOverlay[index].name;
+        $("#" + overlay).hide();
+        OCGantt.lbox.deleteLastActiveOverlay();
+    }
     document.getElementById("my-form").querySelector("[name='resources_hidden']").value = resources;
 };
 
-OCGantt.lbox.save.links = function (links){
-    $("#links-form").hide();
+OCGantt.lbox.save.links = function (){
+    var index = OCGantt.lbox.getActiveOverlay();
+    if (index != undefined){
+        var overlay = OCGantt.lbox.ActiveOverlay[index].name;
+        $("#" + overlay).hide();
+        OCGantt.lbox.deleteLastActiveOverlay();
+    }
 };
 
 
@@ -763,17 +830,38 @@ OCGantt.lbox.cancel = function () {
         }
     });
     gantt.hideLightbox();
+    OCGantt.lbox.deleteLastActiveOverlay();
     OCGantt.lbox.getForm("my-form").querySelector("[name='resources']").innerHTML = "";
 };
 
 OCGantt.lbox.cancel.resources = function (resources){
     var form = OCGantt.lbox.getForm("my-form");
-    $("#resources-form").hide();
+    var index = OCGantt.lbox.getActiveOverlay();
+    if (index != undefined){
+        var overlay = OCGantt.lbox.ActiveOverlay[index].name;
+        $("#" + overlay).hide();
+        OCGantt.lbox.deleteLastActiveOverlay();
+    }
     document.getElementById("my-form").querySelector("[name='resources']").innerHTML = "";
     OCGantt.displayResources(resources.split(","), document.getElementById("my-form").querySelector("[name='resources']"));
     $("resources :checkbox").prop('checked', false);
     OCGantt.lbox.precheckBoxes(resources.split(","));
 };
+
+OCGantt.lbox.cancel.links = function () {
+    var form = OCGantt.lbox.getForm("my-form");
+    var linksField = form.querySelector("[name='links']");
+    var index = OCGantt.lbox.getActiveOverlay();
+    if (index != undefined){
+        var overlay = OCGantt.lbox.ActiveOverlay[index].name;
+        $("#" + overlay).hide();
+        OCGantt.lbox.deleteLastActiveOverlay();
+    }
+    OCGantt.tempLinks = JSON.parse(JSON.stringify(arr.links));
+    OCGantt.linksToRemove = [];
+    $(linksField).html("");
+}
+
 OCGantt.lbox.remove = function () {
     var tid = taskId;
     gantt.confirm({
@@ -788,6 +876,52 @@ OCGantt.lbox.remove = function () {
     gantt.hideLightbox();
     OCGantt.lbox.getForm("my-form").querySelector("[name='resources']").innerHTML = "";
 };
+
+// Function for setting the last shown overlay like links-form as active
+OCGantt.lbox.setActiveOverlay = function (container){
+    OCGantt.lbox.getActiveOverlay();
+    var index = OCGantt.lbox.getActiveOverlay();
+    if (index != undefined) {
+        if (OCGantt.lbox.ActiveOverlay[index].name != container){
+            delete OCGantt.lbox.ActiveOverlay[index].$active;
+            var overlay = {
+                name: container,
+                $active: true
+            };
+        OCGantt.lbox.ActiveOverlay.push(overlay);
+        }
+    } 
+    if (index == undefined) {
+        var overlay = {
+            name: container,
+            $active: true
+        };
+        OCGantt.lbox.ActiveOverlay.push(overlay);
+    }
+}
+
+// Function to get the active overlay
+OCGantt.lbox.getActiveOverlay = function (){
+    var returnIndex = undefined;
+    OCGantt.lbox.ActiveOverlay.forEach(function (overlay, index){
+        if (overlay.$active){
+            returnIndex = index;
+        }
+    });
+    return returnIndex;
+}
+
+// Function to delete the last overlay and set the one before as active
+OCGantt.lbox.deleteLastActiveOverlay = function (){
+    var index = OCGantt.lbox.getActiveOverlay();
+    OCGantt.lbox.ActiveOverlay.splice(index, 1);
+    var length = OCGantt.lbox.ActiveOverlay.length -1;
+    if (length != undefined) {
+        if (length != -1) {
+            OCGantt.lbox.ActiveOverlay[length].$active = true;
+        }
+    }
+}
 
 // Definition of how dates should be converted
 OCGantt.DateToStr = gantt.date.date_to_str("%Y-%m-%d %H:%i");
@@ -990,6 +1124,8 @@ OCGantt.Links.prototype = {
             contentType: 'application/json',
             data: JSON.stringify(link)
         }).done(function (link) {
+            link.source = link.source.toString();
+            link.target = link.target.toString();
             self._links.push(link);
             //self._activeLink = link;
             self.load(link.id);
