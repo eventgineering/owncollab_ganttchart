@@ -41,6 +41,24 @@ gantt_save_btn_set {
 
 
 /* Styles for the lightbox */
+.gantt_progress{
+    padding-right: 40px !important;
+}
+
+.gantt_changeprogress{
+    margin-left: -30px;
+    height: 20px;
+    width: 16px;
+    background: #c2c2c2;
+    /*top: -4.5px;*/
+    position: relative;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    opacity: 1 !important;
+    border: 0;
+    font-size: 19px !important;
+}
+
 .gantt_cal_light {
     height: auto;
 }
@@ -204,6 +222,9 @@ div[contenteditable=true] {
 }
 .fa-times{
 	color: red;
+}
+.fa-crosshairs{
+    color: #656565;
 }
 
 /* Definition of tooltips */

@@ -10,6 +10,7 @@ class Link extends Entity implements JsonSerializable {
     protected $source;
     protected $target;
     protected $type;
+    protected $lag;
 
     public function jsonSerialize() {
         return [
@@ -17,6 +18,7 @@ class Link extends Entity implements JsonSerializable {
             'source' => $this->source,
             'target' => $this->target,
             'type' => $this->type,
+            'lag' => $this->lag,
         ];
     }
 }

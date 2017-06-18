@@ -52,9 +52,10 @@ class LinkController extends Controller {
      * @param int $source
      * @param int $target
      * @param string $type
+     * @param int $lag
      */
-    public function create($source, $target, $type) {
-        return $this->service->create($source, $target, $type);
+    public function create($source, $target, $type, $lag) {
+        return $this->service->create($source, $target, $type, $lag);
     }
 
     /**
@@ -63,10 +64,11 @@ class LinkController extends Controller {
      * @param int $source
      * @param int $target
      * @param string $type
+     * @param int $lag
      */
-    public function update($id, $source, $target, $type) {
-        return $this->handleNotFound(function () use ($id, $source, $target, $type) {
-            return $this->service->update($id, $source, $target, $type);
+    public function update($id, $source, $target, $type, $lag) {
+        return $this->handleNotFound(function () use ($id, $source, $target, $type, $lag) {
+            return $this->service->update($id, $source, $target, $type, $lag);
         });
     }
 

@@ -5,6 +5,7 @@ $ganttLangUrl = "commercial/locale/locale_". $lang;
 script('owncollab_ganttchart', 'html2canvas');
 script('owncollab_ganttchart', 'commercial/dhtmlxgantt');
 script('owncollab_ganttchart', 'commercial/ext/dhtmlxgantt_multiselect');
+script('owncollab_ganttchart', 'commercial/ext/dhtmlxgantt_auto_scheduling');
 script('owncollab_ganttchart', $ganttLangUrl);
 script('owncollab_ganttchart', 'jquery-ui-timepicker/jquery.ui.timepicker');
 script('owncollab_ganttchart', $timepickerLangUrl);

@@ -52,13 +52,18 @@ var taskId = null;
         /* OCGantt.groupusers.loadAll().done(function(){
             console.log(OCGantt.groupusers._groupusers);
         }); */
-        OCGantt.links.loadAll().done(function () {
-            arr.links = OCGantt.links._links;
-            OCGantt.linksLoaded = true;
-        });
         OCGantt.tasks.loadAll().done(function () {
             arr.data = OCGantt.tasks._tasks;
             OCGantt.tasksLoaded = true;
+        });
+        OCGantt.links.loadAll().done(function () {
+            arr.links = OCGantt.links._links;
+            for (i = 0; i < arr.links.length; i++) {
+                if (arr.links[i].lag != "0"){
+                    arr.links[i].lag = parseInt(arr.links[i].lag);
+                }
+            }
+            OCGantt.linksLoaded = true;
         });
         OCGantt.groupusers.loadAll().done(function(){
             OCGantt.usergroupsLoaded = true;

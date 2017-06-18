@@ -50,15 +50,17 @@ class LinkService {
         $link->setSource($source);
         $link->setTarget($target);
         $link->setType($type);
+        $link->setLag($lag);
         return $this->mapper->insert($link);
     }
 
-    public function update($id, $source, $target, $type) {
+    public function update($id, $source, $target, $type, $lag) {
         try {
             $link = $this->mapper->find($id);
             $link->setSource($source);
             $link->setTarget($target);
             $link->setType($type);
+            $link->setLag($lag);
             return $this->mapper->update($link);
         } catch(Exception $e) {
             $this->handleException($e);

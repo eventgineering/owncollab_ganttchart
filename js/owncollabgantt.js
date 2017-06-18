@@ -18,6 +18,8 @@ OCGantt.lbox.resources.HTML = {};
 OCGantt.lbox.ActiveOverlay = [];
 OCGantt.tempLinks = [];
 OCGantt.linksToRemove = [];
+OCGantt.caretPos;
+OCGantt.tempDistance = 0;
 var target = undefined;
 
 OCGantt.splashScreenIcon = OC.generateUrl('/apps/owncollab_ganttchart/img/loading-dark.gif').replace("index.php/", "");
@@ -271,6 +273,7 @@ OCGantt.lbox.addLink = function (tempLinks, source, target) {
     link.$new = true;
     link.source = predecessor.toString();
     link.target = target.toString();
+    link.lag = 0;
     switch (linkType) {
         case "FS":
             link.type = "0";
@@ -324,9 +327,14 @@ OCGantt.lbox.precheckBoxes = function (taskResources) {
 }
 
 OCGantt.lbox.precheckLinks = function (links, id) {
+    console.log(links);
     $(".links :checkbox").prop('checked', false);
     for (i = 0; i < links.length; i++) {
         if (links[i].target == id) {
+            console.log(links[i].source);
+            if (Number.isInteger(links[i].source) == false){
+                links[i].source = links[i].source.toString();
+            }
             switch (links[i].type) {
                 case "0":
                     $('input[id=' + links[i].source + '_FS]').prop('checked', true);
@@ -347,6 +355,158 @@ OCGantt.lbox.precheckLinks = function (links, id) {
             }
         }
     }
+}
+
+OCGantt.lbox.convertLagsToDay = function (links, id) {
+    var lag = "";
+    console.log(links);
+    console.log(id);
+    for (i = 0; i < links.length; i++) {
+        if ((links[i].target == id) && (links[i].lag != 0)) {
+            console.log(links[i].lag);
+            var absLag = Math.abs(links[i].lag);
+            var days = Math.floor(absLag / 24);
+            var hours = absLag - (days * 24);
+            lag = days + "d " + hours + "h";
+            if (links[i].lag < 0) {
+                lag = "-" + lag;
+            }
+            document.getElementById(links[i].source + "_buffer").value = lag;
+            console.log("link-id: " + links[i].id + " lag: " + lag);
+        }
+        if ((links[i].target == id) && (links[i].lag == 0)) {
+            lag = "";
+            document.getElementById(links[i].source + "_buffer").value = lag;
+            console.log("link-id: " + links[i].id + " lag: " + lag);
+        }
+    }
+}
+
+OCGantt.lbox.handleKeyEvents = function (e) {
+    if (e != undefined) {
+        e.stopPropagation();
+        var id = $(this).prop('id');
+        var sucessor = e.data.sucessor;
+        if (id != undefined) {
+            var value = $("#" + id).prop('value');
+            var dPos = value.indexOf("d") + 1;
+        }
+        switch (true) {
+            case (e.which == 8):
+            case (e.which == 46):
+            case (e.which > 47 && e.which < 58):
+            case (e.which > 95 && e.which < 106):
+                break;
+            case (e.which == 13):
+                e.preventDefault();
+                //OCGantt.lbox.handleBufferValue(id, sucessor, "enter");
+                //$("#" + id).blur();
+                break;
+            case (e.which == 27):
+                e.preventDefault();
+                //OCGantt.lbox.handleBufferValue(id, sucessor, "escape");
+                //$("#"+id).prop('value', '');
+                //$("#" + id).blur();
+                break;
+            case (e.which == 68):
+                e.preventDefault();
+                if (OCGantt.caretPos == 1) {
+                    OCGantt.caretPos = 2;
+                    document.getElementById(id).setSelectionRange(dPos + 1, dPos + 2);
+                }
+                break;
+            case (e.which == 72):
+                e.preventDefault();
+                if (OCGantt.caretPos == 2) {
+                    OCGantt.caretPos = 1;
+                    document.getElementById(id).setSelectionRange(0, dPos - 1);
+                }
+                break;
+            case (e.which == 37):
+            case (e.which == 39):
+                e.preventDefault();
+                switch (OCGantt.caretPos) {
+                    case 1:
+                        OCGantt.caretPos = 2;
+                        document.getElementById(id).setSelectionRange(dPos + 1, dPos + 2);
+                        break;
+                    case 2:
+                        OCGantt.caretPos = 1;
+                        document.getElementById(id).setSelectionRange(0, dPos - 1);
+                        break;
+                }
+                break;
+            default:
+                e.preventDefault();
+                break;
+        }
+    }
+}
+
+OCGantt.lbox.handleKeyUpEvents = function (e) {
+    if (e != undefined) {
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        var id = $(this).prop('id');
+        var sucessor = e.data.sucessor;
+        if (id != undefined) {
+            var value = $("#" + id).prop('value');
+            var dPos = value.indexOf("d") + 1;
+        }
+        switch (true) {
+            case (e.which == 27):
+                OCGantt.lbox.handleBufferValue(id, sucessor, "escape");
+                //$("#"+id).prop('value', '');
+                $("#" + id).blur();
+                break;
+            case (e.which == 13):
+                OCGantt.lbox.handleBufferValue(id, sucessor, "enter");
+                $("#" + id).blur();
+                break;
+        }
+    }
+}
+
+OCGantt.lbox.handleBufferValue = function (id, sucessor, action) {
+    var value = $("#" + id).prop('value');
+    var temp = value.substr(0, 1);
+    if (temp == "-") {
+        value = value.replace("-", "");
+    }
+    var dPos = value.indexOf("d");
+    var hPos = value.indexOf("h");
+    var days = parseInt(value.substr(0, dPos));
+    var hours = parseInt(value.substr(dPos + 1, hPos - dPos));
+    if ((days == 0) && (hours == 0)) {
+        $("#" + id).prop('value', '');
+    } else {
+        var predecessor = id.substr(0, id.indexOf("_"));
+        switch (action) {
+            case "escape":
+                var linkIndex = OCGantt.lbox.findLinkId(predecessor, sucessor);
+                console.log(OCGantt.tempLinks[linkIndex]);
+                OCGantt.lbox.convertLagsToDay([OCGantt.tempLinks[linkIndex]], sucessor);
+                break;
+            case "enter":
+                var linkIndex = OCGantt.lbox.findLinkId(predecessor, sucessor);
+                if (temp == "-") {
+                    OCGantt.tempLinks[linkIndex].lag = ((days*24)+hours)*(-1);
+                } else {
+                    console.log("convert started")
+                    OCGantt.tempLinks[linkIndex].lag = ((days*24)+hours);
+                }
+                OCGantt.lbox.convertLagsToDay([OCGantt.tempLinks[linkIndex]], sucessor);
+                OCGantt.tempLinks[linkIndex].$changed = true;
+                break;
+        }
+    }
+    //console.log(days);
+    //console.log(hours);
+}
+
+OCGantt.lbox.findLinkId = function (predecessor, sucessor) {
+    var index = OCGantt.tempLinks.map(function (link) { return link.source + link.target; }).indexOf(predecessor + sucessor);
+    return index;
 }
 
 OCGantt.lbox.handleMilestone = function (tempTask) {
@@ -377,6 +537,51 @@ OCGantt.lbox.handleMilestone = function (tempTask) {
         }
     }
     return tempTask;
+}
+
+OCGantt.lbox.setProgress = function (sourceValue, target, sign){
+    var progress = 0.0
+    if ((sourceValue != null) && (sourceValue != "0") && (sourceValue != 0)){
+        progress = Number((parseFloat(sourceValue)*100).toFixed(1));
+    }
+    progress = progress.toString().replace(".", ",");
+    $('#'+target).prop('value', progress + " " + sign);
+}
+
+OCGantt.lbox.handleMouseMover = function (e){
+    var target = e.data.source;
+    var value = $('#'+target).prop('value');
+    var progress = Number(value.replace(" ", "").replace("%", "").replace(",", "."));
+    var distance = e.data.y - e.pageY;
+    var difference = 0;
+    if ((distance > 0) && (distance > OCGantt.tempDistance)){
+        difference = distance - OCGantt.tempDistance;
+        progress += (difference/2);
+    } else if ((distance > 0) && (distance < OCGantt.tempDistance)){
+        difference = OCGantt.tempDistance - distance;
+        progress -= (difference/2);
+    } else if ((distance < 0) && (distance < OCGantt.tempDistance)){
+        difference = distance - OCGantt.tempDistance;
+        progress -= (difference/2)*(-1);
+    } else if ((distance < 0) && (distance > OCGantt.tempDistance)){
+        difference = OCGantt.tempDistance - distance;
+        progress += (difference/2)*(-1);
+    }
+    if (progress < 0){
+        progress = 0;
+    } else if (progress > 100){
+        progress = 100;
+    }
+    progress = progress.toFixed(1).toString().replace(".", ",");
+    $('#'+target).prop('value', progress + " " + "%");
+    OCGantt.tempDistance = distance;
+}
+
+OCGantt.lbox.getProgress = function (source, sign){
+    var value = $('#'+source).prop('value');
+    var progress = value.replace(" ", "").replace(sign, "").replace(",", ".");
+    progress = (Number(parseFloat(progress).toFixed(6)))/100;
+    return progress;
 }
 
 OCGantt.displayResources = function (array, target) {
@@ -474,10 +679,10 @@ OCGantt.lbox.getTaskName = function (task) {
 }
 
 OCGantt.lbox.getMaxHeight = function (element) {
-    if (element == "linklist"){
+    if (element == "linklist") {
         var offset = $("#" + element).offset();
         var maxHeight = window.innerHeight - offset.top - 72;
-    } else if (element == "linklist"){
+    } else if (element == "linklist") {
         var offset = $("#" + element).offset();
         var maxHeight = window.innerHeight - offset.top - 72;
     } else {
@@ -607,7 +812,9 @@ gantt.showLightbox = function (id) {
                 _lineTaskInputSS.innerHTML = '<input type="checkbox" id="' + arr.data[taskArray]['id'] + '_SS" />';
                 _lineTaskInputSF.innerHTML = '<input type="checkbox" id="' + arr.data[taskArray]['id'] + '_SF" />';
                 _lineTaskInputFF.innerHTML = '<input type="checkbox" id="' + arr.data[taskArray]['id'] + '_FF" />';
-                _lineTaskBuffer.innerHTML = '<input type="text" id="' + arr.data[taskArray]['id'] + '_buffer" />';
+                _lineTaskBuffer.innerHTML = '<input type="text" id="' +
+                    arr.data[taskArray]['id'] +
+                    '_buffer" placeholder="0d 0h" />';
                 _lineTask.appendChild(_lineTaskId);
                 _lineTask.appendChild(_lineTaskText);
                 _lineTask.appendChild(_lineTaskInputFS);
@@ -747,12 +954,54 @@ gantt.showLightbox = function (id) {
                 }
             }
             OCGantt.lbox.precheckLinks(OCGantt.tempLinks, tempTask.id);
+            console.log(arr.links);
+            console.log(OCGantt.tempLinks);
+            OCGantt.lbox.convertLagsToDay(OCGantt.tempLinks, tempTask.id, "init");
             linksStatus = 1;
         });
         (function () {
             var tempTask;
             tempTask = task;
             var previuosValue;
+            var status = 0;
+            $(".links input:text").on('focus', function () {
+                var id = $(this).prop('id');
+                var predecessor = id.substr(0, id.indexOf("_"));
+                if (($('input[id=' + predecessor + '_FS]').prop('checked') == true) ||
+                    ($('input[id=' + predecessor + '_SS]').prop('checked') == true) ||
+                    ($('input[id=' + predecessor + '_SF]').prop('checked') == true) ||
+                    ($('input[id=' + predecessor + '_FF]').prop('checked') == true)
+                ) {
+                    status = 1;
+                    $(document).unbind("keyup", OCGantt.lbox.keyUpfunction);
+                    OCGantt.caretPos = 1;
+                    var value = $("#" + id).prop('value');
+                    if (value === "") {
+                        value = "0d 0h";
+                        $("#" + id).prop('value', value);
+                    }
+                    var dPos = value.indexOf("d") + 1;
+                    this.setSelectionRange(0, dPos - 1);
+                    $("#" + id).keydown({sucessor: tempTask.id}, OCGantt.lbox.handleKeyEvents);
+                    $("#" + id).keyup({sucessor: tempTask.id}, OCGantt.lbox.handleKeyUpEvents);
+                } else {
+                    $("#" + id).blur();
+                    alert("set Linktype first!");
+                }
+            });
+            $(".links input:text").on('blur', function () {
+                var id = $(this).prop('id');
+                if (status == 1) {
+                    $("#" + id).unbind("keydown", OCGantt.lbox.handleKeyEvents);
+                    $("#" + id).unbind("keyup", OCGantt.lbox.handleKeyUpEvents);
+                    console.log(id);
+                    console.log(tempTask.id);
+                    OCGantt.lbox.handleBufferValue(id, tempTask.id, "enter");
+                    console.log(OCGantt.tempLinks);
+                    console.log("blurred");
+                    $(document).keyup(OCGantt.lbox.keyUpFunction);
+                }
+            })
             $(".links :checkbox").on('focus', function () {
                 previousValue = this.checked;
             }).change(function () {
@@ -786,6 +1035,22 @@ gantt.showLightbox = function (id) {
         form.querySelector("[name='title']").innerHTML = task.id + ": " + task.text;
         input.focus();
         input.value = task.text;
+        OCGantt.lbox.setProgress(OCGantt.tempTask.progress, "progress", "%");
+            $("#changeprogress").mousedown(function(event){
+                console.log("y: " + event.pageY);
+                $(document).disableSelection();
+                $(document).mousemove({y: event.pageY, source: "progress"}, OCGantt.lbox.handleMouseMover);
+                $(document).mouseup(function(){
+                    OCGantt.tempDistance = 0;
+                    $(document).unbind("mousemove");
+                    $(document).unbind("mouseup");
+                    $(document).enableSelection();
+                })
+            });
+        $("#changeprogress").blur(function(){
+            $(this).unbind("mousedown");
+            $(this).unbind("mouseup");
+        });
         if (task.id == "1") {
             $("#add1").hide();
             $("label[for='description']").text("Project name");
@@ -825,16 +1090,13 @@ OCGantt.lbox.getForm = function (form) {
 OCGantt.lbox.save = function () {
     var task = gantt.getTask(taskId);
     task.text = OCGantt.lbox.getForm("my-form").querySelector("[name='description']").value;
+    console.log(OCGantt.lbox.getProgress("progress", "%"));
+    task.progress = OCGantt.lbox.getProgress("progress", "%");
     if (task.id == "1") {
         gantt.updateTask(task.id);
-    } else if (task.id != "1") {
+    }
+    if ((task.id != "1") && (task.type == "project")) {
         task.resources = OCGantt.lbox.getForm("my-form").querySelector("[name='resources_hidden']").value;
-        if (task.$new) {
-            gantt.addTask(task, task.parent);
-            delete task.$new;
-        } else {
-            gantt.updateTask(task.id);
-        }
         var lengthLinksToRemove = OCGantt.linksToRemove.length;
         if (lengthLinksToRemove != -1) {
             OCGantt.linksToRemove.forEach(function (item, index) {
@@ -848,20 +1110,58 @@ OCGantt.lbox.save = function () {
                     var linkId = gantt.addLink({
                         source: link.source,
                         target: link.target,
-                        type: link.type
+                        type: link.type,
+                        lag: link.lag
                     });
                     link.active = false;
                     delete link.$new;
+                } else {
+                    
                 }
             });
         }
-    }
-    if ((task.id != "1") && (task.type == "project")) {
+        if (task.$new) {
+            gantt.addTask(task, task.parent);
+            delete task.$new;
+        } else {
+            gantt.updateTask(task.id);
+        }
     } else if ((task.id != "1") && (task.type != "project")) {
         var sdate = OCGantt.lbox.getForm("my-form").querySelector("[name='startdate']").value;
         var stime = OCGantt.lbox.getForm("my-form").querySelector("[name='starttime']").value;
         var smonth = sdate.substr(3, 2) - 1;
         task.start_date = new Date(sdate.substr(6, 4), smonth, sdate.substr(0, 2), stime.substr(0, 2), stime.substr(3, 2));
+        task.resources = OCGantt.lbox.getForm("my-form").querySelector("[name='resources_hidden']").value;
+        var lengthLinksToRemove = OCGantt.linksToRemove.length;
+        if (lengthLinksToRemove != -1) {
+            OCGantt.linksToRemove.forEach(function (item, index) {
+                OCGantt.links._activeLink = OCGantt.linksToRemove[index];
+                gantt.deleteLink(item.id);
+            });
+        }
+        if (OCGantt.tempLinks) {
+            OCGantt.tempLinks.forEach(function (link) {
+                if (link.$new) {
+                    var linkId = gantt.addLink({
+                        source: link.source,
+                        target: link.target,
+                        type: link.type,
+                        lag: link.lag
+                    });
+                    link.active = false;
+                    delete link.$new;
+                } else {
+                    if (link.$changed){
+                        console.log("update");
+                        console.log(link);
+                        console.log(arr.links);
+                        gantt.getLink(link.id).lag = link.lag;
+                        gantt.updateLink(link.id);
+                        console.log(arr.links);
+                    }
+                }
+            });
+        }
         if (OCGantt.tempTask.type != task.type) {
             if (OCGantt.tempTask.type == "milestone") {
                 task.type = OCGantt.tempTask.type;
@@ -874,9 +1174,16 @@ OCGantt.lbox.save = function () {
                 task.end_date = new Date(edate.substr(6, 4), emonth, edate.substr(0, 2), etime.substr(0, 2), etime.substr(3, 2));
             }
         }
+        if (task.$new) {
+            gantt.addTask(task, task.parent);
+            delete task.$new;
+        } else {
+            gantt.updateTask(task.id);
+        }
     }
     OCGantt.lbox.getForm("my-form").querySelector("[name='resources']").innerHTML = "";
     gantt.hideLightbox();
+    //gantt.render();
 };
 
 OCGantt.lbox.save.resources = function (resources) {
@@ -1041,6 +1348,12 @@ OCGantt.lbox.HTML.html = '<div class="gantt_cal_light" id="my-form" style="displ
     '<div class="tbl_cell lbox_title"style="width: 0px"><label for="endtime"></label></div>' +
     '<div class="tbl_cell" style="text-align: left"><input class="timepicker" id="endtime" name="endtime" type="text" style="width: 40px"></div>' +
     '</div>' +
+    '</div>' +
+    '</div>' +
+    '<div id="progressinput" class="tbl">' +
+    '<div class="tbl_cell lbox_title" style="width: 60px"><label for="progress">Progress</Label></div>' +
+    '<div class="tbl_cell style="width: 80px"><input class="gantt_progress" id="progress" name="progress" type="text" style="width: 65px; text-align: right">' +
+    '<i class="fa fa-crosshairs fa-align-center gantt_changeprogress" id="changeprogress" name="changeprogress"></i>' +
     '</div>' +
     '</div>' +
     '</div>' +
@@ -1211,6 +1524,7 @@ OCGantt.Links.prototype = {
         }).done(function (link) {
             link.source = link.source.toString();
             link.target = link.target.toString();
+            link.lag = 0;
             self._links.push(link);
             //self._activeLink = link;
             self.load(link.id);
@@ -1307,6 +1621,16 @@ OCGantt.GroupUsers.prototype = {
                 OCGantt.tasks.updateActive();
                 gantt.render();
             });
+            gantt.attachEvent("onAfterLinkUpdate", function (id, item){
+                arr= gantt.serialize();
+                gantt.refreshLink(id);
+                var link = gantt.getLink(id);
+                var index = OCGantt.getIndexOfProperty(arr.links, 'id', id);
+                OCGantt.links._links[index] = arr.links[index];
+                OCGantt.links._activeLink = OCGantt.links._links[index];
+                OCGantt.links.updateActive();
+                gantt.render();
+            });
             gantt.attachEvent("onAfterTaskAdd", function (id, item) {
                 var tmpstart = OCGantt.DateToStr(item.start_date);
                 var tmpend = OCGantt.DateToStr(item.end_date);
@@ -1375,9 +1699,16 @@ OCGantt.GroupUsers.prototype = {
             gantt.attachEvent("onAfterLinkAdd", function (id, item) {
                 arr = gantt.serialize();
                 var index = arr.links.length - 1;
+                arr.links[index].source = item.source;
+                arr.links[index].target = item.target;
+                arr.links[index].type = item.type;
+                if (!item.lag){
+                    arr.links[index].lag = 0;
+                }
                 OCGantt.links.create(arr.links[index]).done(function () {
                     gantt.changeLinkId(item.id, arr.links[index].id);
                 });
+                console.log(arr.links);
             });
             gantt.attachEvent("onAfterLinkDelete", function (id, item) {
                 arr = gantt.serialize();
@@ -1393,6 +1724,8 @@ OCGantt.GroupUsers.prototype = {
         } else if (OCGantt.isAdmin === false) {
             gantt.config.readonly = true;
         }
+        gantt.config.auto_scheduling = true;
+        gantt.config.auto_scheduling_strict = true;
         gantt.config.server_utc = false;
         gantt.config.duration_unit = "hour";//an hour
         gantt.config.duration_step = 1;
