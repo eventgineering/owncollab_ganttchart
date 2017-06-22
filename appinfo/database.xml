@@ -78,6 +78,7 @@
             <field>
                 <name>open</name>
                 <type>boolean</type>
+                <default>1</default>
             </field>
             <field>
                 <name>enddate</name>

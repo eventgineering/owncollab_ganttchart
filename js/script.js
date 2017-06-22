@@ -13,19 +13,53 @@ var arr = {
     links: {},
 };
 var resourcesStatus = undefined;
+var globalTimeout = null;
 //$("body").append(OCGantt.splashScreen.html);
 
 OCGantt.linksLoaded = undefined;
 OCGantt.tasksLoaded = undefined;
 OCGantt.usergroupsLoaded = undefined;
 OCGantt.appConfig = undefined;
+OCGantt.dhtmlxversion = undefined;
 var taskId = null;
 
 (function (OC, window, $, undefined) {
     'use strict';
 
     $(document).ready(function () {
+        OCGantt.dhtmlxversion = $("#app").data();
         $("#app").append(OCGantt.splashScreen);
+        var $bottom = OCGantt.getBottomById("topbar") + 1;
+        $("#sidebar-left").css('top', $bottom + 'px');
+        OCGantt.setMaxHeight($("#topbar"), $("#bottombar"), 'sidebar-left');
+        OCGantt.setMaxHeight($("#topbar"), $("#bottombar"), 'gantt_chart');
+        $(".sidebar_header").hover(
+            function() { $(this).addClass("Hover");},
+            function() { $(this).removeClass("Hover");}
+        );
+        $("#zoomslider").slider({
+            value: 50,
+            min: 0,
+            max: 100,
+            step: 1,
+            change: function(){
+                // var width = $(".gantt_task_cell").css('width');
+                //width = width.substr("px", "");
+                gantt.config.min_column_width = $(this).slider("value");
+                gantt.render();
+                console.log($("#zoomslider").slider("value"));},
+        });
+        $("#zoom-minus").click(function(){
+            var s = $("#zoomslider"), val = s.slider("value"), step = s.slider("option", "step");
+            s.slider("value", val - step);
+        });
+        $("#zoom-plus").click(function(){
+            var s = $("#zoomslider"), val = s.slider("value"), step = s.slider("option", "step");
+            s.slider("value", val + step);
+        });
+        $("#zoomtofit").click(function(){
+            zoomToFit();
+        });
         // OCGantt.showMask();
 //    document.body.innerHTML += OCGantt.splashScreen;
         var translations = {
