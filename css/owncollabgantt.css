@@ -27,6 +27,15 @@
     font-size: 11px !important;
 }
 
+
+.gantt_task{
+    overflow-x: auto;
+}
+
+.gantt_hor_scroll{
+    display: none !important;
+}
+
 /* Styles for buttons */
 gantt_save_btn_set {
 	width: auto;
@@ -39,6 +48,71 @@ gantt_save_btn_set {
 	cursor: pointer;
 }
 
+/* Styles for bottom bar */
+#bottombar {
+    position: fixed;
+    bottom: 0;
+    height: 20px;
+    width: 100%;
+}
+
+#zoomslider {
+    position: absolute;
+    bottom: 0;
+    top: 8px;
+    right: 60px;
+    width: 150px;
+}
+
+.ui-slider-horizontal {
+    height: .2em !important;
+    position: relative;
+    top: 10px;
+}
+
+.ui-widget-content {
+    border: 1px solid #000 !important;
+}
+
+.ui-slider-handle {
+    border-radius: 50% !important;
+    border-color: #000 !important;
+    opacity: 1 !important;
+    top: -7px !important;
+}
+
+.OCGantt-zoomToFit:before {
+    position: absolute;
+    content: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Axlink%3D%22http%3A//www.w3.org/1999/xlink%22%20version%3D%221.1%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%20256%20256%22%20enable-background%3D%22new%200%200%20256%20256%22%20xml%3Aspace%3D%22preserve%22%3E%3Cg%3E%3Cpath%20d%3D%22M224.329%2C203.521l-59.144-59.145c-5.579%2C8.164-12.645%2C15.229-20.809%2C20.808l59.145%2C59.145%20%20%20c3.905%2C3.905%2C10.237%2C3.905%2C14.142%2C0l6.667-6.666C228.235%2C213.758%2C228.235%2C207.427%2C224.329%2C203.521z%22%3E%3C/path%3E%3Cpath%20d%3D%22M170.742%2C99.742c0-39.149-31.851-71-71.001-71c-39.149%2C0-71%2C31.851-71%2C71c0%2C39.149%2C31.851%2C71%2C71%2C71%20%20%20C138.892%2C170.742%2C170.742%2C138.891%2C170.742%2C99.742z%20M99.742%2C153.742c-29.822%2C0-54-24.177-54-54c0-29.823%2C24.178-54%2C54-54%20%20%20c29.824%2C0%2C54.001%2C24.177%2C54.001%2C54C153.742%2C129.565%2C129.566%2C153.742%2C99.742%2C153.742z%22%3E%3C/path%3E%3Cpath%20d%3D%22M70%2C130h60V70H70V130z%20M82%2C82h36v36H82V82z%22%3E%3C/path%3E%3C/g%3E%3C/svg%3E');
+    height: 20px;
+    width: 20px;
+    background-size: contain;
+    cursor: pointer;
+    bottom: 0;
+    right: 0;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.fa-search-plus {
+    position: absolute;
+    bottom: 3px;
+    right: 30px;
+    opacity: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    cursor: pointer;
+}
+
+.fa-search-minus {
+    position: absolute;
+    bottom: 3px;
+    right: 225px; 
+    opacity: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    cursor: pointer;
+}
 
 /* Styles for the lightbox */
 .gantt_progress{
@@ -119,6 +193,7 @@ div[contenteditable=true] {
     max-width: 10% !important;
     text-align: left;
 }
+
 .predecessor_line>.tbl_cell.header.text{
     min-width: 100px;
     max-width: 50% !important;
@@ -226,6 +301,75 @@ div[contenteditable=true] {
 .fa-crosshairs{
     color: #656565;
 }
+.fa-indent{
+    font-size: 19px;
+    color: #000;
+    opacity: 1;
+}
+.fa-outdent{
+    font-size: 19px;
+    color: #000;
+    opacity: 1;
+}
+.fa-undo{
+    font-size: 19px;
+    color: #000;
+    opacity: 1;
+}
+.fa-repeat{
+    font-size: 19px;
+    color: #000;
+    opacity: 1;
+}
+.fa-save{
+    font-size: 19px;
+    color: #000;
+    opacity: 1;
+}
+
+/* Definition of sidebar left */
+
+#sidebar-left {
+    position:fixed;
+    width: 350px;
+    /*bottom:0;*/
+    z-index: 1400;
+    background-color: #FFF;
+    padding: 5px;
+    display: none;
+}
+
+.not_available {
+    opacity: 0.5 !important;
+    cursor: not-allowed;
+}
+
+.sidebar_header {
+    opacity: 0.5;
+}
+
+.sidebar_header img {
+    width: 36px;
+    height: 36px;
+    align-content: center;
+    cursor: pointer;
+}
+
+.sidebar_header h4 {
+    cursor: pointer;
+}
+
+.sidebar_header.Hover {
+    border-bottom: 2px solid #1D2D44;
+    opacity: 1;
+}
+
+.tbl_cell.sidebar_header{
+    /*min-width: 40px;*/
+    width: 20% !important;
+    /*max-width: 20% !important;*/
+    text-align: center;
+}
 
 /* Definition of tooltips */
 .tooltip {
@@ -324,3 +468,4 @@ div[contenteditable=true] {
     border-style: solid;
     border-color: transparent transparent transparent #555;
 }
+

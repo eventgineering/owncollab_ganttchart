@@ -1,0 +1,14 @@
+/*
+@license
+
+dhtmlxGantt v.4.0.10 Professional
+This software is covered by DHTMLX Commercial License. Usage without proper license is prohibited.
+
+(c) Dinamenta, UAB.
+*/
+gantt.date.date_to_str=function(t,a){return function(e){return t.replace(/%[a-zA-Z]/g,function(t){switch(t){case"%d":return a?gantt.date.to_fixed(e.getUTCDate()):gantt.date.to_fixed(e.getDate());case"%m":return a?gantt.date.to_fixed(e.getUTCMonth()+1):gantt.date.to_fixed(e.getMonth()+1);case"%j":return a?e.getUTCDate():e.getDate();case"%n":return a?e.getUTCMonth()+1:e.getMonth()+1;case"%y":return a?gantt.date.to_fixed(e.getUTCFullYear()%100):gantt.date.to_fixed(e.getFullYear()%100);case"%Y":return a?e.getUTCFullYear():e.getFullYear();
+case"%D":return a?gantt.locale.date.day_short[e.getUTCDay()]:gantt.locale.date.day_short[e.getDay()];case"%l":return a?gantt.locale.date.day_full[e.getUTCDay()]:gantt.locale.date.day_full[e.getDay()];case"%M":return a?gantt.locale.date.month_short[e.getUTCMonth()]:gantt.locale.date.month_short[e.getMonth()];case"%F":return a?gantt.locale.date.month_full[e.getUTCMonth()]:gantt.locale.date.month_full[e.getMonth()];case"%h":return a?gantt.date.to_fixed((e.getUTCHours()+11)%12+1):gantt.date.to_fixed((e.getHours()+11)%12+1);
+case"%g":return a?(e.getUTCHours()+11)%12+1:(e.getHours()+11)%12+1;case"%G":return a?e.getUTCHours():e.getHours();case"%H":return a?gantt.date.to_fixed(e.getUTCHours()):gantt.date.to_fixed(e.getHours());case"%i":return a?gantt.date.to_fixed(e.getUTCMinutes()):gantt.date.to_fixed(e.getMinutes());case"%a":return a?e.getUTCHours()>11?"pm":"am":e.getHours()>11?"pm":"am";case"%A":return a?e.getUTCHours()>11?"PM":"AM":e.getHours()>11?"PM":"AM";case"%s":return a?gantt.date.to_fixed(e.getUTCSeconds()):gantt.date.to_fixed(e.getSeconds());
+case"%W":return a?gantt.date.to_fixed(gantt.date.getUTCISOWeek(e)):gantt.date.to_fixed(gantt.date.getISOWeek(e));default:return t}})}},gantt.date.str_to_date=function(t,a){return function(e){for(var n=[0,0,1,0,0,0],r=e.match(/[a-zA-Z]+|[0-9]+/g),i=t.match(/%[a-zA-Z]/g),s=0;s<i.length;s++)switch(i[s]){case"%j":case"%d":n[2]=r[s]||1;break;case"%n":case"%m":n[1]=(r[s]||1)-1;break;case"%y":n[0]=1*r[s]+(r[s]>50?1900:2e3);break;case"%g":case"%G":case"%h":case"%H":n[3]=r[s]||0;break;case"%i":n[4]=r[s]||0;
+break;case"%Y":n[0]=r[s]||0;break;case"%a":case"%A":n[3]=n[3]%12+("am"==(r[s]||"").toLowerCase()?0:12);break;case"%s":n[5]=r[s]||0;break;case"%M":n[1]=gantt.locale.date.month_short_hash[r[s]]||0;break;case"%F":n[1]=gantt.locale.date.month_full_hash[r[s]]||0}return a?new Date(Date.UTC(n[0],n[1],n[2],n[3],n[4],n[5])):new Date(n[0],n[1],n[2],n[3],n[4],n[5])}};
+//# sourceMappingURL=../sources/ext/dhtmlxgantt_csp.js.map

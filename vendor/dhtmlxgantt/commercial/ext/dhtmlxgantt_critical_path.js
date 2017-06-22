@@ -1,0 +1,14 @@
+/*
+@license
+
+dhtmlxGantt v.4.0.10 Professional
+This software is covered by DHTMLX Commercial License. Usage without proper license is prohibited.
+
+(c) Dinamenta, UAB.
+*/
+gantt.config.highlight_critical_path=!1,gantt._criticalPathHandler=function(){gantt.config.highlight_critical_path&&gantt.render()},gantt.attachEvent("onAfterLinkAdd",gantt._criticalPathHandler),gantt.attachEvent("onAfterLinkUpdate",gantt._criticalPathHandler),gantt.attachEvent("onAfterLinkDelete",gantt._criticalPathHandler),gantt.attachEvent("onAfterTaskAdd",gantt._criticalPathHandler),gantt.attachEvent("onAfterTaskUpdate",gantt._criticalPathHandler),gantt.attachEvent("onAfterTaskDelete",gantt._criticalPathHandler),
+gantt.isCriticalTask=function(t){if(t){var a=arguments[1]||{};if(this._isProjectEnd(t))return!0;a[t.id]=!0;for(var e=this._getSuccessors(t),n=0;n<e.length;n++){var i=this.getTask(e[n].task);if(this._getSlack(t,i,e[n].link,e[n].lag)<=0&&!a[i.id]&&this.isCriticalTask(i,a))return!0}return!1}},gantt.isCriticalLink=function(t){return this.isCriticalTask(gantt.getTask(t.source))},gantt.getSlack=function(t,a){for(var e=[],n={},i=0;i<t.$source.length;i++)n[t.$source[i]]=!0;for(var i=0;i<a.$target.length;i++)n[a.$target[i]]&&e.push(a.$target[i]);
+for(var r=[],i=0;i<e.length;i++){var s=this.getLink(e[i]);r.push(this._getSlack(t,a,s.type,s.lag))}return Math.min.apply(Math,r)},gantt._getSlack=function(t,a,e,n){if(null===e)return 0;var i=null,r=null,s=this.config.links,g=this.config.types;i=e!=s.finish_to_finish&&e!=s.finish_to_start||this._get_safe_type(t.type)==g.milestone?t.start_date:t.end_date,r=e!=s.finish_to_finish&&e!=s.start_to_finish||this._get_safe_type(a.type)==g.milestone?a.start_date:a.end_date;var o=0;return o=+i>+r?-this.calculateDuration(r,i):this.calculateDuration(i,r),
+n&&1*n==n&&(o-=n),o},gantt._getProjectEnd=function(){var t=gantt.getTaskByTime();return t=t.sort(function(t,a){return+t.end_date>+a.end_date?1:-1}),t.length?t[t.length-1].end_date:null},gantt._isProjectEnd=function(t){return!this._hasDuration(t.end_date,this._getProjectEnd())},gantt._formatSuccessors=function(t,a){for(var e=[],n=0;n<t.length;n++)e.push(this._formatSuccessor(t[n],a));return e},gantt._formatSuccessor=function(t,a){return{task:t,link:a.type,lag:a.lag}},gantt._getSummarySuccessors=function(t,a){
+var e=[];return this.eachTask(function(t){this._isTask(t)&&e.push(gantt._formatSuccessor(t.id,a))},t.id),e},gantt._getSuccessors=function(t){for(var a=[],e=t.$source.map(function(t){return gantt.getLink(t)}),n=0;n<e.length;n++){var i=e[n],r=this._get_link_target(i);r&&(this._isTask(r)?a.push(gantt._formatSuccessor(i.target,i)):a=a.concat(this._getSummarySuccessors(r,i)))}return this._eachParent(function(t){this._isProject(t)&&(a=a.concat(gantt._getSuccessors(t)))},t),a};
+//# sourceMappingURL=../sources/ext/dhtmlxgantt_critical_path.js.map

@@ -384,6 +384,7 @@ OCGantt.lbox.convertLagsToDay = function (links, id) {
 
 OCGantt.lbox.handleKeyEvents = function (e) {
     if (e != undefined) {
+        console.log("key pressed");
         e.stopPropagation();
         var id = $(this).prop('id');
         var sucessor = e.data.sucessor;
@@ -393,9 +394,13 @@ OCGantt.lbox.handleKeyEvents = function (e) {
         }
         switch (true) {
             case (e.which == 8):
+            case (e.which == 16):
+            case (e.which == 17):
             case (e.which == 46):
             case (e.which > 47 && e.which < 58):
             case (e.which > 95 && e.which < 106):
+            case (e.which == 109):
+            case (e.which > 105 && e.which < 223):
                 break;
             case (e.which == 13):
                 e.preventDefault();
@@ -437,7 +442,7 @@ OCGantt.lbox.handleKeyEvents = function (e) {
                 }
                 break;
             default:
-                e.preventDefault();
+                //e.preventDefault();
                 break;
         }
     }
@@ -626,6 +631,42 @@ OCGantt.getDisplayname = function (uid) {
     return displayname;
 }
 
+
+OCGantt.lbox.getTaskName = function (task) {
+    return task.id === target;
+}
+
+OCGantt.lbox.getMaxHeight = function (element) {
+    if (element == "linklist") {
+        var offset = $("#" + element).offset();
+        var maxHeight = window.innerHeight - offset.top - 72;
+    } else if (element == "linklist") {
+        var offset = $("#" + element).offset();
+        var maxHeight = window.innerHeight - offset.top - 72;
+    } else {
+        var offset = $("#" + element).offset();
+        var maxHeight = window.innerHeight - offset.top - 16;
+    }
+    return maxHeight;
+}
+
+OCGantt.lbox.setWidth = function (id) {
+    var widthId = $("#header_id").css("width");
+    var widthText = $("#header_text").css("width");
+    var widthFS = $("#header_fs").css("width");
+    var widthSS = $("#header_ss").css("width");
+    var widthSF = $("#header_sf").css("width");
+    var widthFF = $("#header_ff").css("width");
+    var widthBuffer = $("#header_buffer").css("width");
+    $("#id_" + id).css("width", widthId);
+    $("#text_" + id).css("width", widthText);
+    $("#fs_" + id).css("width", widthFS);
+    $("#ss_" + id).css("width", widthSS);
+    $("#sf_" + id).css("width", widthSF);
+    $("#ff_" + id).css("width", widthFF);
+    $("#buffer_" + id).css("width", widthBuffer);
+}
+
 // Function to return the index of a property in a specified array
 OCGantt.getIndexOfProperty = function (array, property, value) {
     for (var i = 0; i < array.length; i++) {
@@ -674,40 +715,21 @@ OCGantt.clickGridButton = function (id, action) {
     }
 }
 
-OCGantt.lbox.getTaskName = function (task) {
-    return task.id === target;
+OCGantt.getBottomById = function (element){
+    var $el = $("#" + element);
+    var bottom = $el.position().top + $el.offset().top + $el.outerHeight();
+    return bottom;
 }
 
-OCGantt.lbox.getMaxHeight = function (element) {
-    if (element == "linklist") {
-        var offset = $("#" + element).offset();
-        var maxHeight = window.innerHeight - offset.top - 72;
-    } else if (element == "linklist") {
-        var offset = $("#" + element).offset();
-        var maxHeight = window.innerHeight - offset.top - 72;
-    } else {
-        var offset = $("#" + element).offset();
-        var maxHeight = window.innerHeight - offset.top - 16;
-    }
-    return maxHeight;
+OCGantt.setMaxHeight = function (topElement, bottomElement, target) {
+    var $topElement = topElement;
+    var $bottomElement = bottomElement;
+    var top = $topElement.position().top + $topElement.offset().top + $topElement.outerHeight();
+    var bottom = $bottomElement.position().top;
+    var height = bottom - top;
+    $("#" + target).css('height', height + 'px');
 }
 
-OCGantt.lbox.setWidth = function (id) {
-    var widthId = $("#header_id").css("width");
-    var widthText = $("#header_text").css("width");
-    var widthFS = $("#header_fs").css("width");
-    var widthSS = $("#header_ss").css("width");
-    var widthSF = $("#header_sf").css("width");
-    var widthFF = $("#header_ff").css("width");
-    var widthBuffer = $("#header_buffer").css("width");
-    $("#id_" + id).css("width", widthId);
-    $("#text_" + id).css("width", widthText);
-    $("#fs_" + id).css("width", widthFS);
-    $("#ss_" + id).css("width", widthSS);
-    $("#sf_" + id).css("width", widthSF);
-    $("#ff_" + id).css("width", widthFF);
-    $("#buffer_" + id).css("width", widthBuffer);
-}
 
 //Functions for the lightbox
 gantt.showLightbox = function (id) {
@@ -1090,7 +1112,6 @@ OCGantt.lbox.getForm = function (form) {
 OCGantt.lbox.save = function () {
     var task = gantt.getTask(taskId);
     task.text = OCGantt.lbox.getForm("my-form").querySelector("[name='description']").value;
-    console.log(OCGantt.lbox.getProgress("progress", "%"));
     task.progress = OCGantt.lbox.getProgress("progress", "%");
     if (task.id == "1") {
         gantt.updateTask(task.id);
@@ -1416,6 +1437,7 @@ OCGantt.Tasks.prototype = {
     create: function (task) {
         task.startdate = task.start_date;
         task.enddate = task.end_date;
+        task.open = 1;
         var deferred = $.Deferred();
         var self = this;
         $.ajax({
@@ -1607,7 +1629,6 @@ OCGantt.GroupUsers.prototype = {
     OCGantt.test = function () {
     };
 
-
     // All configs should be assembled in the object OCGantt.config
     OCGantt.config = function () {
         if (OCGantt.isAdmin === true) {
@@ -1724,18 +1745,41 @@ OCGantt.GroupUsers.prototype = {
         } else if (OCGantt.isAdmin === false) {
             gantt.config.readonly = true;
         }
-        gantt.config.auto_scheduling = true;
-        gantt.config.auto_scheduling_strict = true;
+        if (OCGantt.dhtmlxversion.dhtmlxversion === "commercial"){
+            console.log("You are using the commercial version");
+            gantt.config.auto_scheduling = true;
+            gantt.config.auto_scheduling_strict = true;
+            gantt.config.undo = true;
+            gantt.config.redo = true;
+            gantt.config.undo_actions = {
+                update:"update",
+                remove:"remove", // remove an item from datastore
+                add:"add"
+            };
+            gantt.config.undo_types = {
+                link:"link",
+                task:"task"
+            };
+            gantt.config.undo_steps = 10;
+            gantt.config.multiselect = true;
+        } else if (OCGantt.dhtmlxversion.dhtmlxversion === "standard"){
+            console.log("You are using the standard version");
+        }
         gantt.config.server_utc = false;
-        gantt.config.duration_unit = "hour";//an hour
-        gantt.config.duration_step = 1;
         gantt.config.xml_date = "%Y-%m-%d %H:%i";
         gantt.config.api_date = "%Y-%m-%d %H:%i";
         gantt.config.grid_resize = true;
-        gantt.config.scale_unit = "hour";
-        gantt.config.step = 1;
         gantt.config.date_scale = "%H";
         gantt.config.date_grid = "%d.%m.%Y %H:%i";
+        gantt.config.scale_unit = "hour";
+        gantt.config.step = 1;
+        gantt.config.duration_unit = "hour";
+        gantt.config.duration_step = 1;
+        gantt.config.subscales = [
+            {unit:"month", step:1, date:"%F %Y" },
+            {unit:"day", step:1, date:"%l, %j" }
+        ];
+        gantt.config.min_column_width = 50;
         //gantt.config.show_task_cells = false;
         //gantt.config.static_background = true;
         gantt.config.smart_scales = true;
