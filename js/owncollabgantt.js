@@ -53,6 +53,158 @@ OCGantt.init = function () {
     setTimeout(OCGantt.init, 50);
 };
 
+OCGantt.handleZoom = function(tempValue, sliderValue){
+    // var width = ((sliderValue-((tempValue - 1)*5))*5) + 20;
+    //console.log(tempValue);
+    //console.log(sliderValue);
+    // var width = (-5*(sliderValue-(sliderValue-1)))+50;
+    var width = (-5*(sliderValue-((tempValue-1)*5)))+50;
+    gantt.config.min_column_width = width;
+    console.log("width: " + width);
+    switch (tempValue){
+        case 1:
+            gantt.config.date_scale = "%H";
+            gantt.config.scale_unit = "hour";
+            gantt.config.step = 1;
+            gantt.config.subscales = [
+                {unit:"month", step:1, date:"%F %Y" },
+                {unit:"day", step:1, date:"%d" }
+            ];
+            break;
+        case 2:
+            gantt.config.date_scale = "%H";
+            gantt.config.scale_unit = "hour";
+            gantt.config.step = 2;
+            gantt.config.subscales = [
+                {unit:"month", step:1, date:"%F %Y" },
+                {unit:"day", step:1, date:"%d" }
+            ];
+            break;
+        case 3:
+            gantt.config.date_scale = "%H";
+            gantt.config.scale_unit = "hour";
+            gantt.config.step = 3;
+            gantt.config.subscales = [
+                {unit:"month", step:1, date:"%F %Y" },
+                {unit:"day", step:1, date:"%d" }
+            ];
+            break;
+        case 4:
+            gantt.config.date_scale = "%H";
+            gantt.config.scale_unit = "hour";
+            gantt.config.step = 4;
+            gantt.config.subscales = [
+                {unit:"month", step:1, date:"%F %Y" },
+                {unit:"day", step:1, date:"%d" }
+            ];
+            break;
+        case 5:
+            gantt.config.date_scale = "%H";
+            gantt.config.scale_unit = "hour";
+            gantt.config.step = 6;
+            gantt.config.subscales = [
+                {unit:"month", step:1, date:"%F %Y" },
+                {unit:"day", step:1, date:"%d" }
+            ];
+            break;
+        case 6:
+            gantt.config.date_scale = "%H";
+            gantt.config.scale_unit = "hour";
+            gantt.config.step = 12;
+            gantt.config.subscales = [
+                {unit:"month", step:1, date:"%F %Y" },
+                {unit:"day", step:1, date:"%d" }
+            ];
+            break;
+        case 7:
+            gantt.config.scale_unit = "day";
+            gantt.config.date_scale = "%d";
+            gantt.config.step = 1;
+            gantt.config.subscales = [
+                {unit:"year", step:1, date:"%Y" },
+                {unit:"month", step:1, date:"%F" }
+            ];
+            break;
+        case 8:
+            gantt.config.date_scale = "%d";
+            gantt.config.scale_unit = "day";
+            gantt.config.step = 2;
+            gantt.config.subscales = [
+                {unit:"year", step:1, date:"%Y" },
+                {unit:"month", step:1, date:"%F" }
+            ];
+            break;
+        case 9:
+            gantt.config.date_scale = "%d   ";
+            gantt.config.scale_unit = "day";
+            gantt.config.step = 3;
+            gantt.config.subscales = [
+                {unit:"year", step:1, date:"%Y" },
+                {unit:"month", step:1, date:"%F" }
+            ];
+            break;
+        case 10:
+            gantt.config.date_scale = "%W";
+            gantt.config.scale_unit = "week";
+            gantt.config.step = 1;
+            gantt.config.subscales = [
+                {unit:"year", step:1, date:"%Y" },
+                {unit:"month", step:1, date:"%F" }
+            ];
+            break;
+        case 11:
+            gantt.config.scale_unit = "week";
+            gantt.config.date_scale = "%W";
+            gantt.config.step = 2;
+            gantt.config.subscales = [
+                {unit:"year", step:1, date:"%Y" },
+                {unit:"month", step:1, date:"%F" }
+            ];
+            break;
+        case 12:
+            gantt.config.scale_unit = "year";
+            gantt.config.date_scale = "%F";
+            gantt.config.step = 1;
+            gantt.config.subscales = [
+                {unit:"year", step:1, date:"%Y" }
+            ];
+            break;
+        case 13:
+            gantt.config.scale_unit = "year";
+            gantt.config.date_scale = "%F";
+            gantt.config.step = 2;
+            gantt.config.subscales = [
+                {unit:"year", step:1, date:"%Y" }
+            ];
+            break;
+        case 14:
+            gantt.config.scale_unit = "year";
+            gantt.config.date_scale = "%F";
+            gantt.config.step = 3;
+            gantt.config.subscales = [
+                {unit:"year", step:1, date:"%Y" }
+            ];
+            break;
+        case 15:
+            gantt.config.scale_unit = "year";
+            gantt.config.date_scale = "%F";
+            gantt.config.step = 4;
+            gantt.config.subscales = [
+                {unit:"year", step:1, date:"%Y" }
+            ];
+            break;
+        case 16:
+            gantt.config.scale_unit = "year";
+            gantt.config.date_scale = "%F";
+            gantt.config.step = 6;
+            gantt.config.subscales = [
+                {unit:"year", step:1, date:"%Y" }
+            ];
+            break;
+    }
+    gantt.render();
+}
+
 // Function that inits a datefield with datepicker and extra features
 OCGantt.lbox.dateInit = function (datefield, task) {
     var caretPos = 1;
@@ -1111,6 +1263,8 @@ OCGantt.lbox.getForm = function (form) {
 };
 OCGantt.lbox.save = function () {
     var task = gantt.getTask(taskId);
+    console.log("task before changes");
+    console.log(task);
     task.text = OCGantt.lbox.getForm("my-form").querySelector("[name='description']").value;
     task.progress = OCGantt.lbox.getProgress("progress", "%");
     if (task.id == "1") {
@@ -1149,9 +1303,12 @@ OCGantt.lbox.save = function () {
         }
     } else if ((task.id != "1") && (task.type != "project")) {
         var sdate = OCGantt.lbox.getForm("my-form").querySelector("[name='startdate']").value;
+        var edate = OCGantt.lbox.getForm("my-form").querySelector("[name='enddate']").value;
         var stime = OCGantt.lbox.getForm("my-form").querySelector("[name='starttime']").value;
+        var etime = OCGantt.lbox.getForm("my-form").querySelector("[name='endtime']").value;
         var smonth = sdate.substr(3, 2) - 1;
         task.start_date = new Date(sdate.substr(6, 4), smonth, sdate.substr(0, 2), stime.substr(0, 2), stime.substr(3, 2));
+        task.end_date = new Date(edate.substr(6, 4), smonth, edate.substr(0, 2), etime.substr(0, 2), etime.substr(3, 2));
         task.resources = OCGantt.lbox.getForm("my-form").querySelector("[name='resources_hidden']").value;
         var lengthLinksToRemove = OCGantt.linksToRemove.length;
         if (lengthLinksToRemove != -1) {
@@ -1199,6 +1356,8 @@ OCGantt.lbox.save = function () {
             gantt.addTask(task, task.parent);
             delete task.$new;
         } else {
+            console.log("task after changes before update");
+            console.log(task);
             gantt.updateTask(task.id);
         }
     }
@@ -1765,6 +1924,7 @@ OCGantt.GroupUsers.prototype = {
         } else if (OCGantt.dhtmlxversion.dhtmlxversion === "standard"){
             console.log("You are using the standard version");
         }
+        gantt.config.round_dnd_dates = false;
         gantt.config.server_utc = false;
         gantt.config.xml_date = "%Y-%m-%d %H:%i";
         gantt.config.api_date = "%Y-%m-%d %H:%i";
@@ -1773,11 +1933,12 @@ OCGantt.GroupUsers.prototype = {
         gantt.config.date_grid = "%d.%m.%Y %H:%i";
         gantt.config.scale_unit = "hour";
         gantt.config.step = 1;
-        gantt.config.duration_unit = "hour";
-        gantt.config.duration_step = 1;
+        gantt.config.duration_unit = "minute";
+        gantt.config.duration_step = 5;
+        gantt.config.time_step = 5;
         gantt.config.subscales = [
             {unit:"month", step:1, date:"%F %Y" },
-            {unit:"day", step:1, date:"%l, %j" }
+            {unit:"day", step:1, date:"%d" }
         ];
         gantt.config.min_column_width = 50;
         //gantt.config.show_task_cells = false;
@@ -1822,7 +1983,11 @@ OCGantt.GroupUsers.prototype = {
                         return '';
                     } else {
                         if (item.duration) {
-                            return item.duration;
+                            var returnValue = undefined;
+                            returnValue = Math.round(item.duration/288*100)/100 + " d";
+                            //Number((parseFloat(sourceValue)*100).toFixed(1));
+                            // return item.duration;
+                            return returnValue;
                         }
                         //                        var days = (Math.abs((item.start_date.getTime() - item.end_date.getTime()) / (86400000))).toFixed(1);
                         //                        return ((days % 1 == 0) ? Math.round(days) : days) + ' d';

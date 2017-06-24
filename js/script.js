@@ -38,15 +38,19 @@ var taskId = null;
             function() { $(this).removeClass("Hover");}
         );
         $("#zoomslider").slider({
-            value: 50,
-            min: 0,
-            max: 100,
+            value: 1,
+            min: 1,
+            max: 80,
             step: 1,
             change: function(){
                 // var width = $(".gantt_task_cell").css('width');
                 //width = width.substr("px", "");
-                gantt.config.min_column_width = $(this).slider("value");
-                gantt.render();
+                var sliderValue = $(this).slider("value");
+                var tempValue = Math.floor(sliderValue-((sliderValue-1)/5)*4);
+                console.log(tempValue);
+                OCGantt.handleZoom(tempValue, sliderValue);
+                //gantt.config.min_column_width = 
+                //gantt.render();
                 console.log($("#zoomslider").slider("value"));},
         });
         $("#zoom-minus").click(function(){
