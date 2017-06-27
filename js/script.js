@@ -43,15 +43,10 @@ var taskId = null;
             max: 80,
             step: 1,
             change: function(){
-                // var width = $(".gantt_task_cell").css('width');
-                //width = width.substr("px", "");
                 var sliderValue = $(this).slider("value");
                 var tempValue = Math.floor(sliderValue-((sliderValue-1)/5)*4);
-                console.log(tempValue);
                 OCGantt.handleZoom(tempValue, sliderValue);
-                //gantt.config.min_column_width = 
-                //gantt.render();
-                console.log($("#zoomslider").slider("value"));},
+                },
         });
         $("#zoom-minus").click(function(){
             var s = $("#zoomslider"), val = s.slider("value"), step = s.slider("option", "step");

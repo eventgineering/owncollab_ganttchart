@@ -78,7 +78,6 @@ OCGantt.handleZoom = function (tempValue, sliderValue) {
     // var width = (-5*(sliderValue-(sliderValue-1)))+50;
     var width = (-5 * (sliderValue - ((tempValue - 1) * 5))) + 50;
     gantt.config.min_column_width = width;
-    console.log("width: " + width);
     switch (tempValue) {
         case 1:
             gantt.config.date_scale = "%H";
