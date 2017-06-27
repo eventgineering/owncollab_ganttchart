@@ -1,6 +1,22 @@
 <?php
+
+//use OCP\App\AppManager;
+
 $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 $timepickerLangUrl = "jquery-ui-timepicker/i18n/jquery.ui.timepicker-". $lang;
+//$apps = \OC::$server->getAppManager()->getInstalledApps();
+//$test\OC::$server->getSystemConfig()->getValue('maintenance', false)
+//$userapps = \OC::$server->getAppManager()->getEnabledAppsForUser();
+$FRW = \OC::$server->getConfig()->getAppValue('owncollab_ganttchart', 'firstrunwizard', '0');
+error_log($FRW . "\n", 3, "/var/tmp/installed_apps.log");
+if ($FRW == '0'){
+		error_log("firstrunwizard to be loaded" . "\n", 3, "/var/tmp/installed_apps.log");
+		script('owncollab_ganttchart', 'firstrunwizard');
+}
+
+//error_log(print_r($apps, true) . "\n", 3, "/var/tmp/installed_apps.log");
+//error_log("appvalues: " . print_r($appvalues, true) . "\n", 3, "/var/tmp/installed_apps.log");
+
 
 $dirname = OC::$SERVERROOT.'/apps/owncollab_ganttchart/vendor/dhtmlxgantt/commercial';
 if (is_dir($dirname)){
@@ -20,7 +36,7 @@ if (is_dir($dirname)){
 	$dhtmlxversion = "standard";
 }
 
-vendor_script('owncollab_ganttchart', 'html2canvas/html2canvas');
+//vendor_script('owncollab_ganttchart', 'html2canvas/html2canvas');
 vendor_script('owncollab_ganttchart', $ganttLangUrl);
 vendor_script('owncollab_ganttchart', 'jquery-ui-timepicker/jquery.ui.timepicker');
 vendor_script('owncollab_ganttchart', $timepickerLangUrl);

@@ -107,6 +107,8 @@ var taskId = null;
             OCGantt.usergroupsLoaded = true;
         });
         OCGantt.init();
+        OCGantt.testRedo();
+        OCGantt.testUndo();
         $("body").append(OCGantt.lbox.HTML.html);
         if (typeof monthNames != 'undefined') {
             // min date should always be the next day

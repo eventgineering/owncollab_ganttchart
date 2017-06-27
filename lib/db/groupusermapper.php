@@ -50,14 +50,14 @@ class GroupUserMapper extends Mapper {
                 $user['displayname'] = $user['uid'];
             }
             if (in_array($user['uid'], array_column($groups, 'uid'))){
-                error_log("user " . $user['uid'] . " is in at least 1 group " . "\n", 3, "/var/tmp/meine-fehler.log");
+                //error_log("user " . $user['uid'] . " is in at least 1 group " . "\n", 3, "/var/tmp/meine-fehler.log");
             foreach ($groups as $group){
                 if (!in_array($group['gid'], array_column($groupusers, 'gid'))){
                     $groupusers[] = array('gid' => $group['gid']);
                 }
                 if ($user['uid'] == $group['uid']) {
                     $index = array_search($group['gid'], array_column($groupusers, 'gid'));
-                    /* $subarray = $groupusers[$index]['users']; */
+                    /*$subarray = $groupusers[$index]['users'];*/
                     if (!in_array($user['uid'], array_column($subarray, 'uid'))){
                         $index = array_search($group['gid'], array_column($groupusers, 'gid'));
                         $groupusers[$index]['users'][] = array(
@@ -67,7 +67,7 @@ class GroupUserMapper extends Mapper {
                 }
             }}
             if (!in_array($user['uid'], array_column($groups, 'uid'))){
-                error_log("user " . $user['uid'] . " has no group " . "\n", 3, "/var/tmp/meine-fehler.log");
+                //error_log("user " . $user['uid'] . " has no group " . "\n", 3, "/var/tmp/meine-fehler.log");
                 $groupusers[] = array('gid' => '_ungrouped');
                 $index = array_search('_ungrouped', array_column($groupusers, 'gid'));
                 $groupusers[$index]['users'][] = array(

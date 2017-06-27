@@ -31,6 +31,7 @@
 			},
             "undo": function undo(){
 				if (OCGantt.dhtmlxversion.dhtmlxversion === "commercial"){
+					var stack = gantt.getUndoStack();
                 	gantt.undo();
 				} else if (OCGantt.dhtmlxversion.dhtmlxversion === "standard")
 				{

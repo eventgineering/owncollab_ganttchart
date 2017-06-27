@@ -37,7 +37,8 @@
 		if (i == scaleConfigs.length) {
 			i--;
 		}
-
+		console.log(scaleConfigs[i]);
+		console.log(project);
 		applyConfig(scaleConfigs[i], project);
 		gantt.render();
 	}

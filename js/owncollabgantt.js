@@ -23,8 +23,8 @@ OCGantt.tempDistance = 0;
 var target = undefined;
 
 OCGantt.splashScreenIcon = OC.generateUrl('/apps/owncollab_ganttchart/img/loading-dark.gif').replace("index.php/", "");
-OCGantt.splashScreen = '<div id="OCGantt-cover" class="gantt_cal_cover" style="z-index: 1500;"></div>' +
-    '<div id="OCGantt-loader" class="icon-loading-dark" style="display: block; top: calc(50% - 8px); left: calc(50% - 8px); filter: contrast(0%) brightness(0%); margin: auto; z-index:1501; position: absolute; transform: translate(-50%, -50%)">' +
+OCGantt.splashScreen = '<div id="OCGantt-cover" class="gantt_cal_cover" style="z-index: 900;"></div>' +
+    '<div id="OCGantt-loader" class="icon-loading-dark" style="display: block; top: calc(50% - 8px); left: calc(50% - 8px); filter: contrast(0%) brightness(0%); margin: auto; z-index:901; position: absolute; transform: translate(-50%, -50%)">' +
     '<br><br><br>We are preparing the app for your best experience . . .</div>';
 
 
@@ -53,22 +53,40 @@ OCGantt.init = function () {
     setTimeout(OCGantt.init, 50);
 };
 
-OCGantt.handleZoom = function(tempValue, sliderValue){
+OCGantt.testRedo = function() {
+    if (gantt._undo._redoStack.length > 0){
+        console.log("redo activated");
+        $(".fa-repeat").removeClass('not_available');
+        return;
+    }
+    setTimeout(OCGantt.testRedo, 50);
+};
+
+OCGantt.testUndo = function() {
+    if (gantt._undo._undoStack.length > 0){
+        console.log("undo activated");
+        $(".fa-undo").removeClass('not_available');
+        return;
+    }
+    setTimeout(OCGantt.testUndo, 50);
+};
+
+OCGantt.handleZoom = function (tempValue, sliderValue) {
     // var width = ((sliderValue-((tempValue - 1)*5))*5) + 20;
     //console.log(tempValue);
     //console.log(sliderValue);
     // var width = (-5*(sliderValue-(sliderValue-1)))+50;
-    var width = (-5*(sliderValue-((tempValue-1)*5)))+50;
+    var width = (-5 * (sliderValue - ((tempValue - 1) * 5))) + 50;
     gantt.config.min_column_width = width;
     console.log("width: " + width);
-    switch (tempValue){
+    switch (tempValue) {
         case 1:
             gantt.config.date_scale = "%H";
             gantt.config.scale_unit = "hour";
             gantt.config.step = 1;
             gantt.config.subscales = [
-                {unit:"month", step:1, date:"%F %Y" },
-                {unit:"day", step:1, date:"%d" }
+                { unit: "month", step: 1, date: "%F %Y" },
+                { unit: "day", step: 1, date: "%d" }
             ];
             break;
         case 2:
@@ -76,8 +94,8 @@ OCGantt.handleZoom = function(tempValue, sliderValue){
             gantt.config.scale_unit = "hour";
             gantt.config.step = 2;
             gantt.config.subscales = [
-                {unit:"month", step:1, date:"%F %Y" },
-                {unit:"day", step:1, date:"%d" }
+                { unit: "month", step: 1, date: "%F %Y" },
+                { unit: "day", step: 1, date: "%d" }
             ];
             break;
         case 3:
@@ -85,8 +103,8 @@ OCGantt.handleZoom = function(tempValue, sliderValue){
             gantt.config.scale_unit = "hour";
             gantt.config.step = 3;
             gantt.config.subscales = [
-                {unit:"month", step:1, date:"%F %Y" },
-                {unit:"day", step:1, date:"%d" }
+                { unit: "month", step: 1, date: "%F %Y" },
+                { unit: "day", step: 1, date: "%d" }
             ];
             break;
         case 4:
@@ -94,8 +112,8 @@ OCGantt.handleZoom = function(tempValue, sliderValue){
             gantt.config.scale_unit = "hour";
             gantt.config.step = 4;
             gantt.config.subscales = [
-                {unit:"month", step:1, date:"%F %Y" },
-                {unit:"day", step:1, date:"%d" }
+                { unit: "month", step: 1, date: "%F %Y" },
+                { unit: "day", step: 1, date: "%d" }
             ];
             break;
         case 5:
@@ -103,8 +121,8 @@ OCGantt.handleZoom = function(tempValue, sliderValue){
             gantt.config.scale_unit = "hour";
             gantt.config.step = 6;
             gantt.config.subscales = [
-                {unit:"month", step:1, date:"%F %Y" },
-                {unit:"day", step:1, date:"%d" }
+                { unit: "month", step: 1, date: "%F %Y" },
+                { unit: "day", step: 1, date: "%d" }
             ];
             break;
         case 6:
@@ -112,8 +130,8 @@ OCGantt.handleZoom = function(tempValue, sliderValue){
             gantt.config.scale_unit = "hour";
             gantt.config.step = 12;
             gantt.config.subscales = [
-                {unit:"month", step:1, date:"%F %Y" },
-                {unit:"day", step:1, date:"%d" }
+                { unit: "month", step: 1, date: "%F %Y" },
+                { unit: "day", step: 1, date: "%d" }
             ];
             break;
         case 7:
@@ -121,8 +139,8 @@ OCGantt.handleZoom = function(tempValue, sliderValue){
             gantt.config.date_scale = "%d";
             gantt.config.step = 1;
             gantt.config.subscales = [
-                {unit:"year", step:1, date:"%Y" },
-                {unit:"month", step:1, date:"%F" }
+                { unit: "year", step: 1, date: "%Y" },
+                { unit: "month", step: 1, date: "%F" }
             ];
             break;
         case 8:
@@ -130,8 +148,8 @@ OCGantt.handleZoom = function(tempValue, sliderValue){
             gantt.config.scale_unit = "day";
             gantt.config.step = 2;
             gantt.config.subscales = [
-                {unit:"year", step:1, date:"%Y" },
-                {unit:"month", step:1, date:"%F" }
+                { unit: "year", step: 1, date: "%Y" },
+                { unit: "month", step: 1, date: "%F" }
             ];
             break;
         case 9:
@@ -139,8 +157,8 @@ OCGantt.handleZoom = function(tempValue, sliderValue){
             gantt.config.scale_unit = "day";
             gantt.config.step = 3;
             gantt.config.subscales = [
-                {unit:"year", step:1, date:"%Y" },
-                {unit:"month", step:1, date:"%F" }
+                { unit: "year", step: 1, date: "%Y" },
+                { unit: "month", step: 1, date: "%F" }
             ];
             break;
         case 10:
@@ -148,8 +166,8 @@ OCGantt.handleZoom = function(tempValue, sliderValue){
             gantt.config.scale_unit = "week";
             gantt.config.step = 1;
             gantt.config.subscales = [
-                {unit:"year", step:1, date:"%Y" },
-                {unit:"month", step:1, date:"%F" }
+                { unit: "year", step: 1, date: "%Y" },
+                { unit: "month", step: 1, date: "%F" }
             ];
             break;
         case 11:
@@ -157,8 +175,8 @@ OCGantt.handleZoom = function(tempValue, sliderValue){
             gantt.config.date_scale = "%W";
             gantt.config.step = 2;
             gantt.config.subscales = [
-                {unit:"year", step:1, date:"%Y" },
-                {unit:"month", step:1, date:"%F" }
+                { unit: "year", step: 1, date: "%Y" },
+                { unit: "month", step: 1, date: "%F" }
             ];
             break;
         case 12:
@@ -166,7 +184,7 @@ OCGantt.handleZoom = function(tempValue, sliderValue){
             gantt.config.date_scale = "%F";
             gantt.config.step = 1;
             gantt.config.subscales = [
-                {unit:"year", step:1, date:"%Y" }
+                { unit: "year", step: 1, date: "%Y" }
             ];
             break;
         case 13:
@@ -174,7 +192,7 @@ OCGantt.handleZoom = function(tempValue, sliderValue){
             gantt.config.date_scale = "%F";
             gantt.config.step = 2;
             gantt.config.subscales = [
-                {unit:"year", step:1, date:"%Y" }
+                { unit: "year", step: 1, date: "%Y" }
             ];
             break;
         case 14:
@@ -182,7 +200,7 @@ OCGantt.handleZoom = function(tempValue, sliderValue){
             gantt.config.date_scale = "%F";
             gantt.config.step = 3;
             gantt.config.subscales = [
-                {unit:"year", step:1, date:"%Y" }
+                { unit: "year", step: 1, date: "%Y" }
             ];
             break;
         case 15:
@@ -190,7 +208,7 @@ OCGantt.handleZoom = function(tempValue, sliderValue){
             gantt.config.date_scale = "%F";
             gantt.config.step = 4;
             gantt.config.subscales = [
-                {unit:"year", step:1, date:"%Y" }
+                { unit: "year", step: 1, date: "%Y" }
             ];
             break;
         case 16:
@@ -198,7 +216,7 @@ OCGantt.handleZoom = function(tempValue, sliderValue){
             gantt.config.date_scale = "%F";
             gantt.config.step = 6;
             gantt.config.subscales = [
-                {unit:"year", step:1, date:"%Y" }
+                { unit: "year", step: 1, date: "%Y" }
             ];
             break;
     }
@@ -206,10 +224,18 @@ OCGantt.handleZoom = function(tempValue, sliderValue){
 }
 
 // Function that inits a datefield with datepicker and extra features
-OCGantt.lbox.dateInit = function (datefield, task) {
+OCGantt.lbox.dateInit = function (datefield, task, datefield2) {
     var caretPos = 1;
     $(datefield).datepicker({ dateFormat: "dd.mm.yy", minDate: null });
     if (datefield.id == 'startdate') {
+        $(datefield).datepicker('setDate', task.start_date);
+        $(datefield).datepicker('option', {
+            onClose: function(){
+                $(datefield2).datepicker('setDate', new Date(task.end_date.getTime() - (task.start_date.getTime() - $(datefield).datepicker('getDate').getTime())));
+            }
+        });
+    }
+    if (datefield.id == 'projectstartdate') {
         $(datefield).datepicker('setDate', task.start_date);
     }
     if (datefield.id == 'enddate') {
@@ -300,6 +326,19 @@ OCGantt.lbox.timeInit = function (timefield, task, date) {
     $(timefield).blur(function () {
         caretPos = 1;
     });
+}
+
+OCGantt.lbox.updateEndDateField = function (source, target) {
+    console.log("update called");
+    var d = $(source).datepicker('getDate');
+    /*var sdate = OCGantt.lbox.getForm("my-form").querySelector("[name='startdate']").value;
+    var stime = OCGantt.lbox.getForm("my-form").querySelector("[name='starttime']").value;
+    var smonth = sdate.substr(3, 2) - 1;
+    var enddate = new Date(sdate.substr(6, 4), smonth, sdate.substr(0, 2), stime.substr(0, 2), stime.substr(3, 2));
+    console.log(enddate);*/
+    console.log(d);
+    $(target).datepicker('setDate', d);
+
 }
 
 OCGantt.lbox.addResources = function (taskResources, resource) {
@@ -484,7 +523,7 @@ OCGantt.lbox.precheckLinks = function (links, id) {
     for (i = 0; i < links.length; i++) {
         if (links[i].target == id) {
             console.log(links[i].source);
-            if (Number.isInteger(links[i].source) == false){
+            if (Number.isInteger(links[i].source) == false) {
                 links[i].source = links[i].source.toString();
             }
             switch (links[i].type) {
@@ -647,10 +686,10 @@ OCGantt.lbox.handleBufferValue = function (id, sucessor, action) {
             case "enter":
                 var linkIndex = OCGantt.lbox.findLinkId(predecessor, sucessor);
                 if (temp == "-") {
-                    OCGantt.tempLinks[linkIndex].lag = ((days*24)+hours)*(-1);
+                    OCGantt.tempLinks[linkIndex].lag = ((days * 24) + hours) * (-1);
                 } else {
                     console.log("convert started")
-                    OCGantt.tempLinks[linkIndex].lag = ((days*24)+hours);
+                    OCGantt.tempLinks[linkIndex].lag = ((days * 24) + hours);
                 }
                 OCGantt.lbox.convertLagsToDay([OCGantt.tempLinks[linkIndex]], sucessor);
                 OCGantt.tempLinks[linkIndex].$changed = true;
@@ -696,48 +735,48 @@ OCGantt.lbox.handleMilestone = function (tempTask) {
     return tempTask;
 }
 
-OCGantt.lbox.setProgress = function (sourceValue, target, sign){
+OCGantt.lbox.setProgress = function (sourceValue, target, sign) {
     var progress = 0.0
-    if ((sourceValue != null) && (sourceValue != "0") && (sourceValue != 0)){
-        progress = Number((parseFloat(sourceValue)*100).toFixed(1));
+    if ((sourceValue != null) && (sourceValue != "0") && (sourceValue != 0)) {
+        progress = Number((parseFloat(sourceValue) * 100).toFixed(1));
     }
     progress = progress.toString().replace(".", ",");
-    $('#'+target).prop('value', progress + " " + sign);
+    $('#' + target).prop('value', progress + " " + sign);
 }
 
-OCGantt.lbox.handleMouseMover = function (e){
+OCGantt.lbox.handleMouseMover = function (e) {
     var target = e.data.source;
-    var value = $('#'+target).prop('value');
+    var value = $('#' + target).prop('value');
     var progress = Number(value.replace(" ", "").replace("%", "").replace(",", "."));
     var distance = e.data.y - e.pageY;
     var difference = 0;
-    if ((distance > 0) && (distance > OCGantt.tempDistance)){
+    if ((distance > 0) && (distance > OCGantt.tempDistance)) {
         difference = distance - OCGantt.tempDistance;
-        progress += (difference/2);
-    } else if ((distance > 0) && (distance < OCGantt.tempDistance)){
+        progress += (difference / 2);
+    } else if ((distance > 0) && (distance < OCGantt.tempDistance)) {
         difference = OCGantt.tempDistance - distance;
-        progress -= (difference/2);
-    } else if ((distance < 0) && (distance < OCGantt.tempDistance)){
+        progress -= (difference / 2);
+    } else if ((distance < 0) && (distance < OCGantt.tempDistance)) {
         difference = distance - OCGantt.tempDistance;
-        progress -= (difference/2)*(-1);
-    } else if ((distance < 0) && (distance > OCGantt.tempDistance)){
+        progress -= (difference / 2) * (-1);
+    } else if ((distance < 0) && (distance > OCGantt.tempDistance)) {
         difference = OCGantt.tempDistance - distance;
-        progress += (difference/2)*(-1);
+        progress += (difference / 2) * (-1);
     }
-    if (progress < 0){
+    if (progress < 0) {
         progress = 0;
-    } else if (progress > 100){
+    } else if (progress > 100) {
         progress = 100;
     }
     progress = progress.toFixed(1).toString().replace(".", ",");
-    $('#'+target).prop('value', progress + " " + "%");
+    $('#' + target).prop('value', progress + " " + "%");
     OCGantt.tempDistance = distance;
 }
 
-OCGantt.lbox.getProgress = function (source, sign){
-    var value = $('#'+source).prop('value');
+OCGantt.lbox.getProgress = function (source, sign) {
+    var value = $('#' + source).prop('value');
     var progress = value.replace(" ", "").replace(sign, "").replace(",", ".");
-    progress = (Number(parseFloat(progress).toFixed(6)))/100;
+    progress = (Number(parseFloat(progress).toFixed(6))) / 100;
     return progress;
 }
 
@@ -867,7 +906,7 @@ OCGantt.clickGridButton = function (id, action) {
     }
 }
 
-OCGantt.getBottomById = function (element){
+OCGantt.getBottomById = function (element) {
     var $el = $("#" + element);
     var bottom = $el.position().top + $el.offset().top + $el.outerHeight();
     return bottom;
@@ -898,10 +937,10 @@ gantt.showLightbox = function (id) {
         var form = OCGantt.lbox.getForm("my-form");
         var starttmp = task.start_date;
         var startdateField = form.querySelector("[name='startdate']");
-        OCGantt.lbox.dateInit(startdateField, task);
+        var enddateField = form.querySelector("[name='enddate']");
+        OCGantt.lbox.dateInit(startdateField, task, enddateField);
         var starttimeField = form.querySelector("[name='starttime']");
         OCGantt.lbox.timeInit(starttimeField, task, 'start_date');
-        var enddateField = form.querySelector("[name='enddate']");
         OCGantt.lbox.dateInit(enddateField, task, 'end_date');
         var endtimeField = form.querySelector("[name='endtime']");
         OCGantt.lbox.timeInit(endtimeField, task, 'end_date');
@@ -1156,8 +1195,8 @@ gantt.showLightbox = function (id) {
                     }
                     var dPos = value.indexOf("d") + 1;
                     this.setSelectionRange(0, dPos - 1);
-                    $("#" + id).keydown({sucessor: tempTask.id}, OCGantt.lbox.handleKeyEvents);
-                    $("#" + id).keyup({sucessor: tempTask.id}, OCGantt.lbox.handleKeyUpEvents);
+                    $("#" + id).keydown({ sucessor: tempTask.id }, OCGantt.lbox.handleKeyEvents);
+                    $("#" + id).keyup({ sucessor: tempTask.id }, OCGantt.lbox.handleKeyUpEvents);
                 } else {
                     $("#" + id).blur();
                     alert("set Linktype first!");
@@ -1210,18 +1249,18 @@ gantt.showLightbox = function (id) {
         input.focus();
         input.value = task.text;
         OCGantt.lbox.setProgress(OCGantt.tempTask.progress, "progress", "%");
-            $("#changeprogress").mousedown(function(event){
-                console.log("y: " + event.pageY);
-                $(document).disableSelection();
-                $(document).mousemove({y: event.pageY, source: "progress"}, OCGantt.lbox.handleMouseMover);
-                $(document).mouseup(function(){
-                    OCGantt.tempDistance = 0;
-                    $(document).unbind("mousemove");
-                    $(document).unbind("mouseup");
-                    $(document).enableSelection();
-                })
-            });
-        $("#changeprogress").blur(function(){
+        $("#changeprogress").mousedown(function (event) {
+            console.log("y: " + event.pageY);
+            $(document).disableSelection();
+            $(document).mousemove({ y: event.pageY, source: "progress" }, OCGantt.lbox.handleMouseMover);
+            $(document).mouseup(function () {
+                OCGantt.tempDistance = 0;
+                $(document).unbind("mousemove");
+                $(document).unbind("mouseup");
+                $(document).enableSelection();
+            })
+        });
+        $("#changeprogress").blur(function () {
             $(this).unbind("mousedown");
             $(this).unbind("mouseup");
         });
@@ -1263,8 +1302,9 @@ OCGantt.lbox.getForm = function (form) {
 };
 OCGantt.lbox.save = function () {
     var task = gantt.getTask(taskId);
-    console.log("task before changes");
-    console.log(task);
+    var tempTask = JSON.parse(JSON.stringify(task));
+    tempTask.start_date = new Date(tempTask.start_date);
+    tempTask.end_date = new Date(tempTask.end_date);
     task.text = OCGantt.lbox.getForm("my-form").querySelector("[name='description']").value;
     task.progress = OCGantt.lbox.getProgress("progress", "%");
     if (task.id == "1") {
@@ -1291,7 +1331,7 @@ OCGantt.lbox.save = function () {
                     link.active = false;
                     delete link.$new;
                 } else {
-                    
+
                 }
             });
         }
@@ -1329,7 +1369,7 @@ OCGantt.lbox.save = function () {
                     link.active = false;
                     delete link.$new;
                 } else {
-                    if (link.$changed){
+                    if (link.$changed) {
                         console.log("update");
                         console.log(link);
                         console.log(arr.links);
@@ -1356,14 +1396,15 @@ OCGantt.lbox.save = function () {
             gantt.addTask(task, task.parent);
             delete task.$new;
         } else {
-            console.log("task after changes before update");
-            console.log(task);
             gantt.updateTask(task.id);
+            var index = gantt._undo._undoStack.length - 1;
+            gantt._undo._undoStack[index].commands[0].oldValue = tempTask;
+
         }
     }
     OCGantt.lbox.getForm("my-form").querySelector("[name='resources']").innerHTML = "";
     gantt.hideLightbox();
-    //gantt.render();
+    gantt.render();
 };
 
 OCGantt.lbox.save.resources = function (resources) {
@@ -1791,18 +1832,23 @@ OCGantt.GroupUsers.prototype = {
     // All configs should be assembled in the object OCGantt.config
     OCGantt.config = function () {
         if (OCGantt.isAdmin === true) {
+            gantt.templates.task_class = gantt.templates.grid_row_class = gantt.templates.task_row_class = function (start, end, task) {
+                if (gantt.isSelectedTask(task.id))
+                return "gantt_selected";
+            };
             gantt.attachEvent("onAfterTaskUpdate", function (id, move, e) {
                 arr = gantt.serialize();
                 gantt.refreshTask(id);
                 var task = gantt.getTask(id);
                 var index = OCGantt.getIndexOfProperty(arr.data, 'id', id);
+                arr.data[index].open = 1;
                 OCGantt.tasks._tasks[index] = arr.data[index];
                 OCGantt.tasks._activeTask = OCGantt.tasks._tasks[index];
                 OCGantt.tasks.updateActive();
                 gantt.render();
             });
-            gantt.attachEvent("onAfterLinkUpdate", function (id, item){
-                arr= gantt.serialize();
+            gantt.attachEvent("onAfterLinkUpdate", function (id, item) {
+                arr = gantt.serialize();
                 gantt.refreshLink(id);
                 var link = gantt.getLink(id);
                 var index = OCGantt.getIndexOfProperty(arr.links, 'id', id);
@@ -1821,6 +1867,7 @@ OCGantt.GroupUsers.prototype = {
                 arr.data[index].parent = item.parent;
                 arr.data[index].text = item.text;
                 arr.data[index].duration = item.duration;
+                arr.data[index].open = "1";
                 OCGantt.tasks.create(arr.data[index]).done(function () {
                     gantt.changeTaskId(item.id, arr.data[index].id);
                 });
@@ -1831,6 +1878,27 @@ OCGantt.GroupUsers.prototype = {
                         task.type = 'project';
                         gantt.updateTask(item.parent);
                     }
+                }
+                gantt.render();
+            });
+            gantt.attachEvent("onAfterRedo", function (){
+                if (gantt._undo._redoStack.length === 0){
+                    $(".fa-repeat").addClass('not_available');
+                    OCGantt.testRedo();
+                }
+                if (gantt._undo._undoStack.length === 0){
+                    $(".fa-undo").addClass('not_available');
+                    OCGantt.testUndo();
+                }
+            });
+            gantt.attachEvent("onAfterUndo", function (){
+                if (gantt._undo._redoStack.length === 0){
+                    $(".fa-repeat").addClass('not_available');
+                    OCGantt.testRedo();
+                }
+                if (gantt._undo._undoStack.length === 0){
+                    $(".fa-undo").addClass('not_available');
+                    OCGantt.testUndo();
                 }
             });
             gantt.attachEvent("onBeforeTaskDelete", function (id, item) {
@@ -1882,7 +1950,7 @@ OCGantt.GroupUsers.prototype = {
                 arr.links[index].source = item.source;
                 arr.links[index].target = item.target;
                 arr.links[index].type = item.type;
-                if (!item.lag){
+                if (!item.lag) {
                     arr.links[index].lag = 0;
                 }
                 OCGantt.links.create(arr.links[index]).done(function () {
@@ -1904,24 +1972,24 @@ OCGantt.GroupUsers.prototype = {
         } else if (OCGantt.isAdmin === false) {
             gantt.config.readonly = true;
         }
-        if (OCGantt.dhtmlxversion.dhtmlxversion === "commercial"){
+        if (OCGantt.dhtmlxversion.dhtmlxversion === "commercial") {
             console.log("You are using the commercial version");
             gantt.config.auto_scheduling = true;
             gantt.config.auto_scheduling_strict = true;
             gantt.config.undo = true;
             gantt.config.redo = true;
             gantt.config.undo_actions = {
-                update:"update",
-                remove:"remove", // remove an item from datastore
-                add:"add"
+                update: "update",
+                remove: "remove", // remove an item from datastore
+                add: "add"
             };
             gantt.config.undo_types = {
-                link:"link",
-                task:"task"
+                link: "link",
+                task: "task"
             };
             gantt.config.undo_steps = 10;
             gantt.config.multiselect = true;
-        } else if (OCGantt.dhtmlxversion.dhtmlxversion === "standard"){
+        } else if (OCGantt.dhtmlxversion.dhtmlxversion === "standard") {
             console.log("You are using the standard version");
         }
         gantt.config.round_dnd_dates = false;
@@ -1937,13 +2005,13 @@ OCGantt.GroupUsers.prototype = {
         gantt.config.duration_step = 5;
         gantt.config.time_step = 5;
         gantt.config.subscales = [
-            {unit:"month", step:1, date:"%F %Y" },
-            {unit:"day", step:1, date:"%d" }
+            { unit: "month", step: 1, date: "%F %Y" },
+            { unit: "day", step: 1, date: "%d" }
         ];
         gantt.config.min_column_width = 50;
         //gantt.config.show_task_cells = false;
         //gantt.config.static_background = true;
-        gantt.config.smart_scales = true;
+        gantt.config.smart_scales = false;
         // Styling
         gantt.config.row_height = 22;
         gantt.config.columns = [
@@ -1984,7 +2052,7 @@ OCGantt.GroupUsers.prototype = {
                     } else {
                         if (item.duration) {
                             var returnValue = undefined;
-                            returnValue = Math.round(item.duration/288*100)/100 + " d";
+                            returnValue = Math.round(item.duration / 288 * 100) / 100 + " d";
                             //Number((parseFloat(sourceValue)*100).toFixed(1));
                             // return item.duration;
                             return returnValue;
@@ -2043,7 +2111,7 @@ OCGantt.GroupUsers.prototype = {
 
             {
                 name: "buttons", label: '', width: OCGantt.columnWidth.buttons, resize: false, template: function (item) {
-                    return ('<i class="tooltip fa gantt_button_grid gantt_grid_edit fa-pencil" onclick="OCGantt.clickGridButton(' + item.id + ', \'edit\')"><span class="tooltiptext tooltip-left">Edit</span></i>' +
+                    return ('<i class="fa gantt_button_grid gantt_grid_edit fa-pencil" onclick="OCGantt.clickGridButton(' + item.id + ', \'edit\')"></i>' +
                         '<i class="fa gantt_button_grid gantt_grid_add fa-plus" onclick="OCGantt.clickGridButton(' + item.id + ', \'add\')"></i>' +
                         '<i class="fa gantt_button_grid gantt_grid_delete fa-times" onclick="OCGantt.clickGridButton(' + item.id + ', \'delete\')"></i>');
                 }

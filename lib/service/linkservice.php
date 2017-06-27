@@ -46,7 +46,7 @@ class LinkService {
 
     public function create($source, $target, $type) {
         $link = new Link();
-        error_log($link . "\n", 3, "/var/tmp/meine-fehler.log");
+        //error_log($link . "\n", 3, "/var/tmp/meine-fehler.log");
         $link->setSource($source);
         $link->setTarget($target);
         $link->setType($type);
