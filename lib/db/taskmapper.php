@@ -77,7 +77,7 @@ class TaskMapper extends Mapper {
         $replace = '';
         $screenorder = explode(",", str_replace($search, $replace, \OC::$server->getConfig()->getAppValue('owncollab_ganttchart', 'screenorder')));
         $tasks = $this->findEntities($sql);
-        if ($tasks){
+        if ($tasks && count($screenorder) > 0){
             foreach ($screenorder as $key=>$value){
                 $value = intval($value);
                 $index = TaskMapper::searchIndex($value, $tasks);
@@ -106,6 +106,8 @@ class TaskMapper extends Mapper {
                     $tasks[$key]->color = 'rgb(75, 113, 164)';
                 }
             }
+        } else {
+            $newarray = $tasks;
         }
         //return $this->findEntities($sql);
         //error_log(print_r($newarray, true) . "\n", 3, "/var/tmp/tasks.log");
