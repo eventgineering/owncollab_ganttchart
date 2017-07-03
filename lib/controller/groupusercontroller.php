@@ -31,12 +31,15 @@ class GroupUserController extends Controller {
      * @NoAdminRequired
      */
     public function json() {
+        //error_log(print_r($this, true) . "\n", 3, "/var/tmp/thisgroupusercontrollerjson.log");
 	return new JSONResponse($this->service->findAll());
     }
 
     /**
+    * @NoAdminRequired
      */
     public function index() {
+    //error_log(print_r($this, true) . "\n", 3, "/var/tmp/thisgroupusercontrollerindex.log");
 	return new DataResponse($this->service->findAll());
     }
 

@@ -7,7 +7,7 @@
 $appName = 'owncollab_ganttchart';
 ?>
 
-<div id="sidebar-left" class="sidebar-left">
+<div id="sidebar-save" class="sidebar-left">
     <div id="sidebar-export">
         <div class="tbl">
             <div class="tbl_cell export_gantt sidebar_header export_excel">

@@ -10,9 +10,19 @@ class GroupUserMapper extends Mapper {
         parent::__construct($db, 'group_user', '\OCA\OwnCollab_GanttChart\Db\GroupUser');
     }
 
+    public function findAllUsers() {
+        $sqlusers = 'SELECT uid FROM *PREFIX*users';
+        return $this->db->executeQuery($sqlusers)->fetchAll();
+    }
+
+    public function findAllGroups() {
+        $sqlgroups = 'SELECT gid FROM *PREFIX*groups';
+        return $this->db->executeQuery($sqlgroups)->fetchAll();
+    }
+
     public function findAll() {
-        $sqlgroups = 'SELECT * FROM *PREFIX*group_user';
-        $sqlusers = 'SELECT * FROM *PREFIX*users';
+        $sqlgroups = 'SELECT gid, uid FROM *PREFIX*group_user';
+        $sqlusers = 'SELECT uid, displayname FROM *PREFIX*users';
         $groups = $this->db->executeQuery($sqlgroups)->fetchAll();
         $users = $this->db->executeQuery($sqlusers)->fetchAll();
         $groupusers = array();

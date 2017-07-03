@@ -20,6 +20,10 @@ OCGantt.tempLinks = [];
 OCGantt.linksToRemove = [];
 OCGantt.caretPos;
 OCGantt.tempDistance = 0;
+OCGantt.sortDirection = false;
+OCGantt.screenOrder = [];
+OCGantt.tempChildren = [];
+OCGantt.tempParent;
 var target = undefined;
 
 OCGantt.splashScreenIcon = OC.generateUrl('/apps/owncollab_ganttchart/img/loading-dark.gif').replace("index.php/", "");
@@ -27,21 +31,46 @@ OCGantt.splashScreen = '<div id="OCGantt-cover" class="gantt_cal_cover" style="z
     '<div id="OCGantt-loader" class="icon-loading-dark" style="display: block; top: calc(50% - 8px); left: calc(50% - 8px); filter: contrast(0%) brightness(0%); margin: auto; z-index:901; position: absolute; transform: translate(-50%, -50%)">' +
     '<br><br><br>We are preparing the app for your best experience . . .</div>';
 
+Array.prototype.move = function(from,to){
+  this.splice(to,0,this.splice(from,1)[0]);
+  return this;
+};
 
 // Definition of width of the columns in the table
 OCGantt.columnWidth = {
-    id: 30,
+    id: 50,
     name: 150,
     start: 120,
     end: 120,
-    duration: 50,
+    duration: 80,
     resources: 100,
     buttons: 75
+};
+
+OCGantt.columnNames = {
+    id: "'id'",
+    name: "'text'",
+    start: "'start_date'",
+    end: "'end_date'",
+    duration: "'duration'",
+    resources: "'resources'"
+}
+
+OCGantt.columnLabel = {
+    id: '<div style="width: 30px; display: inline-block; text-align: left; padding-left:2px;">ID</div><div style="width: 20px; display: inline-block;"><i class="fa fa-sort" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.id +')"></i></div>',
+    name: '<div style="width: 130px; display: inline-block; text-align: left; padding-left:2px;">Taskname</div><div style="width: 20px; display: inline-block;"><i class="fa fa-sort" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.name +')"></i></div>',
+    start: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">Start</div><div style="width: 20px; display: inline-block;"><i class="fa fa-sort" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.start +')"></i></div>',
+    end: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">End</div><div style="width: 20px; display: inline-block;"><i class="fa fa-sort" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.end +')"></i></div>',
+    duration: '<div style="width: 60px; display: inline-block; text-align: left; padding-left:2px;">Duration</div><div style="width: 20px; display: inline-block;"><i class="fa fa-sort" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.duration +')"></i></div>',
+    resources: '<div style="width: 80px; display: inline-block; text-align: left; padding-left:2px;">Resources</div><div style="width: 20px; display: inline-block;"><i class="fa fa-sort" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.resources +')"></i></div>',
 };
 
 // Function that initializes the gantt chart
 OCGantt.init = function () {
     if (OCGantt.linksLoaded && OCGantt.tasksLoaded && OCGantt.usergroupsLoaded) {
+        for (i=0; i<arr.data.length; i++) {
+            OCGantt.screenOrder[i] = JSON.stringify(arr.data[i].id);
+        }
         gantt.parse(arr);
         /*html2canvas([document.getElementById('content-wrapper')], {
             onrendered: function (canvas) {
@@ -53,8 +82,172 @@ OCGantt.init = function () {
     setTimeout(OCGantt.init, 50);
 };
 
-OCGantt.testRedo = function() {
-    if (gantt._undo._redoStack.length > 0){
+OCGantt.testUserColors = function(length){
+    if (OCGantt.userColors.length === length){
+        if (OCGantt.usergroupsLoaded){
+            OCGantt.renderUsertable();
+            return;
+        }
+        setTimeout(OCGantt.testUserColors, 50);
+    }
+};
+
+OCGantt.renderUsertable = function(){
+    console.log("color rendering started");
+    var fragment = document.createDocumentFragment();
+    var groups = OCGantt.groupusers._groupusers;
+    var deprecatedUsers = ['collab_user'];
+    var _table = document.createElement('table');
+    _table.innerHTML += '<thead><tr><th width="70%"><b>Group/ user name</b></th><th width="30%"><b>Color</b></th></tr></thead>';
+    _table.innerHTML += '<tbody></tbody>';
+    _table.id = 'userlist';
+    _table.width = '100%';
+    var _tableRef = _table.getElementsByTagName('tbody')[0];
+    groups.forEach(function(item, index){
+        var _lineGroup = document.createElement('div'),
+            _lineUsers = document.createElement('div'),
+            _inputGroup = document.createElement('input'),
+            _inputLabel = document.createElement('label'),
+            _inputSpan = document.createElement('span'),
+            users = item.users,
+            gid = item.gid;
+        _inputGroup.name = String(gid).trim();
+        _inputGroup.type = 'checkbox';
+        _inputGroup.className = 'group';
+        _inputGroup.setAttribute('data-type', 'group');
+        _lineGroup.appendChild(_inputGroup);
+        _inputLabel.appendChild(_inputSpan);
+        _lineGroup.appendChild(_inputLabel);
+        _inputGroup.id = 'group' + item.gid;
+        _inputLabel.setAttribute('for', 'group' + gid);
+        _inputLabel.innerHTML += ' <strong>' + gid + '</strong>';
+        var rowCount = _tableRef.rows.length;
+        var row = _tableRef.insertRow(rowCount);
+        var colorId = 'col_g_' + gid;
+        row.insertCell(0).innerHTML = '<b><i>' + gid + '</i></b>';
+        row.insertCell(1).innerHTML = '<input type="text" id="' + colorId + '" />';
+        users.forEach(function(item, index){
+            if (deprecatedUsers.indexOf(users[index].uid) !== -1) return;
+            var uid = item.uid;
+            var _inlineUser = document.createElement('span'),
+                _inputUser = document.createElement('input'),
+                _inputUserLabel = document.createElement('label'),
+                _inputUserSpan = document.createElement('span');
+            _inputUser.name = uid;
+            _inputUser.type = 'checkbox';
+            _inputUser.className = 'user';
+            _inputUser.setAttribute('data-type', 'user');
+            _inputUser.setAttribute('data-gid', gid);
+            _inputUser.id = 'u_' + uid;
+            _inputUserLabel.setAttribute('for', 'u_' + uid);
+            _inputUserLabel.appendChild(_inputUserSpan);
+            _inputUserLabel.innerHTML += uid;
+            _inlineUser.appendChild(_inputUser);
+            _inlineUser.appendChild(_inputUserLabel);
+            _lineUsers.appendChild(_inlineUser);
+            var rowCount = _tableRef.rows.length;
+            var row = _tableRef.insertRow(rowCount);
+            var colorId = 'col_u_' + uid;
+            row.insertCell(0).innerHTML = item.displayname;
+            row.insertCell(1).innerHTML = '<input type="text" id="' + colorId + '" />';
+        });
+        $('#sidebar-settings-content-colors').append(_table);
+    });
+    OCGantt.renderUserColors();
+};
+
+OCGantt.initColorPicker = function (target, color){
+    $("[id=" + target + "]").spectrum({
+        color: color,
+        showPaletteOnly: true,
+        hideAfterPaletteSelect: true,
+        change: function (changeColor) {
+            var userString2 = $(this).prop("id").replace('col_', '');
+            var colorString = changeColor.toRgbString();
+            $("[id=" + $(this).prop("id") + "]").spectrum("set", colorString);
+            if (userString2.substr(0,2) === 'g_'){
+                OC.AppConfig.setValue('owncollab_ganttchart', 'color_group_' + userString2.substr(2), colorString);
+            } else if (userString2.substr(0,2) === 'u_'){
+                OC.AppConfig.setValue('owncollab_ganttchart', 'color_user_' + userString2.substr(2), colorString);
+            }
+            var tempTasks = $.grep(arr.data , function (data) { return data.resources != null && data.resources != "" });
+            $.each(tempTasks, function (id, taskObject) {                
+                var resources = taskObject.resources;
+                var obj = taskObject.resources.split(",");
+                if (obj[0] === userString2){
+                    taskObject.color = colorString;
+                }
+            });
+            gantt.render();
+        },
+        palette: [
+            ["rgb(0, 0, 0)", "rgb(67, 67, 67)", "rgb(102, 102, 102)",
+            "rgb(204, 204, 204)", "rgb(217, 217, 217)", "rgb(255, 255, 255)"],
+            ["rgb(152, 0, 0)", "rgb(255, 0, 0)", "rgb(255, 153, 0)", "rgb(255, 255, 0)", "rgb(0, 255, 0)",
+            "rgb(0, 255, 255)", "rgb(74, 134, 232)", "rgb(0, 0, 255)", "rgb(153, 0, 255)", "rgb(255, 0, 255)"],
+            ["rgb(230, 184, 175)", "rgb(244, 204, 204)", "rgb(252, 229, 205)", "rgb(255, 242, 204)", "rgb(217, 234, 211)",
+            "rgb(208, 224, 227)", "rgb(201, 218, 248)", "rgb(207, 226, 243)", "rgb(217, 210, 233)", "rgb(234, 209, 220)",
+            "rgb(221, 126, 107)", "rgb(234, 153, 153)", "rgb(249, 203, 156)", "rgb(255, 229, 153)", "rgb(182, 215, 168)",
+            "rgb(162, 196, 201)", "rgb(164, 194, 244)", "rgb(159, 197, 232)", "rgb(180, 167, 214)", "rgb(213, 166, 189)",
+            "rgb(204, 65, 37)", "rgb(224, 102, 102)", "rgb(246, 178, 107)", "rgb(255, 217, 102)", "rgb(147, 196, 125)",
+            "rgb(118, 165, 175)", "rgb(109, 158, 235)", "rgb(111, 168, 220)", "rgb(142, 124, 195)", "rgb(194, 123, 160)",
+            "rgb(166, 28, 0)", "rgb(204, 0, 0)", "rgb(230, 145, 56)", "rgb(241, 194, 50)", "rgb(106, 168, 79)",
+            "rgb(69, 129, 142)", "rgb(60, 120, 216)", "rgb(61, 133, 198)", "rgb(103, 78, 167)", "rgb(166, 77, 121)",
+            "rgb(91, 15, 0)", "rgb(102, 0, 0)", "rgb(120, 63, 4)", "rgb(127, 96, 0)", "rgb(39, 78, 19)",
+            "rgb(12, 52, 61)", "rgb(28, 69, 135)", "rgb(7, 55, 99)", "rgb(32, 18, 77)", "rgb(76, 17, 48)"]
+        ]
+    });
+}
+
+OCGantt.renderUserColors = function() {
+    var groups = OCGantt.groupusers._groupusers;
+    var deprecatedUsers = ['collab_user'];
+    var colors = OCGantt.userColors;
+    groups.forEach(function(item, index){
+        var users = item.users,
+            gid = item.gid,
+            ccode = $.grep(colors, function (group) { return  group.id == 'g_' + gid }),
+            ccode1 = 'rgb(75, 113, 164)';
+        if (ccode.length != 0) {
+            ccode1 = ccode[0].value;
+        } else {
+            colors.push({
+                id: 'g_' +gid,
+                value: ccode1
+            });
+            OC.AppConfig.setValue('owncollab_ganttchart', 'color_group_' + gid, ccode1);
+            //console.log(colors);
+        }
+        OCGantt.initColorPicker('col_g_' + gid, ccode1);
+        users.forEach(function(item, index){
+            if (deprecatedUsers.indexOf(users[index].uid) !== -1) return;
+            var uid = item.uid,
+                ccode = $.grep(colors, function (user) { return  user.id == 'u_' + uid }),
+                ccode1 = 'rgb(75, 113, 164)';
+            if (ccode.length != 0) {
+                //console.log("ccode existing");
+                //console.log(ccode[0]);
+                ccode1 = ccode[0].value;
+            } else {
+                colors.push({
+                    id: 'u_' + uid,
+                    value: ccode1
+                });
+                OC.AppConfig.setValue('owncollab_ganttchart', 'color_user_' + uid, ccode1);
+                //console.log(colors);
+            }
+            //console.log("uid: " + uid + " ccode1: " + ccode1);
+            OCGantt.initColorPicker('col_u_' + uid, ccode1);
+        });
+    });
+};
+
+OCGantt.updateColor = function(){
+
+};
+
+OCGantt.testRedo = function () {
+    if (gantt._undo._redoStack.length > 0) {
         console.log("redo activated");
         $(".fa-repeat").removeClass('not_available');
         return;
@@ -62,8 +255,8 @@ OCGantt.testRedo = function() {
     setTimeout(OCGantt.testRedo, 50);
 };
 
-OCGantt.testUndo = function() {
-    if (gantt._undo._undoStack.length > 0){
+OCGantt.testUndo = function () {
+    if (gantt._undo._undoStack.length > 0) {
         console.log("undo activated");
         $(".fa-undo").removeClass('not_available');
         return;
@@ -222,6 +415,15 @@ OCGantt.handleZoom = function (tempValue, sliderValue) {
     gantt.render();
 }
 
+OCGantt.sortGrid = function (column1, column2){
+    if (Gantt.sortDirection){
+        gantt.sort(column1, false);
+    } else {
+        gantt.sort(column1, true);
+    }
+    Gantt.sortDirection = !Gantt.sortDirection;
+}
+
 // Function that inits a datefield with datepicker and extra features
 OCGantt.lbox.dateInit = function (datefield, task, datefield2) {
     var caretPos = 1;
@@ -229,7 +431,7 @@ OCGantt.lbox.dateInit = function (datefield, task, datefield2) {
     if (datefield.id == 'startdate') {
         $(datefield).datepicker('setDate', task.start_date);
         $(datefield).datepicker('option', {
-            onClose: function(){
+            onClose: function () {
                 $(datefield2).datepicker('setDate', new Date(task.end_date.getTime() - (task.start_date.getTime() - $(datefield).datepicker('getDate').getTime())));
             }
         });
@@ -1043,7 +1245,41 @@ gantt.showLightbox = function (id) {
         var fragment = document.createDocumentFragment();
         $("#resources-form").append('<div id="resourceslist" style="padding: 5px; overflow-y: scroll;">');
         var groupusers = OCGantt.groupusers._groupusers;
-        for (var groupArray in groupusers) {
+        groupusers.forEach(function (item, index){
+            var _lineGroup = document.createElement('div'),
+                _lineUsers = document.createElement('div'),
+                _inputGroup = document.createElement('input'),
+                _inputLabel = document.createElement('label');
+            _inputGroup.name = item['gid'];
+            _inputGroup.type = 'checkbox';
+            _inputGroup.className = 'group';
+            _inputGroup.setAttribute('data-type', 'group');
+            _lineGroup.appendChild(_inputGroup);
+            _inputLabel.appendChild(_inputGroup);
+            _lineGroup.appendChild(_inputLabel);
+            _inputGroup.id = 'g_' + item['gid'];
+            _inputLabel.setAttribute('for', 'g_' + item['gid']);
+            _inputLabel.innerHTML += ' <strong>' + item['gid'] + '</strong>';
+            fragment.appendChild(_lineGroup);
+            item['users'].forEach(function (item, index){
+                var _inlineUser = document.createElement('span'),
+                    _inputUser = document.createElement('input'),
+                    _inputUserLabel = document.createElement('label');
+                _inputUser.name = item['uid'];
+                _inputUser.type = 'checkbox';
+                _inputUser.className = 'user';
+                _inputUser.setAttribute('data-type', 'user');
+                _inputUser.setAttribute('data-gid', item['gid']);
+                _inputUser.id = 'u_' + item['uid'];
+                _inputUserLabel.setAttribute('for', 'u_' + item['uid']);
+                _inputUserLabel.innerHTML += item['displayname'];
+                _inlineUser.appendChild(_inputUser);
+                _inlineUser.appendChild(_inputUserLabel);
+                _lineUsers.appendChild(_inlineUser);
+            });
+            fragment.appendChild(_lineUsers);
+        });
+        /*for (var groupArray in groupusers) {
             group = groupusers[groupArray]['gid'];
             var _lineGroup = document.createElement('div'),
                 _lineUsers = document.createElement('div'),
@@ -1062,6 +1298,8 @@ gantt.showLightbox = function (id) {
             fragment.appendChild(_lineGroup);
             users = groupusers[groupArray]['users'];
             for (var userArray in users) {
+                console.log(userArray);
+                console.log(users);
                 var _inlineUser = document.createElement('span'),
                     _inputUser = document.createElement('input'),
                     _inputUserLabel = document.createElement('label');
@@ -1078,7 +1316,7 @@ gantt.showLightbox = function (id) {
                 _lineUsers.appendChild(_inlineUser);
             }
             fragment.appendChild(_lineUsers);
-        };
+        };*/
         $("#resources-form div:first-child").append(fragment);
         $("#resources-form").append('<div id="resourcesbuttons" style="padding: 5px; position: absolute;"><div class="tbl">' +
             '<div class="tbl_cell"><input type="button" id="save-resources" name="save-resources" value="Done"></div>' +
@@ -1831,10 +2069,6 @@ OCGantt.GroupUsers.prototype = {
     // All configs should be assembled in the object OCGantt.config
     OCGantt.config = function () {
         if (OCGantt.isAdmin === true) {
-            gantt.templates.task_class = gantt.templates.grid_row_class = gantt.templates.task_row_class = function (start, end, task) {
-                if (gantt.isSelectedTask(task.id))
-                return "gantt_selected";
-            };
             gantt.attachEvent("onAfterTaskUpdate", function (id, move, e) {
                 arr = gantt.serialize();
                 gantt.refreshTask(id);
@@ -1869,6 +2103,8 @@ OCGantt.GroupUsers.prototype = {
                 arr.data[index].open = "1";
                 OCGantt.tasks.create(arr.data[index]).done(function () {
                     gantt.changeTaskId(item.id, arr.data[index].id);
+                    OCGantt.screenOrder.push(JSON.stringify(item.id));
+                    OC.AppConfig.setValue('owncollab_ganttchart', 'screenorder', JSON.stringify(OCGantt.screenOrder));
                 });
                 // check if the added task has a parent and if this parent is a project
                 if (item.parent != 0) {
@@ -1880,22 +2116,22 @@ OCGantt.GroupUsers.prototype = {
                 }
                 gantt.render();
             });
-            gantt.attachEvent("onAfterRedo", function (){
-                if (gantt._undo._redoStack.length === 0){
+            gantt.attachEvent("onAfterRedo", function () {
+                if (gantt._undo._redoStack.length === 0) {
                     $(".fa-repeat").addClass('not_available');
                     OCGantt.testRedo();
                 }
-                if (gantt._undo._undoStack.length === 0){
+                if (gantt._undo._undoStack.length === 0) {
                     $(".fa-undo").addClass('not_available');
                     OCGantt.testUndo();
                 }
             });
-            gantt.attachEvent("onAfterUndo", function (){
-                if (gantt._undo._redoStack.length === 0){
+            gantt.attachEvent("onAfterUndo", function () {
+                if (gantt._undo._redoStack.length === 0) {
                     $(".fa-repeat").addClass('not_available');
                     OCGantt.testRedo();
                 }
-                if (gantt._undo._undoStack.length === 0){
+                if (gantt._undo._undoStack.length === 0) {
                     $(".fa-undo").addClass('not_available');
                     OCGantt.testUndo();
                 }
@@ -1975,19 +2211,56 @@ OCGantt.GroupUsers.prototype = {
             console.log("You are using the commercial version");
             gantt.config.auto_scheduling = true;
             gantt.config.auto_scheduling_strict = true;
-            gantt.config.undo = true;
-            gantt.config.redo = true;
-            gantt.config.undo_actions = {
-                update: "update",
-                remove: "remove", // remove an item from datastore
-                add: "add"
-            };
-            gantt.config.undo_types = {
-                link: "link",
-                task: "task"
-            };
-            gantt.config.undo_steps = 10;
-            gantt.config.multiselect = true;
+            if (OCGantt.isAdmin === true) {
+                gantt.config.undo = true;
+                gantt.config.redo = true;
+                gantt.config.undo_actions = {
+                    update: "update",
+                    remove: "remove", // remove an item from datastore
+                    add: "add"
+                };
+                gantt.config.undo_types = {
+                    link: "link",
+                    task: "task"
+                };
+                gantt.config.undo_steps = 10;
+                gantt.config.multiselect = true;
+                gantt.config.order_branch = true;
+                gantt.config.order_branch_free = true;
+                gantt.templates.task_class = gantt.templates.grid_row_class = gantt.templates.task_row_class = function (start, end, task) {
+                    if (gantt.isSelectedTask(task.id))
+                        return "gantt_selected";
+                };
+                gantt.attachEvent("onRowDragStart", function (id, target, e) {
+                    var task = gantt.getTask(id);
+                    OCGantt.tempParent = task.parent;
+                    return true;
+                });
+                gantt.attachEvent("onRowDragEnd", function (id, target) {
+                    var task = gantt.getTask(id);
+                    if (task.parent){
+                        var parenttask = gantt.getTask(task.parent);
+                        if (parenttask.type != "project"){
+                             parenttask.type = "project";
+                             gantt.updateTask(parenttask.id);
+                        }
+                    }
+                    gantt.updateTask(id);
+                    if (target){
+                        var sourceIndex = OCGantt.screenOrder.indexOf(id);
+                        var targetIndex = OCGantt.screenOrder.indexOf(target);
+                        OCGantt.screenOrder.move(sourceIndex, targetIndex);
+                        OC.AppConfig.setValue('owncollab_ganttchart', 'screenorder', JSON.stringify(OCGantt.screenOrder));
+                    }
+                    OCGantt.tempChildren = gantt.getChildren(OCGantt.tempParent);
+                    if (OCGantt.tempChildren.length === 0){
+                        var task = gantt.getTask(OCGantt.tempParent);
+                        task.type = "task";
+                        gantt.updateTask(task.id);
+                    }
+                });
+                //gantt.config.sort = true;
+            }
         } else if (OCGantt.dhtmlxversion.dhtmlxversion === "standard") {
             console.log("You are using the standard version");
         }
@@ -2012,15 +2285,25 @@ OCGantt.GroupUsers.prototype = {
         //gantt.config.static_background = true;
         gantt.config.smart_scales = false;
         // Styling
+        gantt.templates.grid_open = function(item) {
+            return "<div class='gantt_tree_icon fa " + 
+            (item.$open ? "fa-caret-down gantt_close" : "fa-caret-right gantt_open") + "'></div>";
+        };
+        gantt.templates.grid_folder = function(item) {
+            return "<div class='gantt_tree_icon' style='width: 3px;'></div>";
+        };
+        gantt.templates.grid_file = function(item) {
+            return "<div class='gantt_tree_icon' style='width: 3px;'></div>";
+        };
         gantt.config.row_height = 22;
         gantt.config.columns = [
             {
-                name: "id", label: "ID", width: OCGantt.columnWidth.id, template: function (item) {
+                name: "id", label: OCGantt.columnLabel.id, width: OCGantt.columnWidth.id, template: function (item) {
                     return item.id;
                 }
             },
             {
-                name: "text", label: "Taskname", tree: true, width: OCGantt.columnWidth.name, resize: true, template: function (item) {
+                name: "text", label: OCGantt.columnLabel.name, tree: true, width: OCGantt.columnWidth.name, resize: true, template: function (item) {
                     if (gantt.getChildren(item.id).length > 0)
                         return '<b>' + item.text + '</b>';
                     return item.text;
@@ -2028,14 +2311,14 @@ OCGantt.GroupUsers.prototype = {
             },
 
             {
-                name: "start_date", label: "Start", align: "center", width: OCGantt.columnWidth.start, resize: true, template: function (item) {
+                name: "start_date", label: OCGantt.columnLabel.start, align: "center", width: OCGantt.columnWidth.start, resize: true, template: function (item) {
                     //                    return DateTime.dateToStr(item.start_date, "%d.%m.%Y %H:%i");
                     return item.start_date;
                 }
             },
 
             {
-                name: "end_date", label: "End", align: "center", width: OCGantt.columnWidth.end, resize: true, template: function (item) {
+                name: "end_date", label: OCGantt.columnLabel.end, align: "center", width: OCGantt.columnWidth.end, resize: true, template: function (item) {
                     if (item.type === gantt.config.types.milestone) {
                         return '';
                     }
@@ -2045,7 +2328,7 @@ OCGantt.GroupUsers.prototype = {
             },
 
             {
-                name: "duration", label: "Duration", align: "center", width: OCGantt.columnWidth.duration, template: function (item) {
+                name: "duration", label: OCGantt.columnLabel.duration, align: "center", width: OCGantt.columnWidth.duration, template: function (item) {
                     if (item.type === gantt.config.types.milestone) {
                         return '';
                     } else {
@@ -2063,7 +2346,7 @@ OCGantt.GroupUsers.prototype = {
             },
 
             {
-                name: "resources", label: "Resources", align: "left", width: OCGantt.columnWidth.resources, resize: true, template: function (item) {
+                name: "resources", label: OCGantt.columnLabel.resources, align: "left", width: OCGantt.columnWidth.resources, resize: true, template: function (item) {
 
                     var returnValue = undefined;
                     var uid = undefined;
@@ -2081,7 +2364,7 @@ OCGantt.GroupUsers.prototype = {
                                     gid = userGroupArray[i].replace("g_", "");
                                 }
                                 if (uid) {
-                                    if (i == 0) {
+                                    if (i === 0) {
                                         returnValue = OCGantt.getDisplayname(uid);
                                     } else if (i > 0) {
                                         returnValue += OCGantt.getDisplayname(uid);
@@ -2089,7 +2372,7 @@ OCGantt.GroupUsers.prototype = {
                                     uid = undefined;
                                 }
                                 if (gid) {
-                                    if (i == 0) {
+                                    if (i === 0) {
                                         returnValue = "<strong>" + gid + "</strong>";
                                     } else if (i > 0) {
                                         returnValue += "<strong>" + gid + "</strong>";
@@ -2097,7 +2380,7 @@ OCGantt.GroupUsers.prototype = {
                                     gid = undefined;
                                 }
                             }
-                        } else if ((userGroupArray.length == 1) && (userGroupArray[0] == "")) {
+                        } else if ((userGroupArray.length === 1) && (userGroupArray[0] === "")) {
                             returnValue = "";
                         }
                     } else if (!item.resources) {

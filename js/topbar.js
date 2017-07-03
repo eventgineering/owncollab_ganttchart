@@ -21,13 +21,17 @@
 					}, timeout);
 
 					if (globalTimeout){
+						if ($("div[class^='sp-container']").length != 0){
+							$("div[class^='sp-container']").mouseenter(function() {
+								console.log("entered sp-container");
+								clearTimeout(globalTimeout);
+							});
+						}
 						$("#"+ target).mouseenter(function() {
 							clearTimeout(globalTimeout);
 						});
 					}
 				});
-
-
 			},
             "undo": function undo(){
 				if (OCGantt.dhtmlxversion.dhtmlxversion === "commercial"){

@@ -35,6 +35,7 @@ class Task extends Entity implements JsonSerializable {
             'open' => $this->open,
             'end_date' => $this->enddate,
             'resources' => $this->resources,
+            'color' => $this->color,
         ];
     }
 }

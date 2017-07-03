@@ -21,6 +21,38 @@ OCGantt.tasksLoaded = undefined;
 OCGantt.usergroupsLoaded = undefined;
 OCGantt.appConfig = undefined;
 OCGantt.dhtmlxversion = undefined;
+OCGantt.userColors= [];
+OCGantt.filterValues = function (data, query){
+    return data.filter(function(el){
+        return el.toLowerCase().indexOf(query.toLowerCase()) > -1;
+    });
+}
+
+OCGantt.getColors = function (data){
+    if (data){
+        var keys = OCGantt.filterValues(data, 'color');
+            if (keys.length != 0){
+            keys.forEach(function(item, index){
+                OC.AppConfig.getValue('owncollab_ganttchart', item, function(data){
+                    if (item.match(/.*user.*/)){
+                        OCGantt.userColors.push({
+                            id: 'u' + item.replace('color_user', ''),
+                            value: data
+                        });
+                        OCGantt.testUserColors(keys.length);
+                    }
+                    if (item.match(/.*group.*/)){
+                        OCGantt.userColors.push({
+                            id: 'g' + item.replace('color_group', ''),
+                            value: data
+                        });
+                        OCGantt.testUserColors(keys.length);
+                    }
+                });
+            });
+        }
+    }
+}
 var taskId = null;
 
 (function (OC, window, $, undefined) {
@@ -30,8 +62,10 @@ var taskId = null;
         OCGantt.dhtmlxversion = $("#app").data();
         $("#app").append(OCGantt.splashScreen);
         var $bottom = OCGantt.getBottomById("topbar") + 1;
-        $("#sidebar-left").css('top', $bottom + 'px');
-        OCGantt.setMaxHeight($("#topbar"), $("#bottombar"), 'sidebar-left');
+        $("#sidebar-save").css('top', $bottom + 'px');
+        $("#sidebar-settings").css('top', $bottom + 'px');
+        OCGantt.setMaxHeight($("#topbar"), $("#bottombar"), 'sidebar-save');
+        OCGantt.setMaxHeight($("#topbar"), $("#bottombar"), 'sidebar-settings');
         OCGantt.setMaxHeight($("#topbar"), $("#bottombar"), 'gantt_chart');
         $(".sidebar_header").hover(
             function() { $(this).addClass("Hover");},
@@ -70,13 +104,16 @@ var taskId = null;
         console.log(OC.isUserAdmin());
         console.log(OC.getCurrentUser());
         console.log(OC.AppConfig);
-        alert('test');
+        alert('test');*/
 
 
-        OC.AppConfig.getKeys('owncollab_ganttchart', function(data){
+        /*OC.AppConfig.getKeys('owncollab_ganttchart', function(data){
              OCGantt.appConfig = data;
-            });
-        */
+             console.log(data);
+            });*/
+        if (OCGantt.isAdmin === true) {
+            OC.AppConfig.getKeys('owncollab_ganttchart', OCGantt.getColors);
+        }
         OCGantt.config();
         gantt.init("gantt_chart");
         OCGantt.tasks = new OCGantt.Tasks(OC.generateUrl('/apps/owncollab_ganttchart/tasks'));

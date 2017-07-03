@@ -299,6 +299,15 @@ input[type="button"]:hover.ocgantt-frw.disabled, input[type="button"]:focus.ocga
 }
 
 /* Custom gantt styles */
+
+.gantt_tree_icon.gantt_close{
+    background-image: url() !important;
+}
+
+.gantt_tree_icon.gantt_open{
+    background-image: url() !important;
+}
+
 .gantt_tree_content{
     font-family: 'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif !important;
     font-size: 11px !important;
@@ -604,9 +613,15 @@ div[contenteditable=true] {
     opacity: 1;
 }
 
+.fa-cog{
+    font-size: 19px;
+    color: #000;
+    opacity: 1;
+}
+
 /* Definition of sidebar left */
 
-#sidebar-left {
+.sidebar-left {
     position:fixed;
     width: 350px;
     /*bottom:0;*/
@@ -623,6 +638,7 @@ div[contenteditable=true] {
 
 .sidebar_header {
     opacity: 0.5;
+    border-bottom: 2px solid #FFF;
 }
 
 .sidebar_header img {
