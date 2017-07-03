@@ -77,11 +77,13 @@ class TaskMapper extends Mapper {
         $replace = '';
         $screenorder = explode(",", str_replace($search, $replace, \OC::$server->getConfig()->getAppValue('owncollab_ganttchart', 'screenorder')));
         $tasks = $this->findEntities($sql);
-        if ($tasks && count($screenorder) > 1){
-            foreach ($screenorder as $key=>$value){
-                $value = intval($value);
-                $index = TaskMapper::searchIndex($value, $tasks);
-                $newarray[$key] = $tasks[$index];
+        if ($tasks){
+            if (count($screenorder) > 1){
+                foreach ($screenorder as $key=>$value){
+                    $value = intval($value);
+                    $index = TaskMapper::searchIndex($value, $tasks);
+                    $newarray[$key] = $tasks[$index];
+                }
             }
             foreach ($tasks as $key => $task){
                 $task = (array) json_decode(json_encode($task));
