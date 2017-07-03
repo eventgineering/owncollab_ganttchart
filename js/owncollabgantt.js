@@ -87,8 +87,9 @@ OCGantt.testUserColors = function(length){
         if (OCGantt.userColors.length === length){
             OCGantt.renderUsertable();
             return;
+        } else {
+            setTimeout(function() {OCGantt.testUserColors(length);}, 50);
         }
-        setTimeout(function() {OCGantt.testUserColors(length);}, 50);
     } else {
         setTimeout(function() {OCGantt.testUserColors(length);}, 50);
     }

@@ -39,17 +39,16 @@ OCGantt.getColors = function (data){
                             id: 'u' + item.replace('color_user', ''),
                             value: data
                         });
-                        OCGantt.testUserColors(keys.length);
                     }
                     if (item.match(/.*group.*/)){
                         OCGantt.userColors.push({
                             id: 'g' + item.replace('color_group', ''),
                             value: data
                         });
-                        OCGantt.testUserColors(keys.length);
                     }
                 });
             });
+            OCGantt.testUserColors(keys.length);
         } else {
             OCGantt.testUserColors(0);
         }

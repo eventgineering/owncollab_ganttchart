@@ -23,7 +23,6 @@
 					if (globalTimeout){
 						if ($("div[class^='sp-container']").length != 0){
 							$("div[class^='sp-container']").mouseenter(function() {
-								console.log("entered sp-container");
 								clearTimeout(globalTimeout);
 							});
 						}
