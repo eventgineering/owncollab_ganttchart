@@ -50,6 +50,8 @@ OCGantt.getColors = function (data){
                     }
                 });
             });
+        } else {
+            OCGantt.testUserColors(0);
         }
     }
 }
