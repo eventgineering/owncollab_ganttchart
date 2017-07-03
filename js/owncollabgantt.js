@@ -2080,6 +2080,15 @@ OCGantt.GroupUsers.prototype = {
                 arr.data[index].open = 1;
                 OCGantt.tasks._tasks[index] = arr.data[index];
                 OCGantt.tasks._activeTask = OCGantt.tasks._tasks[index];
+                var colors = OCGantt.userColors,
+                    resources = arr.data[index].resources,
+                    obj = resources.split(","),
+                    ccode = $.grep(colors, function (user) { return  user.id == obj[0] });
+                if (ccode.length > 0){
+                    task.color = ccode[0].value;
+                } else {
+                    task.color = 'rgb(75, 113, 164)';
+                }             
                 OCGantt.tasks.updateActive();
                 gantt.render();
             });
