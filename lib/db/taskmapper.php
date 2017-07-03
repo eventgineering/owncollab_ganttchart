@@ -77,7 +77,7 @@ class TaskMapper extends Mapper {
         $replace = '';
         $screenorder = explode(",", str_replace($search, $replace, \OC::$server->getConfig()->getAppValue('owncollab_ganttchart', 'screenorder')));
         $tasks = $this->findEntities($sql);
-        if ($tasks && count($screenorder) > 0){
+        if ($tasks && count($screenorder) > 1){
             foreach ($screenorder as $key=>$value){
                 $value = intval($value);
                 $index = TaskMapper::searchIndex($value, $tasks);
