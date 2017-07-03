@@ -86,6 +86,7 @@ class TaskMapper extends Mapper {
                 }
             }
             foreach ($tasks as $key => $task){
+                $newarray = $tasks;
                 $task = (array) json_decode(json_encode($task));
                 if ($task['resources'] != ''){
                     if (preg_match('/,/', $task['resources'], $match1)){
