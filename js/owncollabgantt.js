@@ -83,12 +83,14 @@ OCGantt.init = function () {
 };
 
 OCGantt.testUserColors = function(length){
-    if (OCGantt.userColors.length === length){
-        if (OCGantt.usergroupsLoaded){
+    if (OCGantt.usergroupsLoaded){
+        if (OCGantt.userColors.length === length){
             OCGantt.renderUsertable();
             return;
         }
-        setTimeout(OCGantt.testUserColors(length), 100);
+        setTimeout(OCGantt.testUserColors(length), 50);
+    } else {
+        setTimeout(OCGantt.testUserColors(length), 50);
     }
 };
 
