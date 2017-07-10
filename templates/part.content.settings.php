@@ -10,7 +10,7 @@ $appName = 'owncollab_ganttchart';
 <div id="sidebar-settings" class="sidebar-left">
     <div id="sidebar-settings-header">
         <div class="tbl">
-            <div class="tbl_cell export_gantt sidebar_header colors">
+            <div class="tbl_cell export_gantt sidebar_header colors" onclick="OCGantt.btnAction('setColors')">
                 <h4>Colors</h4>
             </div>
         </div>

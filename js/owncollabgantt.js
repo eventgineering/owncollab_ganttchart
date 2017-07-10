@@ -24,6 +24,10 @@ OCGantt.sortDirection = false;
 OCGantt.screenOrder = [];
 OCGantt.tempChildren = [];
 OCGantt.tempParent;
+OCGantt.filter = {};
+OCGantt.filter.HTML = {};
+OCGantt.filter.value = [];
+OCGantt.filter.resourcesList = [];
 var target = undefined;
 
 OCGantt.splashScreenIcon = OC.generateUrl('/apps/owncollab_ganttchart/img/loading-dark.gif').replace("index.php/", "");
@@ -57,12 +61,23 @@ OCGantt.columnNames = {
 }
 
 OCGantt.columnLabel = {
-    id: '<div style="width: 30px; display: inline-block; text-align: left; padding-left:2px;">ID</div><div style="width: 20px; display: inline-block;"><i class="fa fa-sort" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.id +')"></i></div>',
-    name: '<div style="width: 130px; display: inline-block; text-align: left; padding-left:2px;">Taskname</div><div style="width: 20px; display: inline-block;"><i class="fa fa-sort" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.name +')"></i></div>',
-    start: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">Start</div><div style="width: 20px; display: inline-block;"><i class="fa fa-sort" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.start +')"></i></div>',
-    end: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">End</div><div style="width: 20px; display: inline-block;"><i class="fa fa-sort" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.end +')"></i></div>',
-    duration: '<div style="width: 60px; display: inline-block; text-align: left; padding-left:2px;">Duration</div><div style="width: 20px; display: inline-block;"><i class="fa fa-sort" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.duration +')"></i></div>',
-    resources: '<div style="width: 80px; display: inline-block; text-align: left; padding-left:2px;">Resources</div><div style="width: 20px; display: inline-block;"><i class="fa fa-sort" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.resources +')"></i></div>',
+    id: '<div style="width: 30px; display: inline-block; text-align: left; padding-left:2px;">ID</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.id +')"></i>' +
+        '<i class="fa fa-sort-asc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.id +')"></i></span></div>',
+    name: '<div style="width: 110px; display: inline-block; text-align: left; padding-left:2px;">Taskname</div>' +
+          '<div style="width: 20px; display: inline-block;"><i class="fa fa-filter" id="text"></i></div>' +
+          '<div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.name +')"></i>' +
+          '<i class="fa fa-sort-asc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.name +')"></i></span></div>',
+    start: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">Start</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.start +')"></i>' +
+           '<i class="fa fa-sort-asc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.start +')"></i></span></div>',
+    end: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">End</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.end +')"></i>' +
+         '<i class="fa fa-sort-asc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.end +')"></i></span></div>',
+    duration: '<div style="width: 60px; display: inline-block; text-align: left; padding-left:2px;">Duration</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.duration +')"></i>' +
+              '<i class="fa fa-sort-asc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.duration +')"></i></span></div>',
+    resources: '<div style="width: 60px; display: inline-block; text-align: left; padding-left:2px;">Resources</div>' +
+               '<div style="width: 20px; display: inline-block;"><i class="fa fa-filter" id="resources"></i></div>' +
+               '<div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.resources +')"></i>' +
+               '<i class="fa fa-sort-asc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.resources +')"></i></span></div>',
+    buttons: '<span class="fa-stack"><i class="fa fa-sort fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span><i class="fa gantt_button_grid gantt_grid_add fa-plus" style="position: absolute; top: 6px;" onclick="gantt.createTask()"></i>',
 };
 
 // Function that initializes the gantt chart
@@ -159,6 +174,16 @@ OCGantt.renderUsertable = function(){
     OCGantt.renderUserColors();
 };
 
+OCGantt.mapColor = function(task){
+    var userStrings = task.resources.split(",");
+    var index = OCGantt.userColors.map(function(o) { return o.id; }).indexOf(userStrings[0]);
+    if (index >= 0){
+        return OCGantt.userColors[index].value;
+    } else if (index < 0){
+        return 'rgb(75, 113, 164)';
+    }
+};
+
 OCGantt.initColorPicker = function (target, color){
     $("[id=" + target + "]").spectrum({
         color: color,
@@ -167,6 +192,8 @@ OCGantt.initColorPicker = function (target, color){
         change: function (changeColor) {
             var userString2 = $(this).prop("id").replace('col_', '');
             var colorString = changeColor.toRgbString();
+            var index = OCGantt.userColors.map(function(o) { return o.id; }).indexOf(userString2);
+            OCGantt.userColors[index].value = colorString;
             $("[id=" + $(this).prop("id") + "]").spectrum("set", colorString);
             if (userString2.substr(0,2) === 'g_'){
                 OC.AppConfig.setValue('owncollab_ganttchart', 'color_group_' + userString2.substr(2), colorString);
@@ -174,10 +201,12 @@ OCGantt.initColorPicker = function (target, color){
                 OC.AppConfig.setValue('owncollab_ganttchart', 'color_user_' + userString2.substr(2), colorString);
             }
             var tempTasks = $.grep(arr.data , function (data) { return data.resources != null && data.resources != "" });
-            $.each(tempTasks, function (id, taskObject) {                
+            $.each(tempTasks, function (id, taskObject) {
                 var resources = taskObject.resources;
                 var obj = taskObject.resources.split(",");
                 if (obj[0] === userString2){
+                    var task = gantt.getTask(taskObject.id);
+                    task.color = colorString;
                     taskObject.color = colorString;
                 }
             });
@@ -219,7 +248,6 @@ OCGantt.renderUserColors = function() {
                 value: ccode1
             });
             OC.AppConfig.setValue('owncollab_ganttchart', 'color_group_' + gid, ccode1);
-            //console.log(colors);
         }
         OCGantt.initColorPicker('col_g_' + gid, ccode1);
         users.forEach(function(item, index){
@@ -243,10 +271,6 @@ OCGantt.renderUserColors = function() {
             OCGantt.initColorPicker('col_u_' + uid, ccode1);
         });
     });
-};
-
-OCGantt.updateColor = function(){
-
 };
 
 OCGantt.testRedo = function () {
@@ -418,14 +442,340 @@ OCGantt.handleZoom = function (tempValue, sliderValue) {
     gantt.render();
 }
 
-OCGantt.sortGrid = function (column1, column2){
+OCGantt.renderResources = function(){
+        var fragment = document.createDocumentFragment();
+        var groupusers = OCGantt.groupusers._groupusers;
+        groupusers.forEach(function (item, index){
+            var _lineGroup = document.createElement('div'),
+                _lineUsers = document.createElement('div'),
+                _inputGroup = document.createElement('input'),
+                _inputLabel = document.createElement('label');
+            _inputGroup.name = item['gid'];
+            _inputGroup.type = 'checkbox';
+            _inputGroup.className = 'group';
+            _inputGroup.setAttribute('data-type', 'group');
+            _lineGroup.appendChild(_inputGroup);
+            _inputLabel.appendChild(_inputGroup);
+            _lineGroup.appendChild(_inputLabel);
+            _inputGroup.id = 'g_' + item['gid'];
+            _inputLabel.setAttribute('for', 'g_' + item['gid']);
+            _inputLabel.innerHTML += ' <strong>' + item['gid'] + '</strong>';
+            fragment.appendChild(_lineGroup);
+            item['users'].forEach(function (item, index){
+                var _inlineUser = document.createElement('span'),
+                    _inputUser = document.createElement('input'),
+                    _inputUserLabel = document.createElement('label');
+                _inputUser.name = item['uid'];
+                _inputUser.type = 'checkbox';
+                _inputUser.className = 'user';
+                _inputUser.setAttribute('data-type', 'user');
+                _inputUser.setAttribute('data-gid', item['gid']);
+                _inputUser.id = 'u_' + item['uid'];
+                _inputUserLabel.setAttribute('for', 'u_' + item['uid']);
+                _inputUserLabel.innerHTML += item['displayname'];
+                _inlineUser.appendChild(_inputUser);
+                _inlineUser.appendChild(_inputUserLabel);
+                _lineUsers.appendChild(_inlineUser);
+            });
+            fragment.appendChild(_lineUsers);
+        });
+        return fragment;
+}
+
+OCGantt.sortGrid = function (column1){
     if (Gantt.sortDirection){
         gantt.sort(column1, false);
+        $(".gantt_grid_head_"+column1+" .fa-sort-asc").addClass("activated");
     } else {
         gantt.sort(column1, true);
+        $(".gantt_grid_head_"+column1+" .fa-sort-desc").addClass("activated");
     }
     Gantt.sortDirection = !Gantt.sortDirection;
+};
+
+OCGantt.initFilterGrid = function (type){
+    switch (type){
+        case 'text':
+            var top = OCGantt.getBottomByClass('gantt_grid_scale');
+            var left = OCGantt.getLeftByClass('gantt_grid_head_text');
+            OCGantt.filter.HTML = '<div id="filter-text" class="gantt_cal_light ocgantt_filter_text" style="display: none; top: ' + top + 'px; left: ' + left + 'px;">' +
+                                  '<p>You can either filter by taskname and/ or sub project name</p>' +
+                                  '<div style="width: 100%;">' +
+                                  '<div class="tbl_cell" style="width: 40%;"><label for="filter-text-tasks">Tasks</label></div>' +
+                                  '<div class="tbl_cell" style="width: 50%;"><input type="text" id="filter-text-tasks" name="filter-text-tasks" /></div>' +
+                                  '<div class="tbl_cell" style="width: 10%;"><i id="delete-filter-text-tasks" class="fa fa-trash-o"></i></div>' +
+                                  '</div>' +
+                                  '<div style="width: 100%;">' +
+                                  '<div class="tbl_cell" style="width: 40%;"><label for="filter-text-subprojects">Sub Projects</label></div>' +
+                                  '<div class="tbl_cell" style="width: 50%;"><input type="text" id="filter-text-subprojects" name="filter-text-subprojects" /></div>' +
+                                  '<div class="tbl_cell" style="width: 10%;"><i id="delete-filter-text-subprojects" class="fa fa-trash-o"></i></div>' +
+                                  '</div>' +
+                                  '<div style="width: 100%;">' +
+                                  '<div class="tbl_cell" style="width: 50%;"><input type="button" id="save-text-filter" name="save-text-filter" value="Done" /></div>' +
+                                  '<div class="tbl_cell" style="width: 50%;" align="right"><input type="button" id="close-text-filter" name="close-text-filter" value="Cancel" /></div>' +
+                                  '</div>';
+            $("#gantt_chart").append(OCGantt.filter.HTML);
+            $("#delete-filter-text-tasks").click(function(){
+                $("#filter-text-tasks").val('');
+                if (OCGantt.filter.value.textTasks){
+                    delete OCGantt.filter.value.textTasks;
+                }
+            });
+            $("#delete-filter-text-subprojects").click(function(){
+                $("#filter-text-subprojects").val('');
+                if (OCGantt.filter.value.textSubprojects){
+                    delete OCGantt.filter.value.textSubprojects;
+                }
+            });
+            $("#close-text-filter").click(function(){
+                if (OCGantt.filter.value.textTasks){
+                    $("#filter-text-tasks").val(OCGantt.filter.value.textTasks);
+                } else if (!OCGantt.filter.value.textTasks){
+                    $("#filter-text-tasks").val('');
+                }
+                if (OCGantt.filter.value.textSubprojects){
+                    $("#filter-text-subprojects").val(OCGantt.filter.value.subProjects);
+                } else if (!OCGantt.filter.value.textTasks){
+                $("#filter-text-subprojects").val('');
+                }
+                $("#filter-text").hide("blind", {direction: "vertical"}, 350);
+            });
+            $("#save-text-filter").click(function(){
+                if ($("#filter-text-tasks").val() != ''){
+                    OCGantt.filter.value['textTasks'] = $("#filter-text-tasks").val();
+                }
+                if ($("#filter-text-subprojects").val() != ''){
+                    OCGantt.filter.value['textSubprojects'] = $("#filter-text-subprojects").val();
+                }
+                gantt.refreshData();
+                $("#filter-text").hide("blind", {direction: "vertical"}, 350);
+            });
+            break;
+        case 'resources':
+            var top = OCGantt.getBottomByClass('gantt_grid_scale');
+            var left = OCGantt.getLeftByClass('gantt_grid_head_buttons')-299;
+            var fragmentResources = OCGantt.renderResources();
+            OCGantt.filter.HTML = '<div id="filter-resources" class="gantt_cal_light ocgantt_filter_resources" style="display: none; top: ' + top + 'px; left: ' + left + 'px;">' +
+                                  '<p>Please select one or more group/ user you wish to filter for.</p>' +
+                                  '<div contenteditable="true" style="width:calc(100% - 16px); display: none;" name="resources"></div>' +
+                                  '<div id="resources-list" style="width: 100%;">' +
+                                  '</div>' +
+                                  '<div style="width: 100%;">' +
+                                  '<div class="tbl_cell" style="width: 33%;"><input type="button" id="save-resources-filter" name="save-resources-filter" value="Done" /></div>' +
+                                  '<div class="tbl_cell" style="width: 33%;" align="right"><input type="button" id="close-resources-filter" name="close-resources-filter" value="Cancel" /></div>' +
+                                  '<div class="tbl_cell" style="width: 33%;" align="right"><input type="button" id="delete-resources-filter" name="delete-resources-filter" value="Delete" /></div>' +
+                                  '</div>';
+            $("#gantt_chart").append(OCGantt.filter.HTML);
+            $("#resources-list").append(fragmentResources);
+            $(".ocgantt_filter_resources :checkbox").change(function () {
+                $('input[id=' + $(this).attr('id') + ']').prop('checked', $(this).is(':checked'));
+                if ($(this).is(':checked') === true) {
+                    OCGantt.filter.resourcesList = OCGantt.lbox.addResources(OCGantt.lbox.getForm("filter-resources"), OCGantt.filter.resourcesList, $(this).attr('id'));
+                } else if ($(this).is(':checked') === false) {
+                    OCGantt.filter.resourcesList = OCGantt.lbox.deleteResources(OCGantt.lbox.getForm("filter-resources"),OCGantt.filter.resourcesList, $(this).attr('id'));
+                }
+            });
+            $("#close-resources-filter").click(function(){
+                $("#filter-resources").hide("blind", {direction: "vertical"}, 350);
+            });
+            $("#delete-resources-filter").click(function(){
+                delete OCGantt.filter.value.resources;
+                OCGantt.filter.resourcesList = [];
+                console.log(OCGantt.filter.value.resources);
+                gantt.refreshData();
+                $("#filter-resources").hide("blind", {direction: "vertical"}, 350);
+            });
+            $("#save-resources-filter").click(function(){
+                if (OCGantt.filter.resourcesList.length != 0){
+                    OCGantt.filter.value['resources'] = OCGantt.filter.resourcesList;
+                } else if (OCGantt.filter.resourcesList.length === 0){
+                    delete OCGantt.filter.value.resources;
+                }
+                gantt.refreshData();
+                $("#filter-resources").hide("blind", {direction: "vertical"}, 350);
+            });
+            break;
+    }
 }
+
+OCGantt.filterTaskByText = function (id, textfield){
+    var task = gantt.getTask(id);
+    switch (textfield){
+        case 'textTasks':
+            if (task.text.search(new RegExp(OCGantt.filter.value.textTasks, "i")) >= 0){
+                return true;
+            }
+            break;
+        case 'textSubprojects':
+            if (task.text.search(new RegExp(OCGantt.filter.value.textSubprojects, "i")) >= 0){
+                return true;
+            }
+            break;            
+    }
+    return false;
+};
+
+OCGantt.filterParentByText = function (id){
+    var parent = gantt.getParent(id);
+    if (parent != 1){
+        if (OCGantt.filterParentByText(parent)){
+            return true;
+        }
+    }
+    if (gantt.getTask(parent).text.search(new RegExp(OCGantt.filter.value.textSubprojects, "i")) >= 0){
+        return true;
+    }
+    return false;
+};
+
+OCGantt.filterChildrenByText = function (id){
+    var child = gantt.getChildren(id);
+    for (var i=0; i < child.length; i++){
+        var subchildren = gantt.getChildren(child[i]);
+        if (subchildren.length != 0){
+            if (OCGantt.filterChildrenByText(child[i])){
+                return true;
+            }
+        }
+        if ((gantt.getTask(child[i]).type != 'project') && (OCGantt.filter.value.textTasks)) {
+            if (OCGantt.filterTaskByText(child[i], 'textTasks')){
+                return true;
+            }
+        }
+        if ((gantt.getTask(child[i]).type === 'project') && (OCGantt.filter.value.textSubprojects)) {
+            if (OCGantt.filterTaskByText(child[i], 'textSubprojects')){
+                return true;
+            }
+        }
+        
+    }
+    return false;
+};
+
+OCGantt.filterTaskByResources = function (id){
+    for (var i=0; i< OCGantt.filter.value.resources.length; i++){
+        var taskresources = gantt.getTask(id).resources.split(",");
+        for (var j=0; j< taskresources.length; j++){
+            if (taskresources[j] === OCGantt.filter.value.resources[i]){
+                return true;
+            }
+        }
+    }
+}
+
+OCGantt.filterChildrenByResources = function (id){
+    var child = gantt.getChildren(id);
+    for (var i=0; i < child.length; i++){
+        var subchildren = gantt.getChildren(child[i]);
+        if (subchildren.length != 0){
+            if (OCGantt.filterChildrenByResources(child[i])){
+                return true;
+            }
+        }
+        if (OCGantt.filterTaskByResources(child[i])){
+            return true;
+        }
+    }
+    return false;
+}
+
+OCGantt.filterParentByResources = function (id){
+    var parent = gantt.getParent(id);
+    if (parent != 1){
+        if (OCGantt.filterParentByResources(parent)){
+            return true;
+        }
+    }
+    for (var i=0; i< OCGantt.filter.value.resources.length; i++){
+        var taskresources = gantt.getTask(id).resources.split(",");
+        for (var j=0; j< taskresources.length; j++){
+            if (taskresources[j] === OCGantt.filter.value.resources[i]){
+                return true;
+            }
+        }
+    }
+}
+
+OCGantt.filterGrid = function (id){
+    if (id === 1) {
+        return true;
+    }
+    if ((OCGantt.filter.value.textTasks) && (!OCGantt.filter.value.textSubprojects) && (!OCGantt.filter.value.resources)){
+        if (gantt.getTask(id).type === 'project'){
+            if (OCGantt.filterChildrenByText(id)){
+                return true;
+            }
+            return false;
+        } else if (gantt.getTask(id).type != 'project'){
+            if (OCGantt.filterTaskByText(id, 'textTasks')){
+                return true;
+            }
+            return false;
+        }
+    } else if ((!OCGantt.filter.value.textTasks) && (OCGantt.filter.value.textSubprojects) && (!OCGantt.filter.value.resources)){
+        if (gantt.getTask(id).type === 'project'){
+            if ((OCGantt.filterTaskByText(id, 'textSubprojects')) || (OCGantt.filterChildrenByText(id)) || (OCGantt.filterParentByText(id))){
+                return true;
+            }
+        } else if (gantt.getTask(id).type != 'project'){
+            if (OCGantt.filterParentByText(id)){
+                return true;
+            }
+        }
+    } else if ((OCGantt.filter.value.textTasks) && (OCGantt.filter.value.textSubprojects) && (!OCGantt.filter.value.resources)){
+        if (gantt.getTask(id).type === 'project'){
+            if ((OCGantt.filterTaskByText(id, 'textSubprojects')) && (OCGantt.filterChildrenByText(id))){
+            return true;
+            }
+        } else if (gantt.getTask(id).type != 'project'){
+            if ((OCGantt.filterParentByText(id)) &&  (OCGantt.filterTaskByText(id, 'textTasks'))){
+                return true;
+            }
+        }
+    } else if ((!OCGantt.filter.value.textTasks) && (!OCGantt.filter.value.textSubprojects) && (OCGantt.filter.value.resources)){
+        if (gantt.getTask(id).type === 'project'){
+            if ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterChildrenByResources(id)) || (OCGantt.filterParentByResources(id))){
+                return true;
+            }
+        } else if (gantt.getTask(id).type != 'project'){
+            if ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterParentByResources(id))){
+                return true;
+            }
+        }
+    } else if ((OCGantt.filter.value.textTasks) && (!OCGantt.filter.value.textSubprojects) && (OCGantt.filter.value.resources)){
+        if (gantt.getTask(id).type === 'project'){
+            if ((OCGantt.filterChildrenByText(id)) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterChildrenByResources(id)) || (OCGantt.filterParentByResources(id)))){
+                return true;
+            }
+        } else if (gantt.getTask(id).type != 'project'){
+            if ((OCGantt.filterTaskByText(id, 'textTasks')) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterParentByResources(id)))){
+                return true;
+            }
+        }
+    } else if ((!OCGantt.filter.value.textTasks) && (OCGantt.filter.value.textSubprojects) && (OCGantt.filter.value.resources)){
+        console.log("using all filters");
+        if (gantt.getTask(id).type === 'project'){
+            if (((OCGantt.filterTaskByText(id, 'textSubprojects')) || (OCGantt.filterChildrenByText(id)) || (OCGantt.filterParentByText(id))) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterChildrenByResources(id)) || (OCGantt.filterParentByResources(id)))){
+                return true;
+            }
+        } else if (gantt.getTask(id).type != 'project'){
+            if ((OCGantt.filterParentByText(id)) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterParentByResources(id)))){
+                return true;
+            }
+        }
+    } else if ((OCGantt.filter.value.textTasks) && (OCGantt.filter.value.textSubprojects) && (OCGantt.filter.value.resources)){
+        if (gantt.getTask(id).type === 'project'){
+            if ((OCGantt.filterTaskByText(id, 'textSubprojects')) && (OCGantt.filterChildrenByText(id)) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterChildrenByResources(id)) || (OCGantt.filterParentByResources(id)))){
+                return true;
+            }
+        } else if (gantt.getTask(id).type != 'project'){
+            if (((OCGantt.filterParentByText(id)) &&  (OCGantt.filterTaskByText(id, 'textTasks'))) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterParentByResources(id)))){
+                return true;
+            }
+        }
+    }
+    return false;
+};
 
 // Function that inits a datefield with datepicker and extra features
 OCGantt.lbox.dateInit = function (datefield, task, datefield2) {
@@ -443,6 +793,12 @@ OCGantt.lbox.dateInit = function (datefield, task, datefield2) {
         $(datefield).datepicker('setDate', task.start_date);
     }
     if (datefield.id == 'enddate') {
+        $(datefield).datepicker('setDate', task.end_date);
+    }
+    if (datefield.id == 'pdf_start_date') {
+        $(datefield).datepicker('setDate', task.start_date);
+    }
+    if (datefield.id == 'pdf_end_date') {
         $(datefield).datepicker('setDate', task.end_date);
     }
     $(datefield).click(function () {
@@ -545,10 +901,10 @@ OCGantt.lbox.updateEndDateField = function (source, target) {
 
 }
 
-OCGantt.lbox.addResources = function (taskResources, resource) {
+OCGantt.lbox.addResources = function (form, taskResources, resource) {
     var uid = undefined;
     var gid = undefined;
-    var form = OCGantt.lbox.getForm("my-form");
+    //var form = OCGantt.lbox.getForm("my-form");
     var resourcesField = form.querySelector("[name='resources']");
     if (resource.indexOf("u_") != -1) {
         uid = resource.replace("u_", "");
@@ -578,10 +934,10 @@ OCGantt.lbox.addResources = function (taskResources, resource) {
     return taskResources;
 }
 
-OCGantt.lbox.deleteResources = function (taskResources, resource) {
+OCGantt.lbox.deleteResources = function (form, taskResources, resource) {
     var uid = undefined;
     var gid = undefined;
-    var form = OCGantt.lbox.getForm("my-form");
+    //var form = OCGantt.lbox.getForm("my-form");
     var resourcesField = form.querySelector("[name='resources']");
     if (resource.indexOf("u_") != -1) {
         uid = resource.replace("u_", "");
@@ -713,16 +1069,15 @@ OCGantt.lbox.deleteLink = function (tempLinks, source, target) {
     return tempLinks;
 }
 
-OCGantt.lbox.precheckBoxes = function (taskResources) {
+OCGantt.lbox.precheckBoxes = function (form, taskResources) {
     if ((taskResources.length >= 1) && (taskResources[0] != "")) {
         for (i = 0; i < taskResources.length; i++) {
-            $('input[id=' + taskResources[i] + ']').prop('checked', true);
+            $('.' + form + ' input[id=' + taskResources[i] + ']').prop('checked', true);
         }
     }
 }
 
 OCGantt.lbox.precheckLinks = function (links, id) {
-    console.log(links);
     $(".links :checkbox").prop('checked', false);
     for (i = 0; i < links.length; i++) {
         if (links[i].target == id) {
@@ -754,8 +1109,6 @@ OCGantt.lbox.precheckLinks = function (links, id) {
 
 OCGantt.lbox.convertLagsToDay = function (links, id) {
     var lag = "";
-    console.log(links);
-    console.log(id);
     for (i = 0; i < links.length; i++) {
         if ((links[i].target == id) && (links[i].lag != 0)) {
             console.log(links[i].lag);
@@ -767,12 +1120,10 @@ OCGantt.lbox.convertLagsToDay = function (links, id) {
                 lag = "-" + lag;
             }
             document.getElementById(links[i].source + "_buffer").value = lag;
-            console.log("link-id: " + links[i].id + " lag: " + lag);
         }
         if ((links[i].target == id) && (links[i].lag == 0)) {
             lag = "";
             document.getElementById(links[i].source + "_buffer").value = lag;
-            console.log("link-id: " + links[i].id + " lag: " + lag);
         }
     }
 }
@@ -1116,6 +1467,20 @@ OCGantt.getBottomById = function (element) {
     return bottom;
 }
 
+OCGantt.getLeftByClass = function (element) {
+    var $el = $("." + element);
+    var bottom = $el.position().left /*+ $el.offset().left + $el.outerWidth()*/;
+    return bottom;
+}
+
+
+OCGantt.getBottomByClass = function (element) {
+    var $el = $("." + element);
+    var bottom = $el.position().top + $el.offset().top + $el.outerHeight();
+    return bottom;
+}
+
+
 OCGantt.setMaxHeight = function (topElement, bottomElement, target) {
     var $topElement = topElement;
     var $bottomElement = bottomElement;
@@ -1245,82 +1610,10 @@ gantt.showLightbox = function (id) {
         var groupUserArray = task.resources.split(",");
         if (groupUserArray.length >= 1) { resources = groupUserArray; }
         OCGantt.displayResources(groupUserArray, resourcesField);
+        var fragmentResources = OCGantt.renderResources(); 
         var fragment = document.createDocumentFragment();
         $("#resources-form").append('<div id="resourceslist" style="padding: 5px; overflow-y: scroll;">');
-        var groupusers = OCGantt.groupusers._groupusers;
-        groupusers.forEach(function (item, index){
-            var _lineGroup = document.createElement('div'),
-                _lineUsers = document.createElement('div'),
-                _inputGroup = document.createElement('input'),
-                _inputLabel = document.createElement('label');
-            _inputGroup.name = item['gid'];
-            _inputGroup.type = 'checkbox';
-            _inputGroup.className = 'group';
-            _inputGroup.setAttribute('data-type', 'group');
-            _lineGroup.appendChild(_inputGroup);
-            _inputLabel.appendChild(_inputGroup);
-            _lineGroup.appendChild(_inputLabel);
-            _inputGroup.id = 'g_' + item['gid'];
-            _inputLabel.setAttribute('for', 'g_' + item['gid']);
-            _inputLabel.innerHTML += ' <strong>' + item['gid'] + '</strong>';
-            fragment.appendChild(_lineGroup);
-            item['users'].forEach(function (item, index){
-                var _inlineUser = document.createElement('span'),
-                    _inputUser = document.createElement('input'),
-                    _inputUserLabel = document.createElement('label');
-                _inputUser.name = item['uid'];
-                _inputUser.type = 'checkbox';
-                _inputUser.className = 'user';
-                _inputUser.setAttribute('data-type', 'user');
-                _inputUser.setAttribute('data-gid', item['gid']);
-                _inputUser.id = 'u_' + item['uid'];
-                _inputUserLabel.setAttribute('for', 'u_' + item['uid']);
-                _inputUserLabel.innerHTML += item['displayname'];
-                _inlineUser.appendChild(_inputUser);
-                _inlineUser.appendChild(_inputUserLabel);
-                _lineUsers.appendChild(_inlineUser);
-            });
-            fragment.appendChild(_lineUsers);
-        });
-        /*for (var groupArray in groupusers) {
-            group = groupusers[groupArray]['gid'];
-            var _lineGroup = document.createElement('div'),
-                _lineUsers = document.createElement('div'),
-                _inputGroup = document.createElement('input'),
-                _inputLabel = document.createElement('label');
-            _inputGroup.name = groupusers[groupArray]['gid'];
-            _inputGroup.type = 'checkbox';
-            _inputGroup.className = 'group';
-            _inputGroup.setAttribute('data-type', 'group');
-            _lineGroup.appendChild(_inputGroup);
-            _inputLabel.appendChild(_inputGroup);
-            _lineGroup.appendChild(_inputLabel);
-            _inputGroup.id = 'g_' + groupusers[groupArray]['gid'];
-            _inputLabel.setAttribute('for', 'g_' + groupusers[groupArray]['gid']);
-            _inputLabel.innerHTML += ' <strong>' + groupusers[groupArray]['gid'] + '</strong>';
-            fragment.appendChild(_lineGroup);
-            users = groupusers[groupArray]['users'];
-            for (var userArray in users) {
-                console.log(userArray);
-                console.log(users);
-                var _inlineUser = document.createElement('span'),
-                    _inputUser = document.createElement('input'),
-                    _inputUserLabel = document.createElement('label');
-                _inputUser.name = users[userArray]['uid'];
-                _inputUser.type = 'checkbox';
-                _inputUser.className = 'user';
-                _inputUser.setAttribute('data-type', 'user');
-                _inputUser.setAttribute('data-gid', groupusers[groupArray]['gid']);
-                _inputUser.id = 'u_' + users[userArray]['uid'];
-                _inputUserLabel.setAttribute('for', 'u_' + users[userArray]['uid']);
-                _inputUserLabel.innerHTML += users[userArray]['displayname'];
-                _inlineUser.appendChild(_inputUser);
-                _inlineUser.appendChild(_inputUserLabel);
-                _lineUsers.appendChild(_inlineUser);
-            }
-            fragment.appendChild(_lineUsers);
-        };*/
-        $("#resources-form div:first-child").append(fragment);
+        $("#resources-form div:first-child").append(fragmentResources);
         $("#resources-form").append('<div id="resourcesbuttons" style="padding: 5px; position: absolute;"><div class="tbl">' +
             '<div class="tbl_cell"><input type="button" id="save-resources" name="save-resources" value="Done"></div>' +
             '<div class="tbl_cell" align="right" ><input type="button" id="close-resources" name="close-resources" value="Cancel"></div>' +
@@ -1328,9 +1621,9 @@ gantt.showLightbox = function (id) {
         $(".resources :checkbox").change(function () {
             $('input[id=' + $(this).attr('id') + ']').prop('checked', $(this).is(':checked'));
             if ($(this).is(':checked') === true) {
-                resources = OCGantt.lbox.addResources(resources, $(this).attr('id'));
+                resources = OCGantt.lbox.addResources(OCGantt.lbox.getForm("my-form"), resources, $(this).attr('id'));
             } else if ($(this).is(':checked') === false) {
-                resources = OCGantt.lbox.deleteResources(resources, $(this).attr('id'));
+                resources = OCGantt.lbox.deleteResources(OCGantt.lbox.getForm("my-form"), resources, $(this).attr('id'));
             }
         });
         $("#links-form div:first-child").append(fragmentLinks);
@@ -1376,7 +1669,7 @@ gantt.showLightbox = function (id) {
             }
         }
         $(document).keyup(OCGantt.lbox.keyUpFunction);
-        OCGantt.lbox.precheckBoxes(groupUserArray);
+        OCGantt.lbox.precheckBoxes('resources', groupUserArray);
         $(resourcesField).focus(function () {
             var tempTask;
             tempTask = task;
@@ -1407,8 +1700,6 @@ gantt.showLightbox = function (id) {
                 }
             }
             OCGantt.lbox.precheckLinks(OCGantt.tempLinks, tempTask.id);
-            console.log(arr.links);
-            console.log(OCGantt.tempLinks);
             OCGantt.lbox.convertLagsToDay(OCGantt.tempLinks, tempTask.id, "init");
             linksStatus = 1;
         });
@@ -1643,6 +1934,7 @@ OCGantt.lbox.save = function () {
         }
     }
     OCGantt.lbox.getForm("my-form").querySelector("[name='resources']").innerHTML = "";
+    task.color = OCGantt.mapColor(task);
     gantt.hideLightbox();
     gantt.render();
 };
@@ -1665,7 +1957,6 @@ OCGantt.lbox.save.links = function () {
         OCGantt.lbox.deleteLastActiveOverlay();
     }
 };
-
 
 OCGantt.lbox.cancel = function () {
     var task = gantt.getTask(taskId);
@@ -1692,7 +1983,7 @@ OCGantt.lbox.cancel.resources = function (resources) {
     document.getElementById("my-form").querySelector("[name='resources']").innerHTML = "";
     OCGantt.displayResources(resources.split(","), document.getElementById("my-form").querySelector("[name='resources']"));
     $("resources :checkbox").prop('checked', false);
-    OCGantt.lbox.precheckBoxes(resources.split(","));
+    OCGantt.lbox.precheckBoxes('resources', resources.split(","));
 };
 
 OCGantt.lbox.cancel.links = function () {
@@ -2084,9 +2375,11 @@ OCGantt.GroupUsers.prototype = {
                     resources = arr.data[index].resources,
                     obj = resources.split(","),
                     ccode = $.grep(colors, function (user) { return  user.id == obj[0] });
-                if (ccode.length > 0){
+                if (ccode.length >= 1){
+                    arr.data[index].color = ccode[0].value;
                     task.color = ccode[0].value;
-                } else {
+                } else if (ccode.length === 0){
+                    arr.data[index].color = 'rgb(75, 113, 164)';
                     task.color = 'rgb(75, 113, 164)';
                 }             
                 OCGantt.tasks.updateActive();
@@ -2189,6 +2482,9 @@ OCGantt.GroupUsers.prototype = {
                     OCGantt.tasks._activeTask = OCGantt.tasks._tasks[index];
                     OCGantt.tasks.removeActive();
                     OCGantt.tasks._tasks = arr.data;
+                    var index = OCGantt.screenOrder.indexOf(JSON.stringify(item.id));
+                    OCGantt.screenOrder.splice(index, 1);
+                    OC.AppConfig.setValue('owncollab_ganttchart', 'screenorder', JSON.stringify(OCGantt.screenOrder));
                 }
             });
             gantt.attachEvent("onAfterLinkAdd", function (id, item) {
@@ -2203,7 +2499,6 @@ OCGantt.GroupUsers.prototype = {
                 OCGantt.links.create(arr.links[index]).done(function () {
                     gantt.changeLinkId(item.id, arr.links[index].id);
                 });
-                console.log(arr.links);
             });
             gantt.attachEvent("onAfterLinkDelete", function (id, item) {
                 arr = gantt.serialize();
@@ -2212,12 +2507,9 @@ OCGantt.GroupUsers.prototype = {
                 OCGantt.links.removeActive();
                 OCGantt.links._links = arr.links;
             });
-            gantt.attachEvent("onParse", function () {
-                $("#OCGantt-cover").fadeOut();
-                $("#OCGantt-loader").fadeOut();
-            });
         } else if (OCGantt.isAdmin === false) {
             gantt.config.readonly = true;
+
         }
         if (OCGantt.dhtmlxversion.dhtmlxversion === "commercial") {
             console.log("You are using the commercial version");
@@ -2259,6 +2551,7 @@ OCGantt.GroupUsers.prototype = {
                     }
                     gantt.updateTask(id);
                     if (target){
+                        console.log(target);
                         var sourceIndex = OCGantt.screenOrder.indexOf(id);
                         var targetIndex = OCGantt.screenOrder.indexOf(target);
                         OCGantt.screenOrder.move(sourceIndex, targetIndex);
@@ -2276,6 +2569,84 @@ OCGantt.GroupUsers.prototype = {
         } else if (OCGantt.dhtmlxversion.dhtmlxversion === "standard") {
             console.log("You are using the standard version");
         }
+        gantt.attachEvent("onParse", function () {
+            $("#OCGantt-cover").fadeOut();
+            $("#OCGantt-loader").fadeOut();     
+            $(".fa-filter").each(function() {
+                OCGantt.initFilterGrid($(this).attr('id'));
+            });
+        });
+        gantt.attachEvent("onDataRender", function(){
+            if (OCGantt.filter.value.textTasks || OCGantt.filter.value.textSubprojects){
+                $(".fa-filter#text").addClass("activated");
+            } else {
+                $(".fa-filter#text").removeClass("activated");
+            }
+            if (OCGantt.filter.value.resources){
+                $(".fa-filter#resources").addClass("activated");
+            } else {
+                $(".fa-filter#resources").removeClass("activated");
+            }
+            $.each($(".fa-filter"), function(i, e){
+                var events = $(e).data("events");
+                if ((!events) || (events.length === 0)){
+                    $(".fa-filter").click(function() {
+                        var id = $(this).attr('id');
+                        $('.ocgantt_filter_resources input:checkbox').prop('checked', false);
+                        if (id === 'resources'){
+                            if (OCGantt.filter.value.resources){
+                                OCGantt.filter.resourcesList = OCGantt.filter.value.resources.slice();
+                                OCGantt.lbox.precheckBoxes('ocgantt_filter_resources', OCGantt.filter.value.resources);
+                            }
+                        }
+                        $("#filter-"+id).toggle("blind", {direction: "vertical"}, 350);
+                    });
+                }
+            });
+            $('.fa-ban.fa-stack-2x').hover(function(e) {
+                $('.fa-sort.fa-stack-2x').trigger(e.type);
+            });
+            $('.fa-sort.fa-stack-2x').hover(function(){
+                 $('.fa-sort.fa-stack-2x').toggleClass("hover");
+            });
+            $('.fa-ban.fa-stack-2x').click(function(){
+                gantt.config.sort = false;
+                console.log(arr);
+                OCGantt.init();
+            });
+        });
+        gantt.attachEvent("onLinkDblClick", function(id,e){
+            $("#content-wrapper").addClass("blur");
+            setTimeout(function(){
+                $("gantt_popup_button").click(function(){
+                    $("#content-wrapper").removeClass("blur");
+                });
+                $(".gantt_popup_button div").click(function(){
+                    $("#content-wrapper").removeClass("blur");
+                });
+                }, 200);
+            return true;
+        });
+        gantt.attachEvent("onTaskCreated", function(task){
+            var scrollPosition = $(".gantt_ver_scroll").scrollTop();
+            setTimeout(function(){
+                gantt.showTask(task.id);
+                if (scrollPosition < $(".gantt_ver_scroll").scrollTop()){
+                    $(".gantt_ver_scroll").scrollTop($(".gantt_ver_scroll").scrollTop() + 25);
+                }
+            }, 300);
+            return true;
+        });
+
+        gantt.attachEvent("onBeforeTaskDisplay", function(id, task){
+            if (Object.keys(OCGantt.filter.value).length > 0){
+                if (OCGantt.filterGrid(id)){
+                    return true;
+                }
+            } else if (Object.keys(OCGantt.filter.value).length === 0 ){
+                return true;
+            }
+        });
         gantt.config.round_dnd_dates = false;
         gantt.config.server_utc = false;
         gantt.config.xml_date = "%Y-%m-%d %H:%i";
@@ -2404,10 +2775,15 @@ OCGantt.GroupUsers.prototype = {
             },
 
             {
-                name: "buttons", label: '', width: OCGantt.columnWidth.buttons, resize: false, template: function (item) {
-                    return ('<i class="fa gantt_button_grid gantt_grid_edit fa-pencil" onclick="OCGantt.clickGridButton(' + item.id + ', \'edit\')"></i>' +
+                name: "buttons", label: OCGantt.columnLabel.buttons, width: OCGantt.columnWidth.buttons, resize: false, template: function (item) {
+                    if (item.id === 1){
+                        return ('<i class="fa gantt_button_grid gantt_grid_edit fa-pencil" onclick="OCGantt.clickGridButton(' + item.id + ', \'edit\')"></i>' +
+                        '<i class="fa gantt_button_grid gantt_grid_add fa-plus" onclick="OCGantt.clickGridButton(' + item.id + ', \'add\')"></i>');
+                    } else {
+                        return ('<i class="fa gantt_button_grid gantt_grid_edit fa-pencil" onclick="OCGantt.clickGridButton(' + item.id + ', \'edit\')"></i>' +
                         '<i class="fa gantt_button_grid gantt_grid_add fa-plus" onclick="OCGantt.clickGridButton(' + item.id + ', \'add\')"></i>' +
                         '<i class="fa gantt_button_grid gantt_grid_delete fa-times" onclick="OCGantt.clickGridButton(' + item.id + ', \'delete\')"></i>');
+                    }
                 }
             },
         ];

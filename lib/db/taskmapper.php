@@ -85,32 +85,32 @@ class TaskMapper extends Mapper {
                     $newarray[$key] = $tasks[$index];
                 }
             }
-            foreach ($tasks as $key => $task){
-                $newarray = $tasks;
+            foreach ($newarray as $key => $task){
+                //$newarray = $tasks;
                 $task = (array) json_decode(json_encode($task));
                 if ($task['resources'] != ''){
                     if (preg_match('/,/', $task['resources'], $match1)){
                         preg_match('/(.*?),/', $task['resources'], $match);
                         $index = array_search($match[1], array_column($usersgroupsarray, 'id'));
                         if ($usersgroupsarray[$index]['color'] != ''){
-                            $tasks[$key]->color = $usersgroupsarray[$index]['color'];
+                            $newarray[$key]->color = $usersgroupsarray[$index]['color'];
                         } else {
-                            $tasks[$key]->color = 'rgb(75, 113, 164)';
+                            $newarray[$key]->color = 'rgb(75, 113, 164)';
                         }
                     } else {
                         $index = array_search($task['resources'], array_column($usersgroupsarray, 'id'));
                         if ($usersgroupsarray[$index]['color'] != ''){
-                            $tasks[$key]->color = $usersgroupsarray[$index]['color'];
+                            $newarray[$key]->color = $usersgroupsarray[$index]['color'];
                         } else {
-                            $tasks[$key]->color = 'rgb(75, 113, 164)';
+                            $newarray[$key]->color = 'rgb(75, 113, 164)';
                         }
                     }
                 } else {
-                    $tasks[$key]->color = 'rgb(75, 113, 164)';
+                    $newarray[$key]->color = 'rgb(75, 113, 164)';
                 }
             }
         } else {
-            $newarray = $tasks;
+            //$newarray = $tasks;
         }
         //return $this->findEntities($sql);
         //error_log(print_r($newarray, true) . "\n", 3, "/var/tmp/tasks.log");

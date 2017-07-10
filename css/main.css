@@ -410,7 +410,7 @@ b, strong { font-weight: 600 !important }
     font-weight: normal;
     cursor: pointer;
 }
-.gantt_popup_button.dhtmlx_popup_button.gantt_ok_button.dhtmlx_ok_button{
+/*.gantt_popup_button.dhtmlx_popup_button.gantt_ok_button.dhtmlx_ok_button{
     background-color: #fff !important;
     border: 3px solid #f00 !important;
     color: #f00;
@@ -418,7 +418,7 @@ b, strong { font-weight: 600 !important }
     padding: 0px 15px 0px 10px !important;
     font-weight: normal;
     cursor: pointer;
-}
+}*/
 
 #gantt_sidebar {
     display: none;

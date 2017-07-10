@@ -143,7 +143,8 @@ startFirstRunWizard = function () {
     $("body").append(OCGanttFRW.html);
     OCGanttFRW.addPageCountDots(OCGanttFRW.pageCount);
     OCGanttFRW.addPages(OCGanttFRW.pageCount);
-    $("#media-frw-1").css('background-image', 'url(' + instanceUrl + 'img/tut1.png)');
+    $("#media-frw-1").css('background-image', 'url(' + instanceUrl + 'img/TUT_change_project_name.png)');
+    $("#media-frw-2").css('background-image', 'url(' + instanceUrl + 'img/TUT_move_beginning.png)');
     $("#lightbox input").click(function(){
         OCGanttFRW.switchPages($(this).prop('value'));
     });
@@ -163,7 +164,7 @@ if (OCGanttFRW.isAdmin === true){
         html: '<div class="ocgantt-frw wrapper">' +
               '<div class="ocgantt-frw header"><h1>Set the project name</h1></div>' +
               '<div class="ocgantt-frw media" id="media-frw-1">' +
-              '<div class="ocgantt-frw video"><video preload="preload" loop="loop"><source src="' + instanceUrl + 'vid/tut1.mp4"></source></video></div>' +
+              '<div class="ocgantt-frw video"><video preload="preload" loop="loop"><source src="' + instanceUrl + 'vid/TUT_change_project_name.mp4"></source></video></div>' +
               '</div>' +
               '<div class="ocgantt-frw form" style="text-align: center;"><p style="font-size: 1.2em; margin-bottom: 5px; padding-bottom: 5px;">Please set the project name as first. You can change it later by editing the first task.</p>' +
               '<input type="text" style="width:20%;" id="projectname" name="projectname" value="" placeholder="Project name" />' +
@@ -174,8 +175,8 @@ if (OCGanttFRW.isAdmin === true){
         OCGanttFRW.pages[2] = {
         html: '<div class="ocgantt-frw wrapper">' +
               '<div class="ocgantt-frw header"><h1>Set the start date of the project</h1></div>' +
-              '<div class="ocgantt-frw media" id="media-frw-1">' +
-              '<div class="ocgantt-frw video"><video preload="preload" loop="loop"><source src="' + instanceUrl + 'vid/tut1.mp4"></source></video></div>' +
+              '<div class="ocgantt-frw media" id="media-frw-2">' +
+              '<div class="ocgantt-frw video"><video preload="preload" loop="loop"><source src="' + instanceUrl + 'vid/TUT_move_beginning.mp4"></source></video></div>' +
               '</div>' +
               '<div class="ocgantt-frw form" style="text-align: center;"><p style="font-size: 1.2em; margin-bottom: 5px; padding-bottom: 5px;">Please set the start date and time of the project. These values will be adjusted automatically when editing the project.</p>' +
               '<input class="datepicker" id="projectstartdate" name="projectstartdate" type="text" style="width: 80px">' +

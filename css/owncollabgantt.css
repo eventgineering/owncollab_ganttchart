@@ -298,7 +298,65 @@ input[type="button"]:hover.ocgantt-frw.disabled, input[type="button"]:focus.ocga
     margin: 10px;
 }
 
+/* styles for filter elements */
+.ocgantt_filter_text{
+    position: fixed;
+    width: 300px !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .8);
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    margin-top: -1px;
+    padding: 5px;
+}
+.ocgantt_filter_resources input:checkbox{
+    color: red !important;
+    background-color: green !important;
+}
+
+.ocgantt_filter_resources{
+    position: fixed;
+    width: 300px !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .8);
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    margin-top: -1px;
+    padding: 5px;
+}
+
+.fa-filter.activated{
+    color: #F00;
+    opacity: 1;
+}
+
+.fa-sort-asc:hover, .fa-sort-desc:hover{
+    opacity: .2 !important;
+}
+
+.fa-sort-asc.activated, .fa-sort-desc.activated{
+    opacity: 1 !important;
+}
+
+.fa-ban.fa-stack-2x{
+    font-size: 23px !important;
+    top: -3px;
+    left: -3px;
+    position: absolute;
+}
+
+.fa-sort.fa-stack-2x.hover{
+    opacity: 1 !important;
+}
+
+.fa-trash-o:hover{
+    color: #f00;
+}
+
 /* Custom gantt styles */
+
+.gantt_project{
+    border-bottom-right-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+}
 
 .gantt_tree_icon.gantt_close{
     background-image: url() !important;
@@ -563,6 +621,82 @@ div[contenteditable=true] {
     /*border-right: 1px solid #4b71a4;*/
 }
 
+.gantt_row .gantt_cell {
+    border-right: 1px solid #d2d2d2;
+}
+
+.gantt_task_cell {
+    page-break-before:auto !important;
+}
+
+.gantt_row {
+    page-break-before:auto !important;
+}
+
+.gantt_task_row {
+    page-break-before:auto !important;
+}
+
+/* Definitions of Modal Boxes */
+.dhx_modal_cover{
+    
+}
+
+.gantt_modal_box{
+    border-radius: 6px !important;
+    box-shadow: 0 0 15px -3px rgba(0, 0, 0, .8) !important;
+    font-family: 'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif !important;
+    width: 350px !important;
+}
+
+.gantt_popup_button.gantt_ok_button{
+        width: 100px !important;
+    height: 30px !important;
+    min-width: 25px !important;
+    padding: 5px !important;
+    background: rgba(240,240,240,.9) !important;
+    font-weight: 600 !important;
+    color: #555 !important;
+    border: 1px solid rgba(240,240,240,.9) !important;
+    cursor: pointer !important;
+    outline: none !important;
+    border-radius: 3px !important;
+    margin: 3px 3px 3px 3px !important;
+    font-family: 'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif !important;
+    text-shadow: none !important;
+}
+.gantt_popup_button div{
+    cursor: pointer !important;
+}
+
+
+.gantt_popup_button.gantt_ok_button:hover{
+    background: #fff !important;
+}
+
+.gantt_popup_button:focus{
+    -moz-box-shadow:none !important;
+    -webkit-box-shadow:none !important;
+    box-shadow:inset none !important;
+}
+
+
+.gantt_popup_button{
+    /*width: auto !important;*/
+    width: 100px !important;
+    height: 30px !important;
+    min-width: 25px !important;
+    padding: 5px !important;
+    background: #fff !important;
+    color: #555 !important;
+    border: 1px solid rgba(240,240,240,.9) !important;
+    cursor: pointer !important;
+    outline: none !important;
+    border-radius: 3px !important;
+    margin: 3px 3px 3px 3px !important;
+    font-family: 'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif !important;
+    text-shadow: none !important;
+}
 
 /* Definition of custom buttons in grid */
 .fa{
