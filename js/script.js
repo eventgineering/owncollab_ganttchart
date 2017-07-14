@@ -14,13 +14,13 @@ var arr = {
 };
 var resourcesStatus = undefined;
 var globalTimeout = null;
-//$("body").append(OCGantt.splashScreen.html);
 
 OCGantt.linksLoaded = undefined;
 OCGantt.tasksLoaded = undefined;
 OCGantt.usergroupsLoaded = undefined;
 OCGantt.appConfig = undefined;
 OCGantt.dhtmlxversion = undefined;
+OCGantt.readOnly = undefined;
 OCGantt.userColors= [];
 OCGantt.filterValues = function (data, query){
     return data.filter(function(el){
@@ -61,6 +61,12 @@ var taskId = null;
 
     $(document).ready(function () {
         OCGantt.dhtmlxversion = $("#app").data();
+        if (OCGantt.dhtmlxversion.token){
+            if (OCGantt.dhtmlxversion.token != ''){
+                instanceUrl = OC.generateUrl('/apps/owncollab_ganttchart/share/s/' + OCGantt.dhtmlxversion.token + '/');
+                OCGantt.readOnly = true;
+            }
+        }
         $("#app").append(OCGantt.splashScreen);
         var $bottom = OCGantt.getBottomById("topbar") + 1;
         $("#sidebar-save").css('top', $bottom + 'px');
@@ -94,35 +100,22 @@ var taskId = null;
         $("#zoomtofit").click(function(){
             zoomToFit();
         });
-        // OCGantt.showMask();
-//    document.body.innerHTML += OCGantt.splashScreen;
         var translations = {
             //    newEvent: $('#new-event-string').text()
         };
-        /*    
-        console.log(oc_appconfig);
-        console.log(OC.getLocale());
-        console.log(OC.isUserAdmin());
-        console.log(OC.getCurrentUser());
-        console.log(OC.AppConfig);
-        alert('test');*/
-
-
-        /*OC.AppConfig.getKeys('owncollab_ganttchart', function(data){
-             OCGantt.appConfig = data;
-             console.log(data);
-            });*/
         if (OCGantt.isAdmin === true) {
             OC.AppConfig.getKeys('owncollab_ganttchart', OCGantt.getColors);
         }
         OCGantt.config();
         gantt.init("gantt_chart");
-        OCGantt.tasks = new OCGantt.Tasks(OC.generateUrl('/apps/owncollab_ganttchart/tasks'));
-        OCGantt.links = new OCGantt.Links(OC.generateUrl('/apps/owncollab_ganttchart/links'));
-        OCGantt.share = new OCGantt.Share(OC.generateUrl('/apps/owncollab_ganttchart'));
-        OCGantt.groupusers = new OCGantt.GroupUsers(OC.generateUrl('/apps/owncollab_ganttchart/groupusers'));
-        OCGantt.share.index().done(function (){
-        });
+        OCGantt.tasks = new OCGantt.Tasks(instanceUrl + 'tasks');
+        OCGantt.links = new OCGantt.Links(instanceUrl + 'links');
+        OCGantt.groupusers = new OCGantt.GroupUsers(instanceUrl + 'groupusers');
+        if (!OCGantt.dhtmlxversion.token){
+            OCGantt.share = new OCGantt.Share(OC.generateUrl('/apps/owncollab_ganttchart'));
+            OCGantt.share.index().done(function (){
+            });
+        }
         OCGantt.tasks.loadAll().done(function () {
             arr.data = OCGantt.tasks._tasks;
             OCGantt.tasksLoaded = true;
@@ -140,8 +133,10 @@ var taskId = null;
             OCGantt.usergroupsLoaded = true;
         });
         OCGantt.init();
-        OCGantt.testRedo();
-        OCGantt.testUndo();
+        if (OCGantt.isAdmin === true) {
+            OCGantt.testRedo();
+            OCGantt.testUndo();
+        }
         $("body").append(OCGantt.lbox.HTML.html);
         if (typeof monthNames != 'undefined') {
             // min date should always be the next day

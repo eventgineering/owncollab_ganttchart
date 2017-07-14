@@ -1,7 +1,5 @@
 <?php 
 /**
- * @author Christoph Wurst <christoph@owncloud.com>
- *
  * @copyright Copyright (c) 2017, ownCloud GmbH
  * @license AGPL-3.0
  *
@@ -36,6 +34,10 @@ use OCP\Security\ICrypto;
 use OCP\ISession;
 use OCP\AppFramework\IAppContainer;
 use OCP\IURLGenerator;
+use OCA\OwnCollab_GanttChart\Service\TaskService;
+use OCA\OwnCollab_GanttChart\Service\LinkService;
+use OCA\OwnCollab_GanttChart\Service\GroupUserService;
+
 
 class ShareController extends Controller {
 
@@ -56,6 +58,9 @@ class ShareController extends Controller {
 	/** @var IURLGenerator */
 	protected $urlGenerator;
 
+	private $taskService;
+	private $linkService;
+	private $groupUserService;
 	private $userId;
 
 	/**
@@ -69,6 +74,9 @@ class ShareController extends Controller {
 	 * @param ISession $session
 	 * @param IAppContainer $appContainer
 	 * @param IURLGenerator $urlGenerator
+	 * @param TaskService $taskService
+	 * @param LinkService $linkService
+	 * @param GroupUserService $groupUserService
 	 */
 	public function __construct($appName,
 								IRequest $request,
@@ -79,6 +87,9 @@ class ShareController extends Controller {
 								ISession $session,
 								IAppContainer $appContainer,
 								IURLGenerator $urlGenerator,
+								TaskService $taskService,
+								LinkService $linkService,
+								GroupUserService $groupUserService,
 								$UserId) {
 		parent::__construct($appName, $request);
 		$this->secureRandom = $secureRandom;
@@ -89,6 +100,9 @@ class ShareController extends Controller {
 		$this->userId = $UserId;
 		$this->appContainer = $appContainer;
 		$this->urlGenerator = $urlGenerator;
+		$this->taskService = $taskService;
+		$this->linkService = $linkService;
+		$this->groupUserService = $groupUserService;
 	}
 
 
@@ -106,21 +120,24 @@ class ShareController extends Controller {
 
 	public function showAuth($token){
 		$storedToken = $this->config->getAppValue('owncollab_ganttchart', 'sharetoken', 0);
-		$url = $this->urlGenerator->linkToRoute('owncollab_ganttchart.share.showShare', ['token' => $token]);
+		$today = $this->getToday();
+		$expiryDate = $this->getExpiryDate();
+		$expired = $this->checkExpired($today, $expiryDate);
 		if ($token !== $storedToken){
 			return new NotFoundResponse;
 		}
 		if ($token === $storedToken){
-			$passwordSet = $this->getPasswordSet();
-			if ($passwordSet !== 0){
-				//return test;
-				return new TemplateResponse($this->appName, 'authenticate', [], 'guest');
+			if ($expired === true){
+				return new TemplateResponse($this->appName, '410', [], 'guest');
 			} else {
-				//return test2;
-				return new TemplateResponse($this->appName, 'public');
+				$passwordSet = $this->getPasswordSet();
+				if ($passwordSet !== 0){
+					return new TemplateResponse($this->appName, 'authenticate', [], 'guest');
+				} else {
+					return new TemplateResponse($this->appName, 'public', ['token' => $token]);
+				}
 			}
 		}
-		return new TemplateResponse($this->appName, 'public');
 	}
 
 	/**
@@ -138,9 +155,9 @@ class ShareController extends Controller {
 	public function getAuth($token, $password){
 		$verification = $this->verifyPassword($password);
 		if ($verification === true){
-			return new TemplateResponse($this->appName, 'public');
+			return new TemplateResponse($this->appName, 'public', ['token' => $token]);
 		}
-		return 'forbidden';
+		return new TemplateResponse($this->appName, 'authenticate', ['wrongpw' => true], 'guest');
 	}
 
 	/**
@@ -151,8 +168,14 @@ class ShareController extends Controller {
 	 */
 
 	public function index(){
-		return new RedirectResponse($this->urlGenerator->linkToRouteAbsolute('', []));
-
+		$token = $this->getToken();
+		$expiryDate = $this->getExpiryDate();
+		$passwordSet = $this->getPasswordSet();
+		return [
+			'token' => $token,
+			'expiryDate' => $expiryDate,
+			'passwordSet' => $passwordSet
+		];
 	}
 
 	/**
@@ -205,9 +228,12 @@ class ShareController extends Controller {
 	* @param string $password
 	*/
 	private function storePassword($password){
-		$hashed = $this->hasher->hash($password);
-		$this->config->setAppValue($this->appContainer->getAppName(), 'sharepassword', $hashed);
-		return 'success';
+		if ($password !== 0){
+			$hashed = $this->hasher->hash($password);
+			$this->config->setAppValue($this->appContainer->getAppName(), 'sharepassword', $hashed);
+		} else {
+			$this->config->setAppValue($this->appContainer->getAppName(), 'sharepassword', 0);
+		}
 	}
 
 	/**
@@ -261,13 +287,59 @@ class ShareController extends Controller {
 	 * Check if a password for the share is set
      * @NoAdminRequired
 	 */
-
 	public function getPasswordSet(){
 		$passwordSet = $this->config->getAppValue('owncollab_ganttchart', 'sharepassword', 0);
-		if ($passwordSet === 0){
+		if ($passwordSet == 0){
 			return 0;
 		} else {
 			return 1;
 		}
+	}
+
+    /**
+     * @NoAdminRequired
+	 * @PublicPage
+     */
+    public function getTasks() {
+	return new DataResponse($this->taskService->findAll());
+    }
+
+    /**
+     * @NoAdminRequired
+	 * @PublicPage
+     */
+    public function getLinks() {
+	return new DataResponse($this->linkService->findAll());
+    }
+
+    /**
+     * @NoAdminRequired
+	 * @PublicPage
+     */
+    public function getGroupUsers() {
+	return new DataResponse($this->groupUserService->findAll());
+    }
+
+	/**
+	 * @NoAdminReqired
+	 * @PublicPage
+	 * 
+	 * @return string
+	 */
+	public function getToday(){
+		return time();
+	}
+
+	/**
+	 * @NoAdminReqired
+	 * @PublicPage
+	 * 
+	 * @return bool
+	 */
+	public function checkExpired($today, $expiryDate){
+		if (strtotime($expiryDate) < $today){
+			return true;
+		}
+		return false;
 	}
 }

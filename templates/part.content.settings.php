@@ -42,7 +42,9 @@ $appName = 'owncollab_ganttchart';
                             <input id="expirationDate" class="datepicker" placeholder="Expiry Date" value="" type="text">
                         </div>
                     </div>
-                    <input type="button" id="share-save" value="Save"><i id="save-share-settings" class="fa fa-spinner fa-pulse" style="display: none;"></i>
+                    <input type="button" id="share-save" value="Save">
+                    <i id="save-share-settings" class="fa fa-spinner fa-pulse" style="display: none;"></i>
+                    <p id="nothing-to-store" style="display:none;">No changes . . . nothing to be saved</p>
                 </div>
             </div>
         </div>

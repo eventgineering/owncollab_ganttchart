@@ -21,6 +21,7 @@ if (is_dir($dirname)){
 	vendor_style('owncollab_ganttchart', 'dhtmlxgantt/commercial/dhtmlxgantt');
 	vendor_style('owncollab_ganttchart', 'colorpicker/spectrum');
 	$dhtmlxversion = "commercial";
+
 } else {
 	vendor_script('owncollab_ganttchart', 'dhtmlxgantt/standard/dhtmlxgantt');
 	vendor_script('owncollab_ganttchart', 'dhtmlxgantt/standard/api');
