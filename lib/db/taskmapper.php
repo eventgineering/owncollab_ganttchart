@@ -71,7 +71,6 @@ class TaskMapper extends Mapper {
         $usersgroupsarray = TaskMapper::addPrefix($groupsarray, 'gid', 'g_', $usersgroupsarray);
         $colors = TaskMapper::getColors();
         $usersgroupsarray = TaskMapper::mapcolors($colors, $usersgroupsarray);
-        //error_log(print_r($usersgroupsarray, true) . "\n", 3, "/var/tmp/usersgroupsarray.log");
         $sql = 'SELECT * FROM *PREFIX*owncollab_gantt_tasks';
         $search = array('[', '"', ']');
         $replace = '';
@@ -86,7 +85,6 @@ class TaskMapper extends Mapper {
                 }
             }
             foreach ($newarray as $key => $task){
-                //$newarray = $tasks;
                 $task = (array) json_decode(json_encode($task));
                 if ($task['resources'] != ''){
                     if (preg_match('/,/', $task['resources'], $match1)){
@@ -112,8 +110,6 @@ class TaskMapper extends Mapper {
         } else {
             //$newarray = $tasks;
         }
-        //return $this->findEntities($sql);
-        //error_log(print_r($newarray, true) . "\n", 3, "/var/tmp/tasks.log");
         return $newarray;
     }
     

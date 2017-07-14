@@ -13,7 +13,7 @@ class GroupUser extends Entity implements JsonSerializable {
     public function jsonSerialize() {
         return [
             'gid' => $this->gid,
-            'uid' => $this->uid;
+            'uid' => $this->uid
         ];
     }
 }

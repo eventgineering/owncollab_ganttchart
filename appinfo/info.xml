@@ -11,4 +11,7 @@
     <dependencies>
         <owncloud min-version="9.1" max-version="9.1"/>
     </dependencies>
+	<public>
+		<files>public.php</files>
+	</public>
 </info>

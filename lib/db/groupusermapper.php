@@ -26,34 +26,6 @@ class GroupUserMapper extends Mapper {
         $groups = $this->db->executeQuery($sqlgroups)->fetchAll();
         $users = $this->db->executeQuery($sqlusers)->fetchAll();
         $groupusers = array();
-        $testarray = array(
-            array(
-                'gid' => 'admin',
-                'users' => array(
-                    array(
-                        'uid' => 'user1',
-                        'displayname' => 'user 1',
-                    ),
-                    array(
-                        'uid' => 'user2',
-                        'displayname' => 'user 2',
-                    ),
-                ),
-            ),
-            array(
-                'gid' => 'benutzer',
-                'users' => array(
-                    array(
-                        'uid' => 'user3',
-                        'displayname' => 'user 3',
-                    ),
-                    array(
-                        'uid' => 'user4',
-                        'displayname' => 'user 4',
-                    ),
-                ),
-            ),
-        );
 
         foreach ($users as $user){
             if (!$user['displayname']){

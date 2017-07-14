@@ -2,12 +2,6 @@
 
 $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 $timepickerLangUrl = "jquery-ui-timepicker/i18n/jquery.ui.timepicker-". $lang;
-$FRW = \OC::$server->getConfig()->getAppValue('owncollab_ganttchart', 'firstrunwizard', '0');
-//error_log($FRW . "\n", 3, "/var/tmp/installed_apps.log");
-if ($FRW == '0'){
-		//error_log("firstrunwizard to be loaded" . "\n", 3, "/var/tmp/installed_apps.log");
-		script('owncollab_ganttchart', 'firstrunwizard');
-}
 
 $dirname = OC::$SERVERROOT.'/apps/owncollab_ganttchart/vendor/dhtmlxgantt/commercial';
 if (is_dir($dirname)){
@@ -21,12 +15,14 @@ if (is_dir($dirname)){
 	vendor_style('owncollab_ganttchart', 'dhtmlxgantt/commercial/dhtmlxgantt');
 	vendor_style('owncollab_ganttchart', 'colorpicker/spectrum');
 	$dhtmlxversion = "commercial";
+	$readonly = "true";
 } else {
 	vendor_script('owncollab_ganttchart', 'dhtmlxgantt/standard/dhtmlxgantt');
 	vendor_script('owncollab_ganttchart', 'dhtmlxgantt/standard/api');
 	$ganttLangUrl = "dhtmlxgantt/standard/locale/locale_". $lang;
 	vendor_style('owncollab_ganttchart', 'dhtmlxgantt/standard/dhtmlxgantt');
 	$dhtmlxversion = "standard";
+	$readonly = "true";
 }
 
 //vendor_script('owncollab_ganttchart', 'html2canvas/html2canvas');
@@ -49,7 +45,6 @@ style('owncollab_ganttchart', 'sharetabview');
 	<div id="app-content">
 		<div id="app-content-wrapper">
 			<?php print_unescaped($this->inc('part.content.save')); ?>
-			<?php print_unescaped($this->inc('part.content.settings')); ?>
 			<?php print_unescaped($this->inc('part.content.topbar')); ?>
 			<?php print_unescaped($this->inc('part.content.gantt')); ?>
 			<?php print_unescaped($this->inc('part.content.bottombar')); ?>

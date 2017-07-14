@@ -40,6 +40,17 @@ Array.prototype.move = function(from,to){
   return this;
 };
 
+
+(function ($) {
+	  $.each(['show', 'hide'], function (i, ev) {
+	    var el = $.fn[ev];
+	    $.fn[ev] = function () {
+	      this.trigger(ev);
+	      return el.apply(this, arguments);
+	    };
+	});
+})(jQuery);
+
 // Definition of width of the columns in the table
 OCGantt.columnWidth = {
     id: 50,
@@ -777,6 +788,80 @@ OCGantt.filterGrid = function (id){
     return false;
 };
 
+OCGantt.copyLinkToClipboard = function(){
+    var copyTextarea = $('#linkText-OCGantt');
+    copyTextarea.select();
+    try {
+        var successful = document.execCommand('copy');
+    } catch (err){
+        gantt.alert('Could not copy the link to your clipboard');
+    }
+};
+
+OCGantt.lookForChange = function (){
+    if ($(this).prop('checked') === true){
+        if ($(this)[0].id === 'showPassword-OCGantt'){
+            $('#linkPass').show();
+        }
+        if ($(this)[0].id === 'expirationCheckbox-OCGantt'){
+            $('.expirationDateContainer').show();
+        }
+    } else if ($(this).prop('checked') === false){
+        if ($(this)[0].id === 'showPassword-OCGantt'){
+            $('#linkPass').hide();
+        }
+        if ($(this)[0].id === 'expirationCheckbox-OCGantt'){
+            $('.expirationDateContainer').hide();
+        }        
+    }
+}
+
+OCGantt.initShare = function (){
+    console.log("binding");
+    $('#linkText-OCGantt').val(window.location.href + 's/' + OCGantt.share._share.token);
+    $('#showPassword-OCGantt').on('change', OCGantt.lookForChange);
+    $('#expirationCheckbox-OCGantt').on('change', OCGantt.lookForChange);
+    $('.fa-copy').on('click', OCGantt.copyLinkToClipboard);
+    $('#share-save').on('click', OCGantt.saveShareChanges);
+    if ((OCGantt.share._share.passwordSet === 1) || ($('#showPassword-OCGantt').prop('checked') === true)){
+        if (OCGantt.share._share.passwordSet === 1){
+            $('#linkPassText-OCGantt').val('********');
+        }
+        $('#showPassword-OCGantt').prop('checked', true);
+        $('#linkPass').show();
+    }
+    if ((OCGantt.share._share.expiryDate != 0) || ($('#expirationCheckbox-OCGantt').prop('checked') === true)){
+        if (OCGantt.share._share.expiryDate != 0) {
+            $('#expirationDate').datepicker('setDate', OCGantt.share._share.expiryDate);
+        }
+        $('#expirationCheckbox-OCGantt').prop('checked', true);
+        $('.expirationDateContainer').show();
+    }
+};
+
+OCGantt.saveShareChanges = function(){
+    OCGantt.share._shareStack = [];
+    if (($('#linkPassText-OCGantt').val() != '********') && ($('#linkPassText-OCGantt').val() != '') && ($('#showPassword-OCGantt').prop('checked') === true)){
+        OCGantt.share._shareStack.push({
+            type: 'password',
+            value: $('#linkPassText-OCGantt').val()
+        });
+    }
+    if (($('#expirationDate').val() != '') && ($('#expirationCheckbox-OCGantt').prop('checked') === true) && ($('#expirationDate').val() != OCGantt.share._share.expiryDate)){
+        OCGantt.share._shareStack.push({
+            type: 'shareExpiryDate',
+            value: $('#expirationDate').val()
+        });
+    }
+    if ($('#recipient-OCGantt').val() != ''){
+        OCGantt.share._shareStack.push({
+            type: 'recipient',
+            value: $('#recipient-OCGantt').val()
+        });
+    }
+    OCGantt.share.store();
+}
+
 // Function that inits a datefield with datepicker and extra features
 OCGantt.lbox.dateInit = function (datefield, task, datefield2) {
     var caretPos = 1;
@@ -1455,8 +1540,8 @@ OCGantt.clickGridButton = function (id, action) {
                 });
                 break;
         }
-    } else if (OCGantt.isAdmin === false) {
-        alert('you are not allowed to make changes in the document');
+    } else if ((OCGantt.isAdmin === false) || (OCGantt.dhtmlxversion.readonly === "true")) {
+        gantt.alert('you are not allowed to make changes in the document');
         return
     }
 }
@@ -1730,7 +1815,7 @@ gantt.showLightbox = function (id) {
                     $("#" + id).keyup({ sucessor: tempTask.id }, OCGantt.lbox.handleKeyUpEvents);
                 } else {
                     $("#" + id).blur();
-                    alert("set Linktype first!");
+                    gantt.alert("set Linktype first!");
                 }
             });
             $(".links input:text").on('blur', function () {
@@ -1812,8 +1897,8 @@ gantt.showLightbox = function (id) {
         $("#close-resources").click(function () { OCGantt.lbox.cancel.resources(task.resources); });
         $("#save-links").click(function () { OCGantt.lbox.save.links(); });
         $("#close-links").click(function () { OCGantt.lbox.cancel.links(); });
-    } else if (OCGantt.isAdmin === false) {
-        alert('you are not allowed to make changes in the document');
+    } else if ((OCGantt.isAdmin === false) || (OCGantt.dhtmlxversion.readonly === "true")) {
+        gantt.alert('you are not allowed to make changes in the document');
         return
     }
 };
@@ -2116,7 +2201,70 @@ OCGantt.lbox.HTML.html = '<div class="gantt_cal_light" id="my-form" style="displ
     '</div>' +
     '</div>';
 
-// The object OCGantt.Tasks holds all Tasks
+OCGantt.Share = function(baseUrl){
+    this._baseUrl = baseUrl;
+    this.token;
+}
+
+OCGantt.Share.prototype = {
+    index: function(){
+        var deferred = $.Deferred();
+        var self = this;
+        $.get(this._baseUrl+'/share').done(function (share){
+            self._share = share;
+            deferred.resolve();
+        }).fail(function () {
+            deferred.reject();
+        });
+        return deferred.promise();        
+    },
+    store: function(){
+        if (OCGantt.share._shareStack.length != 0){
+            $('#save-share-settings').show();
+        }
+        var baseUrl = this._baseUrl;
+        OCGantt.share._shareStack.forEach(function(item, index){
+            if (item.type === 'shareExpiryDate'){
+                var data = {
+                    app: 'owncollab_ganttchart',
+                    key: item.type,
+                    value: item.value
+                };
+                data.action='setValue';
+                $.post(OC.AppConfig.url, data ).done( function(result){
+                    var index2 = OCGantt.share._shareStack.map(function(e) { return e.name; }).indexOf(item.type);
+                    OCGantt.share._shareStack.splice(index2, 1);
+                    OCGantt.share._share.expiryDate = $('#expirationDate').val();
+                    if (OCGantt.share._shareStack.length === 0){
+                        $('#save-share-settings').hide();
+                    }
+                }).fail(function () {
+                });
+            } else if (item.type === 'password'){
+                $.post(baseUrl+'/share/setPassword', {password: item.value}).done(function (result){
+                    var index2 = OCGantt.share._shareStack.map(function(e) { return e.name; }).indexOf(item.type);
+                    OCGantt.share._shareStack.splice(index2, 1);
+                    OCGantt.share._share.passwordSet = 1;
+                    if (OCGantt.share._shareStack.length === 0){
+                        $('#save-share-settings').hide();
+                    }
+                });
+            } else if (item.type === 'recipient'){
+                $.post(baseUrl+'/share/sendemail', {recipients: item.value}).done(function (result){
+                    var index2 = OCGantt.share._shareStack.map(function(e) { return e.name; }).indexOf(item.type);
+                    OCGantt.share._shareStack.splice(index2, 1);
+                    OCGantt.share._share.passwordSet = 1;
+                    if (OCGantt.share._shareStack.length === 0){
+                        $('#save-share-settings').hide();
+                    }
+                });                    
+                console.log('reci');
+            }
+        });
+    }
+};
+
+    // The object OCGantt.Tasks holds all Tasks
 OCGantt.Tasks = function (baseUrl) {
     this._baseUrl = baseUrl;
     this._tasks = [];
@@ -2362,7 +2510,7 @@ OCGantt.GroupUsers.prototype = {
 
     // All configs should be assembled in the object OCGantt.config
     OCGantt.config = function () {
-        if (OCGantt.isAdmin === true) {
+        if (OCGantt.isAdmin === true){
             gantt.attachEvent("onAfterTaskUpdate", function (id, move, e) {
                 arr = gantt.serialize();
                 gantt.refreshTask(id);
@@ -2507,7 +2655,7 @@ OCGantt.GroupUsers.prototype = {
                 OCGantt.links.removeActive();
                 OCGantt.links._links = arr.links;
             });
-        } else if (OCGantt.isAdmin === false) {
+        } else if ((OCGantt.isAdmin === false) || (OCGantt.dhtmlxversion.readonly === "true")) {
             gantt.config.readonly = true;
 
         }

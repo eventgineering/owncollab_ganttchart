@@ -11,6 +11,7 @@
 
 namespace OCA\OwnCollab_GanttChart\AppInfo;
 
+use OC_Defaults;
 use OCP\AppFramework\App;
 
 require_once __DIR__ . '/autoload.php';

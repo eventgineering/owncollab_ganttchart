@@ -119,10 +119,10 @@ var taskId = null;
         gantt.init("gantt_chart");
         OCGantt.tasks = new OCGantt.Tasks(OC.generateUrl('/apps/owncollab_ganttchart/tasks'));
         OCGantt.links = new OCGantt.Links(OC.generateUrl('/apps/owncollab_ganttchart/links'));
+        OCGantt.share = new OCGantt.Share(OC.generateUrl('/apps/owncollab_ganttchart'));
         OCGantt.groupusers = new OCGantt.GroupUsers(OC.generateUrl('/apps/owncollab_ganttchart/groupusers'));
-        /* OCGantt.groupusers.loadAll().done(function(){
-            console.log(OCGantt.groupusers._groupusers);
-        }); */
+        OCGantt.share.index().done(function (){
+        });
         OCGantt.tasks.loadAll().done(function () {
             arr.data = OCGantt.tasks._tasks;
             OCGantt.tasksLoaded = true;

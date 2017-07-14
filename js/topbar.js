@@ -56,7 +56,12 @@
 				globalTimeout = setTimeout(function () {
 					$("#" + target).hide("blind", { direction: "horizontal" }, value);
 					$("div[id^='sidebar-export-content']").hide();
-					$("div[id^='sidebar-settings-content']").hide();
+					$("div[id^='sidebar-settings-content']").hide(function(){
+					});
+					$('#showPassword-OCGantt').off('change', OCGantt.lookForChange);
+					$('#expirationCheckbox-OCGantt').off('change', OCGantt.lookForChange);
+					$('#share-save').off('click', OCGantt.saveShareChanges);
+					$('.fa-copy').off('click', OCGantt.copyLinkToClipboard);
 					$('#submit_export_pdf').off("click", exportToPDF);
 					globalTimeout = null;
 				}, timeout);
@@ -142,7 +147,22 @@
 			gantt.exportToMSProject();
 		},
 		"setColors": function setColors(){
+			$("div[id^='sidebar-settings-content']").hide();
 			$("#sidebar-settings-content-colors").show();
+		},
+		"setShare": function setShare(){
+			$("div[id^='sidebar-settings-content']").hide();
+			var minDate = new Date();
+			var maxDate = null;
+			minDate.setDate(minDate.getDate()+1);
+			$.datepicker.setDefaults({
+				minDate: minDate,
+				maxDate: maxDate
+			});
+			$('#expirationDate').datepicker({dateFormat : 'dd.mm.yy'});
+			$("#sidebar-settings-content-share").show(function(){
+			});
+			OCGantt.initShare();
 		}
 
 	};

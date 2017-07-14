@@ -4,5 +4,5 @@
     <i class="fa fa-outdent" onclick="gantt.performAction('outdent')"></i>
     <i class="fa fa-undo not_available" onclick="OCGantt.btnAction('undo')"></i>
     <i class="fa fa-repeat not_available" onclick="OCGantt.btnAction('redo')"></i>
-    <i class="fa fa-cog" onclick="OCGantt.btnAction('show', 'sidebar-settings', 350, 1000); $('#sidebar-settings-content-colors').show()"></i>
+    <i class="fa fa-cog" onclick="OCGantt.btnAction('show', 'sidebar-settings', 350, 1000)"></i>
 </div>

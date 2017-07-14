@@ -17,6 +17,7 @@
  * The controller class has to be registered in the application.php file since
  * it's instantiated in there
  */
+
 return [
     'resources' => [
         'task' => ['url' => '/tasks'],
@@ -26,5 +27,13 @@ return [
     'routes' => [
 	   ['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
 	   ['name' => 'page#do_echo', 'url' => '/echo', 'verb' => 'POST'],
+       ['name' => 'share#index', 'url' => '/share', 'verb' => 'GET'],
+       ['name' => 'share#getAuth', 'url' => '/share/s/{token}', 'verb' => 'POST'],
+       ['name' => 'share#showAuth', 'url' => '/share/s/{token}', 'verb' => 'GET'],
+       ['name' => 'share#setPassword', 'url' => '/share/setPassword', 'verb' => 'POST'],
+       ['name' => 'share#sendEmail', 'url' => '/share/sendemail', 'verb' => 'POST'],
+       ['name' => 'share#generateToken', 'url' => '/token/generate', 'verb' => 'POST'],
+       ['name' => 'share#getToken', 'url' => '/token/get', 'verb' => 'GET'],
+       ['name' => 'share#getExpiryDate', 'url' => '/expirydate/get', 'verb' => 'GET'],
     ]
 ];

@@ -26,14 +26,14 @@ class TaskController extends Controller {
      * @NoAdminRequired
      */
     public function json() {
-	return new JSONResponse($this->service->findAll());
+	    return new JSONResponse($this->service->findAll());
     }
 
     /**
      * @NoAdminRequired
      */
     public function index() {
-	return new DataResponse($this->service->findAll());
+	    return new DataResponse($this->service->findAll());
     }
 
     /**
