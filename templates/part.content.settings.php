@@ -13,8 +13,11 @@ $appName = 'owncollab_ganttchart';
             <div class="tbl_cell export_gantt sidebar_header colors" onclick="OCGantt.btnAction('setColors')">
                 <h4>Colors</h4>
             </div>
-            <div class="tbl_cell export_gantt sidebar_header colors" onclick="OCGantt.btnAction('setShare')">
+            <div class="tbl_cell export_gantt sidebar_header" onclick="OCGantt.btnAction('setShare')">
                 <h4>Share</h4>
+            </div>
+            <div class="tbl_cell export_gantt sidebar_header" onclick="OCGantt.btnAction('setDisplay')">
+                <h4>Display</h4>
             </div>
         </div>
     </div>
@@ -47,6 +50,24 @@ $appName = 'owncollab_ganttchart';
                     <p id="nothing-to-store" style="display:none;">No changes . . . nothing to be saved</p>
                 </div>
             </div>
+        </div>
+    </div>
+    <div id="sidebar-settings-content-display" class="sidebar-left-content">
+        <div id="dateinput">
+            <p>Please specify the date range that should be shown</p>
+            <div class="tbl_cell lbox_date_column">
+                <div class="tbl">
+                    <div class="tbl_cell lbox_title" style="width: 20px;"><label for="set-startdate">Start</label></div>
+                    <div class="tbl_cell" style="width: 80px"><input class="datepicker" id="set-startdate" name="set-startdate" type="text" style="width: 80px"></div>
+                    <div class="tbl_cell lbox_title" style="width: 20px;"><label for="set-enddate">End</label></div>
+                    <div class="tbl_cell" style="width: 80px"><input class="datepicker" id="set-enddate" name="set-enddate" type="text" style="width: 80px"></div>
+                    <div class="tbl_cell" style="width: 1px;"></div>
+                </div>
+            </div>
+        </div>
+        <div id="display-markers">
+            <input name="display-markers-today" id="display-markers-today" class="checkbox" value="0" type="checkbox">
+            <label for="display-markers-today">Show marker at the actual date</label>
         </div>
     </div>
     

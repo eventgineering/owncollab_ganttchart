@@ -18,6 +18,7 @@ if (is_dir($dirname)){
 	vendor_script('owncollab_ganttchart', 'dhtmlxgantt/commercial/ext/dhtmlxgantt_undo');
 	vendor_script('owncollab_ganttchart', 'dhtmlxgantt/commercial/ext/dhtmlxgantt_auto_scheduling');
 	vendor_script('owncollab_ganttchart', 'dhtmlxgantt/commercial/api');
+	vendor_script('owncollab_ganttchart', 'dhtmlxgantt/commercial/ext/dhtmlxgantt_marker');
 	vendor_style('owncollab_ganttchart', 'dhtmlxgantt/commercial/dhtmlxgantt');
 	vendor_style('owncollab_ganttchart', 'colorpicker/spectrum');
 	$dhtmlxversion = "commercial";

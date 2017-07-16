@@ -5,42 +5,97 @@
 		gantt.updateTask(task.id);
 	};
 
+	function updateWidth(chartWidth){
+		if (chartWidth > 20000){
+			$("#zoom-plus").click();
+			chartWidth = $('.gantt_grid').width() + $('.gantt_task_scale').width();
+		}
+		return chartWidth;
+	}
+
+	function checkWidth(chartWidth){
+		if (chartWidth < 20000){
+			doPdfExport();
+			return;
+		}
+		setTimeout(function(){
+			chartWidth = updateWidth(chartWidth);			
+			checkWidth(chartWidth);
+		}, 50);
+	};
+
+	function doPdfExport(){
+			var papersize = $('#pdf_paper_size').val();
+				orientation = $('#pdf_paper_orientation').val();
+				pdf_header_left = $('#pdf_header_left').val();
+				pdf_header_center = $('#pdf_header_center').val();
+				pdf_header_right = $('#pdf_header_right').val();
+				pdf_footer_left = $('#pdf_footer_left').val();
+				pdf_footer_center = $('#pdf_footer_center').val();
+				pdf_footer_right = $('#pdf_footer_right').val();
+			var styleSheetList = [].slice.call(document.styleSheets);
+			//var newWindow = window.open('', '_blank');
+			var exportHTML = '<html><head>';
+			styleSheetList.forEach(function (item) {
+				exportHTML += '<link rel="stylesheet" href="' + item.href + '">';
+			});
+			exportHTML += '</head><body>';
+			var chartWidth = $('.gantt_grid').width() + $('.gantt_task_scale').width();
+			var totalTaskWidth = $('.gantt_task_scale').width();
+			var taskWidth = $('.gantt_task').width();
+			var totalHeight = $('.gantt_grid_scale').outerHeight(true);
+			$(".gantt_grid_data").children().each(function () {
+				totalHeight += $(this).outerHeight(true);
+			});
+			var gridHeight = $('.gantt_grid').outerHeight(true);
+			var gridDataHeight = $('.gantt_grid_data').outerHeight(true);
+			var taskHeight = $('.gantt_task').outerHeight(true);
+			var taskDataHeight = $('.gantt_data_area').outerHeight(true);
+			$('.gantt_grid').outerHeight(totalHeight);
+			$('.gantt_grid_data').outerHeight(totalHeight - $('.gantt_grid_scale').outerHeight(true));
+			$('.gantt_task').outerHeight(totalHeight);
+			$('.gantt_data_area').outerHeight(totalHeight - $('.gantt_task_scale').outerHeight(true));
+			$('.gantt_task').width(totalTaskWidth);
+			exportHTML += '<div id="gantt_chart" style="width:' + chartWidth + 'px; height: ' + totalHeight + 'px;">' + $('#gantt_chart').html() + '</div></body></html>';
+			// Leave this URL for local testing purposes
+			//$.post("http://10.8.10.201/pdfgenerator/pdfgenerator.php", {
+			$.post("https://pdfgenerator.owncollab.com/rendergantt.php", {
+				html: exportHTML,
+				papersize: papersize,
+				orientation: orientation,
+				pdf_header_left: pdf_header_left,
+				pdf_header_center: pdf_header_center,
+				pdf_header_right: pdf_header_right,
+				pdf_footer_left: pdf_footer_left,
+				pdf_footer_center: pdf_footer_center,
+				pdf_footer_right: pdf_footer_right,
+				width: chartWidth,
+				height: totalHeight,
+			}, function (data, status) {
+				$(this).target = "_blank";
+				newWindow.location = data;
+			}).done(function(){
+				$('#save-export').fadeOut(200);
+				$('#exporting-to-pdf').fadeOut(200);
+			});
+			$('.gantt_grid').outerHeight(gridHeight);
+			$('.gantt_grid_data').outerHeight(gridDataHeight)
+			$('.gantt_task').outerHeight(taskHeight);
+			$('.gantt_data_area').outerHeight(taskDataHeight);
+			$('.gantt_task').width(taskWidth);
+	}
+
 	function exportToPDF() {
-		var styleSheetList = [].slice.call(document.styleSheets);
-		var exportHTML = '<html><head>';
-		styleSheetList.forEach(function (item) {
-			exportHTML += '<link rel="stylesheet" href="' + item.href + '">';
-		});
-		exportHTML += '</head><body>';
-		var chartWidth = $('.gantt_grid').width() + $('.gantt_task_scale').width();
-		var totalTaskWidth = $('.gantt_task_scale').width();
-		var taskWidth = $('.gantt_task').width();
-		var totalHeight = $('.gantt_grid_scale').outerHeight(true);
-		$(".gantt_grid_data").children().each(function () {
-			totalHeight += $(this).outerHeight(true);
-		});
-		var gridHeight = $('.gantt_grid').outerHeight(true);
-		var gridDataHeight = $('.gantt_grid_data').outerHeight(true);
-		var taskHeight = $('.gantt_task').outerHeight(true);
-		var taskDataHeight = $('.gantt_data_area').outerHeight(true);
-		$('.gantt_grid').outerHeight(totalHeight);
-		$('.gantt_grid_data').outerHeight(totalHeight - $('.gantt_grid_scale').outerHeight(true));
-		$('.gantt_task').outerHeight(totalHeight);
-		$('.gantt_data_area').outerHeight(totalHeight - $('.gantt_task_scale').outerHeight(true));
-		$('.gantt_task').width(totalTaskWidth);
-		exportHTML += '<div id="gantt_chart" style="width:' + chartWidth + 'px; height: ' + totalHeight + 'px;">' + $('#gantt_chart').html() + '</div></body></html>';
-		var newWindow = window.open('', '_blank');
-		$.post("http://10.8.10.201/pdfgenerator/pdfgenerator.php", {
-			html: exportHTML,
-		}, function(data, status){
-			$(this).target = "_blank";
-			newWindow.location = data;
-		});
-		$('.gantt_grid').outerHeight(gridHeight);
-		$('.gantt_grid_data').outerHeight(gridDataHeight)
-		$('.gantt_task').outerHeight(taskHeight);
-		$('.gantt_data_area').outerHeight(taskDataHeight);
-		$('.gantt_task').width(taskWidth);
+		$('#save-export').show();
+		$('#exporting-to-pdf').show();
+		gantt.config.start_date = new Date($('#pdf_start_date').datepicker('getDate'));
+		gantt.config.start_date = new Date($('#pdf_end_date').datepicker('getDate'));
+		gantt.render();
+		setTimeout(function () {
+			var chartWidth = $('.gantt_grid').width() + $('.gantt_task_scale').width();
+			checkWidth(chartWidth);
+		}, 200);
+		newWindow = window.open('', '_blank');
 	};
 
 	var btn_actions = {
@@ -56,7 +111,7 @@
 				globalTimeout = setTimeout(function () {
 					$("#" + target).hide("blind", { direction: "horizontal" }, value);
 					$("div[id^='sidebar-export-content']").hide();
-					$("div[id^='sidebar-settings-content']").hide(function(){
+					$("div[id^='sidebar-settings-content']").hide(function () {
 					});
 					$('#showPassword-OCGantt').off('change', OCGantt.lookForChange);
 					$('#expirationCheckbox-OCGantt').off('change', OCGantt.lookForChange);
@@ -90,15 +145,15 @@
 				gantt.undo();
 			} else if (OCGantt.dhtmlxversion.dhtmlxversion === "standard") {
 				gantt.alert("This feature is only available with a licensed version of dhtmlxGantt");
-            	$("#content-wrapper").addClass("blur");
-            	setTimeout(function(){
-                	$("gantt_popup_button").click(function(){
-                    	$("#content-wrapper").removeClass("blur");
-                	});
-                	$(".gantt_popup_button div").click(function(){
-                    	$("#content-wrapper").removeClass("blur");
-                	});
-                }, 200);
+				$("#content-wrapper").addClass("blur");
+				setTimeout(function () {
+					$("gantt_popup_button").click(function () {
+						$("#content-wrapper").removeClass("blur");
+					});
+					$(".gantt_popup_button div").click(function () {
+						$("#content-wrapper").removeClass("blur");
+					});
+				}, 200);
 			}
 		},
 		"redo": function redo() {
@@ -106,15 +161,15 @@
 				gantt.redo();
 			} else if (OCGantt.dhtmlxversion.dhtmlxversion === "standard") {
 				gantt.alert("This feature is only available with a licensed version of dhtmlxGantt");
-            	$("#content-wrapper").addClass("blur");
-            	setTimeout(function(){
-                	$("gantt_popup_button").click(function(){
-                    	$("#content-wrapper").removeClass("blur");
-                	});
-                	$(".gantt_popup_button div").click(function(){
-                    	$("#content-wrapper").removeClass("blur");
-                	});
-                }, 200);
+				$("#content-wrapper").addClass("blur");
+				setTimeout(function () {
+					$("gantt_popup_button").click(function () {
+						$("#content-wrapper").removeClass("blur");
+					});
+					$(".gantt_popup_button div").click(function () {
+						$("#content-wrapper").removeClass("blur");
+					});
+				}, 200);
 			}
 		},
 		"export2excel": function export2excel() {
@@ -146,25 +201,66 @@
 		"export2ms": function export2ms() {
 			gantt.exportToMSProject();
 		},
-		"setColors": function setColors(){
+		"setColors": function setColors() {
 			$("div[id^='sidebar-settings-content']").hide();
 			$("#sidebar-settings-content-colors").show();
 		},
-		"setShare": function setShare(){
+		"setShare": function setShare() {
 			$("div[id^='sidebar-settings-content']").hide();
 			var minDate = new Date();
 			var maxDate = null;
-			minDate.setDate(minDate.getDate()+1);
+			minDate.setDate(minDate.getDate() + 1);
 			$.datepicker.setDefaults({
 				minDate: minDate,
 				maxDate: maxDate
 			});
-			$('#expirationDate').datepicker({dateFormat : 'dd.mm.yy'});
-			$("#sidebar-settings-content-share").show(function(){
+			$('#expirationDate').datepicker({ dateFormat: 'dd.mm.yy' });
+			$("#sidebar-settings-content-share").show(function () {
 			});
 			OCGantt.initShare();
-		}
-
+		},
+		"setDisplay": function setColors() {
+			var formatFunc = gantt.date.date_to_str("%d.%m.%Y");
+			$("div[id^='sidebar-settings-content']").hide();
+			var minDate = gantt.getTask(1).start_date;
+			var maxDate = gantt.getTask(1).end_date;
+			$.datepicker.setDefaults({
+				minDate: minDate,
+				maxDate: maxDate
+			});
+			$('#set-startdate').datepicker({ dateFormat: 'dd.mm.yy' });
+			if (gantt.config.start_date) {
+				$('#set-startdate').datepicker('setDate', formatFunc(gantt.config.start_date));
+			} else {
+				$('#set-startdate').datepicker('setDate', minDate);
+			}
+			$('#set-startdate').datepicker('option', {
+				onClose: function () {
+					gantt.config.start_date = new Date($(this).datepicker('getDate'));
+					if (!gantt.config.end_date) {
+						gantt.config.end_date = maxDate;
+					}
+					gantt.render();
+				}
+			});
+			$('#set-enddate').datepicker({ dateFormat: 'dd.mm.yy' });
+			if (gantt.config.end_date) {
+				$('#set-enddate').datepicker('setDate', formatFunc(gantt.config.end_date));
+			} else {
+				$('#set-enddate').datepicker('setDate', maxDate);
+			}
+			$('#set-enddate').datepicker('option', {
+				onClose: function () {
+					gantt.config.end_date = new Date($(this).datepicker('getDate'));
+					if (!gantt.config.start_date) {
+						gantt.config.start_date = minDate;
+					}
+					gantt.render();
+				}
+			});
+			OCGantt.initDisplay();
+			$("#sidebar-settings-content-display").show();
+		},
 	};
 
 	var actions = {

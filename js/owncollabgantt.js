@@ -28,6 +28,14 @@ OCGantt.filter = {};
 OCGantt.filter.HTML = {};
 OCGantt.filter.value = [];
 OCGantt.filter.resourcesList = [];
+OCGantt.showMarkerToday = false;
+var date_to_str = gantt.date.date_to_str(gantt.config.task_date);
+OCGantt.markerToday = gantt.addMarker({
+    start_date: new Date(),
+    css: "today",
+    text: "Now",
+    title:date_to_str( new Date()) 
+});
 var target = undefined;
 
 OCGantt.splashScreenIcon = OC.generateUrl('/apps/owncollab_ganttchart/img/loading-dark.gif').replace("index.php/", "");
@@ -88,7 +96,7 @@ OCGantt.columnLabel = {
                '<div style="width: 20px; display: inline-block;"><i class="fa fa-filter" id="resources"></i></div>' +
                '<div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.resources +')"></i>' +
                '<i class="fa fa-sort-asc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.resources +')"></i></span></div>',
-    buttons: '<span class="fa-stack"><i class="fa fa-sort fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span><i class="fa gantt_button_grid gantt_grid_add fa-plus" style="position: absolute; top: 6px;" onclick="gantt.createTask()"></i>',
+    buttons: '<span class="fa-stack"><i class="fa fa-sort fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span><i class="fa gantt_button_grid gantt_grid_add fa-plus" style="position: absolute; top: 6px;" onclick="OCGantt.clickGridButton(1, \'add\')"></i>',
 };
 
 OCGantt.buttonsGrid = function(){
@@ -818,15 +826,24 @@ OCGantt.lookForChange = function (){
         if ($(this)[0].id === 'expirationCheckbox-OCGantt'){
             $('.expirationDateContainer').show();
         }
+        if ($(this)[0].id === 'display-markers-today'){
+            gantt.config.show_markers = true;
+            gantt.render();
+        }
     } else if ($(this).prop('checked') === false){
         if ($(this)[0].id === 'showPassword-OCGantt'){
             $('#linkPass').hide();
         }
         if ($(this)[0].id === 'expirationCheckbox-OCGantt'){
             $('.expirationDateContainer').hide();
-        }        
+        }
+        if ($(this)[0].id === 'display-markers-today'){
+            console.log('delete marker');
+            gantt.config.show_markers = false;
+            gantt.render();
+        }
     }
-}
+};
 
 OCGantt.initShare = function (){
     $('#recipient-OCGantt').val('');
@@ -855,6 +872,10 @@ OCGantt.initShare = function (){
         $('#expirationCheckbox-OCGantt').prop('checked', false);
         $('.expirationDateContainer').hide();
     }
+};
+
+OCGantt.initDisplay = function(){
+    $('#display-markers-today').on('change', OCGantt.lookForChange);
 };
 
 OCGantt.saveShareChanges = function(){
@@ -2547,6 +2568,9 @@ OCGantt.GroupUsers.prototype = {
 
     // All configs should be assembled in the object OCGantt.config
     OCGantt.config = function () {
+        gantt.getMarker(OCGantt.markerToday);
+        gantt.renderMarkers();
+        gantt.config.show_markers = false;
         if (OCGantt.isAdmin === true){
             gantt.attachEvent("onAfterTaskUpdate", function (id, move, e) {
                 arr = gantt.serialize();

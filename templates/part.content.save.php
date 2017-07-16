@@ -41,7 +41,8 @@ $appName = 'owncollab_ganttchart';
                     <div class="tbl">
                         <div class="tbl_cell width20">Paper size</div>
                         <div class="tbl_cell">
-                            <select name="pdf_paper_size">
+                            <select id= "pdf_paper_size" name="pdf_paper_size">
+                                <option value="A0">A0 - 118.9 x 84.1 cm</option>
                                 <option value="A1">A1 - 84.1 x 59.4 cm</option>
                                 <option value="A2">A2 - 59.4 x 42 cm</option>
                                 <option value="A3">A3 - 42 x 29.7 cm</option>
@@ -53,40 +54,42 @@ $appName = 'owncollab_ganttchart';
                     <div class="tbl">
                         <div class="tbl_cell width20">Orientation</div>
                         <div class="tbl_cell">
-                            <select name="pdf_paper_orientation" id="">
-                                <option value="P">Portrait</option>
-                                <option value="L">Landscape</option>
+                            <select name="pdf_paper_orientation" id="pdf_paper_orientation">
+                                <option value="Portrait">Portrait</option>
+                                <option value="Landscape">Landscape</option>
                             </select>
                         </div>
                     </div>
                     <p>Define Header</p>
                     <div class="tbl">
                         <div class="tbl_cell width20">Left</div>
-                        <div class="tbl_cell"><input name="pdf_head_left" type="text"></div>
+                        <div class="tbl_cell"><input name="pdf_header_left" id="pdf_header_left" type="text"></div>
                     </div>
                     <div class="tbl">
                         <div class="tbl_cell width20">Center</div>
-                        <div class="tbl_cell"><input name="pdf_head_center"  type="text"></div>
+                        <div class="tbl_cell"><input name="pdf_header_center" id="pdf_header_center" type="text"></div>
                     </div>
                     <div class="tbl">
                         <div class="tbl_cell width20">Right</div>
-                        <div class="tbl_cell"><input name="pdf_head_right"  type="text"></div>
+                        <div class="tbl_cell"><input name="pdf_header_right" id="pdf_header_right" type="text"></div>
                     </div>
                     <p>Define Footer</p>
                     <div class="tbl">
                         <div class="tbl_cell width20">Left</div>
-                        <div class="tbl_cell"><input name="pdf_footer_left" type="text"></div>
+                        <div class="tbl_cell"><input name="pdf_footer_left" id="pdf_footer_left" type="text"></div>
                     </div>
                     <div class="tbl">
                         <div class="tbl_cell width20">Center</div>
-                        <div class="tbl_cell"><input name="pdf_footer_center" type="text"></div>
+                        <div class="tbl_cell"><input name="pdf_footer_center" id="pdf_footer_center" type="text"></div>
                     </div>
                     <div class="tbl">
                         <div class="tbl_cell width20">Right</div>
-                        <div class="tbl_cell"><input name="pdf_footer_right" type="text"></div>
+                        <div class="tbl_cell"><input name="pdf_footer_right" id="pdf_footer_right" type="text"></div>
                     </div>
                     <div>
                         <input type="button" id="submit_export_pdf" value="Export"> <div class="export_loader loader_min" style="display: none"></div>
+                        <i id="save-export" class="fa fa-spinner fa-pulse" style="display: none;"></i>
+                        <p id="exporting-to-pdf" style="display:none;">We are preparing your PDF file. This may take a while.</p>
                     </div>
             </form>
         </div>
