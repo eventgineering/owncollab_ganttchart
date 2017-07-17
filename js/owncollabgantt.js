@@ -2980,14 +2980,48 @@ OCGantt.GroupUsers.prototype = {
             },
         ];
         OCGantt.gridRight();
-	$('.click.export2excel').click(OCGantt.btnAction('export2excel'));
-	$('.click.export2PDF').click(OCGantt.btnAction('export2PDF'));
-	$('.click.export2image').click(OCGantt.btnAction('export2image'));
-	$('.click.export2ical').click(OCGantt.btnAction('export2ical'));
-	$('.click.export2ms').click(OCGantt.btnAction('export2ms'));
-	$('.click.setColors').click(OCGantt.btnAction('setColors'));
-	$('.click.setShare').click(OCGantt.btnAction('setShare'));
-	$('.click.setDisplay').click(OCGantt.btnAction('setDisplay'));
+	$('.click.export2excel').click(function(){
+        OCGantt.btnAction('export2excel')
+    });
+	$('.click.export2PDF').click(function(){
+        OCGantt.btnAction('export2PDF')
+    });
+	$('.click.export2image').click(function(){
+        OCGantt.btnAction('export2image')
+    });
+	$('.click.export2ical').click(function(){
+        OCGantt.btnAction('export2ical')
+    });
+	$('.click.export2ms').click(function(){
+        OCGantt.btnAction('export2ms')
+    });
+	$('.click.setColors').click(function(){
+        OCGantt.btnAction('setColors')
+    });
+	$('.click.setShare').click(function(){
+        OCGantt.btnAction('setShare')
+    });
+    $('.click.setDisplay').click(function(){
+        OCGantt.btnAction('setDisplay')
+    });
+    $('.click.save').click(function(){
+        OCGantt.btnAction('show', 'sidebar-save', 350, 1000)
+    });
+    $('.click.indent').click(function(){
+        OCGantt.btnAction('indent')
+    });
+    $('.click.outdent').click(function(){
+        OCGantt.btnAction('outdent')
+    });
+    $('.click.undo').click(function(){
+        OCGantt.btnAction('undo')
+    });
+    $('.click.redo').click(function(){
+        OCGantt.btnAction('redo')
+    });
+    $('.click.settings').click(function(){
+        OCGantt.btnAction('show', 'sidebar-settings', 350, 1000)
+    });
     }
 
 
