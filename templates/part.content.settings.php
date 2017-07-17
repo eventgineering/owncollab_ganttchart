@@ -10,13 +10,13 @@ $appName = 'owncollab_ganttchart';
 <div id="sidebar-settings" class="sidebar-left">
     <div id="sidebar-settings-header">
         <div class="tbl">
-            <div class="tbl_cell export_gantt sidebar_header colors" onclick="OCGantt.btnAction('setColors')">
+            <div class="tbl_cell export_gantt sidebar_header colors" class="click.setColors">
                 <h4>Colors</h4>
             </div>
-            <div class="tbl_cell export_gantt sidebar_header" onclick="OCGantt.btnAction('setShare')">
+            <div class="tbl_cell export_gantt sidebar_header" class="click.setShare">
                 <h4>Share</h4>
             </div>
-            <div class="tbl_cell export_gantt sidebar_header" onclick="OCGantt.btnAction('setDisplay')">
+            <div class="tbl_cell export_gantt sidebar_header" class="click.setDisplay">
                 <h4>Display</h4>
             </div>
         </div>

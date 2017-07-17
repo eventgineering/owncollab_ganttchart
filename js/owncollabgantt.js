@@ -2980,6 +2980,14 @@ OCGantt.GroupUsers.prototype = {
             },
         ];
         OCGantt.gridRight();
+	$('.click.export2excel').click(OCGantt.btnAction('export2excel'));
+	$('.click.export2PDF').click(OCGantt.btnAction('export2PDF'));
+	$('.click.export2image').click(OCGantt.btnAction('export2image'));
+	$('.click.export2ical').click(OCGantt.btnAction('export2ical'));
+	$('.click.export2ms').click(OCGantt.btnAction('export2ms'));
+	$('.click.setColors').click(OCGantt.btnAction('setColors'));
+	$('.click.setShare').click(OCGantt.btnAction('setShare'));
+	$('.click.setDisplay').click(OCGantt.btnAction('setDisplay'));
     }
 
 
