@@ -34,29 +34,29 @@ OCGantt.markerToday = gantt.addMarker({
     start_date: new Date(),
     css: "today",
     text: "Now",
-    title:date_to_str( new Date()) 
+    title: date_to_str(new Date())
 });
 var target = undefined;
 
 OCGantt.splashScreenIcon = OC.generateUrl('/apps/owncollab_ganttchart/img/loading-dark.gif').replace("index.php/", "");
 OCGantt.splashScreen = '<div id="OCGantt-cover" class="gantt_cal_cover" style="z-index: 900;"></div>' +
     '<div id="OCGantt-loader" class="icon-loading-dark" style="display: block; top: calc(50% - 8px); left: calc(50% - 8px); filter: contrast(0%) brightness(0%); margin: auto; z-index:901; position: absolute; transform: translate(-50%, -50%)">' +
-    '<br><br><br>We are preparing the app for your best experience . . .</div>';
+    '<br><br><br>' + t('owncollab_ganttchart', 'We are preparing the app for your best experience . . .') + '</div>';
 
-Array.prototype.move = function(from,to){
-  this.splice(to,0,this.splice(from,1)[0]);
-  return this;
+Array.prototype.move = function (from, to) {
+    this.splice(to, 0, this.splice(from, 1)[0]);
+    return this;
 };
 
 
 (function ($) {
-	  $.each(['show', 'hide'], function (i, ev) {
-	    var el = $.fn[ev];
-	    $.fn[ev] = function () {
-	      this.trigger(ev);
-	      return el.apply(this, arguments);
-	    };
-	});
+    $.each(['show', 'hide'], function (i, ev) {
+        var el = $.fn[ev];
+        $.fn[ev] = function () {
+            this.trigger(ev);
+            return el.apply(this, arguments);
+        };
+    });
 })(jQuery);
 
 // Definition of width of the columns in the table
@@ -80,42 +80,42 @@ OCGantt.columnNames = {
 }
 
 OCGantt.columnLabel = {
-    id: '<div style="width: 30px; display: inline-block; text-align: left; padding-left:2px;">ID</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.id +')"></i>' +
-        '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.id +')"></i></span></div>',
-    name: '<div style="width: 110px; display: inline-block; text-align: left; padding-left:2px;">Taskname</div>' +
-          '<div style="width: 20px; display: inline-block;"><i class="fa fa-filter" id="text"></i></div>' +
-          '<div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.name +')"></i>' +
-          '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.name +')"></i></span></div>',
-    start: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">Start</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.start +')"></i>' +
-           '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.start +')"></i></span></div>',
-    end: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">End</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.end +')"></i>' +
-         '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.end +')"></i></span></div>',
-    duration: '<div style="width: 60px; display: inline-block; text-align: left; padding-left:2px;">Duration</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.duration +')"></i>' +
-              '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.duration +')"></i></span></div>',
-    resources: '<div style="width: 60px; display: inline-block; text-align: left; padding-left:2px;">Resources</div>' +
-               '<div style="width: 20px; display: inline-block;"><i class="fa fa-filter" id="resources"></i></div>' +
-               '<div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.resources +')"></i>' +
-               '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.resources +')"></i></span></div>',
+    id: '<div style="width: 30px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'ID') + '</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.id + ')"></i>' +
+    '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.id + ')"></i></span></div>',
+    name: '<div style="width: 110px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'Taskname') + '</div>' +
+    '<div style="width: 20px; display: inline-block;"><i class="fa fa-filter" id="text"></i></div>' +
+    '<div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.name + ')"></i>' +
+    '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.name + ')"></i></span></div>',
+    start: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'Start') + '</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.start + ')"></i>' +
+    '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.start + ')"></i></span></div>',
+    end: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'End') + '</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.end + ')"></i>' +
+    '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.end + ')"></i></span></div>',
+    duration: '<div style="width: 60px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'Duration') + '</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.duration + ')"></i>' +
+    '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.duration + ')"></i></span></div>',
+    resources: '<div style="width: 60px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'Resources') + '</div>' +
+    '<div style="width: 20px; display: inline-block;"><i class="fa fa-filter" id="resources"></i></div>' +
+    '<div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.resources + ')"></i>' +
+    '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.resources + ')"></i></span></div>',
     buttons: '<span class="fa-stack"><i class="fa fa-sort fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span><i class="fa gantt_button_grid gantt_grid_add fa-plus click" style="position: absolute; top: 6px;" data-command="OCGantt.clickGridButton(1, \'add\')"></i>',
 };
 
-OCGantt.buttonsGrid = function(){
-        return{
-                name: "buttons", label: OCGantt.columnLabel.buttons, width: OCGantt.columnWidth.buttons, resize: false, template: function (item) {
-                        if (item.id === 1){
-                            return ('<i class="fa gantt_button_grid gantt_grid_edit fa-pencil click" data-command="OCGantt.clickGridButton(' + item.id + ', \'edit\')"></i>' +
-                            '<i class="fa gantt_button_grid gantt_grid_add fa-plus click" data-command="OCGantt.clickGridButton(' + item.id + ', \'add\')"></i>');
-                        } else {
-                            return ('<i class="fa gantt_button_grid gantt_grid_edit fa-pencil click" data-command="OCGantt.clickGridButton(' + item.id + ', \'edit\')"></i>' +
-                            '<i class="fa gantt_button_grid gantt_grid_add fa-plus click" data-command="OCGantt.clickGridButton(' + item.id + ', \'add\')"></i>' +
-                            '<i class="fa gantt_button_grid gantt_grid_delete fa-times click" data-command="OCGantt.clickGridButton(' + item.id + ', \'delete\')"></i>');
-                        }
-                }
-        };
+OCGantt.buttonsGrid = function () {
+    return {
+        name: "buttons", label: OCGantt.columnLabel.buttons, width: OCGantt.columnWidth.buttons, resize: false, template: function (item) {
+            if (item.id === 1) {
+                return ('<i class="fa gantt_button_grid gantt_grid_edit fa-pencil click" data-command="OCGantt.clickGridButton(' + item.id + ', \'edit\')"></i>' +
+                    '<i class="fa gantt_button_grid gantt_grid_add fa-plus click" data-command="OCGantt.clickGridButton(' + item.id + ', \'add\')"></i>');
+            } else {
+                return ('<i class="fa gantt_button_grid gantt_grid_edit fa-pencil click" data-command="OCGantt.clickGridButton(' + item.id + ', \'edit\')"></i>' +
+                    '<i class="fa gantt_button_grid gantt_grid_add fa-plus click" data-command="OCGantt.clickGridButton(' + item.id + ', \'add\')"></i>' +
+                    '<i class="fa gantt_button_grid gantt_grid_delete fa-times click" data-command="OCGantt.clickGridButton(' + item.id + ', \'delete\')"></i>');
+            }
+        }
+    };
 };
 
-OCGantt.gridRight = function(){
-    if (OCGantt.isAdmin === true){
+OCGantt.gridRight = function () {
+    if (OCGantt.isAdmin === true) {
         gantt.config.columns.push(OCGantt.buttonsGrid());
     }
 };
@@ -123,7 +123,7 @@ OCGantt.gridRight = function(){
 // Function that initializes the gantt chart
 OCGantt.init = function () {
     if (OCGantt.linksLoaded && OCGantt.tasksLoaded && OCGantt.usergroupsLoaded) {
-        for (i=0; i<arr.data.length; i++) {
+        for (i = 0; i < arr.data.length; i++) {
             OCGantt.screenOrder[i] = JSON.stringify(arr.data[i].id);
         }
         gantt.parse(arr);
@@ -137,30 +137,30 @@ OCGantt.init = function () {
     setTimeout(OCGantt.init, 50);
 };
 
-OCGantt.testUserColors = function(length){
-    if (OCGantt.usergroupsLoaded){
-        if (OCGantt.userColors.length === length){
+OCGantt.testUserColors = function (length) {
+    if (OCGantt.usergroupsLoaded) {
+        if (OCGantt.userColors.length === length) {
             OCGantt.renderUsertable();
             return;
         } else {
-            setTimeout(function() {OCGantt.testUserColors(length);}, 50);
+            setTimeout(function () { OCGantt.testUserColors(length); }, 50);
         }
     } else {
-        setTimeout(function() {OCGantt.testUserColors(length);}, 50);
+        setTimeout(function () { OCGantt.testUserColors(length); }, 50);
     }
 };
 
-OCGantt.renderUsertable = function(){
+OCGantt.renderUsertable = function () {
     var fragment = document.createDocumentFragment();
     var groups = OCGantt.groupusers._groupusers;
     var deprecatedUsers = ['collab_user'];
     var _table = document.createElement('table');
-    _table.innerHTML += '<thead><tr><th width="70%"><b>Group/ user name</b></th><th width="30%"><b>Color</b></th></tr></thead>';
+    _table.innerHTML += '<thead><tr><th width="70%"><b>' + t('owncollab_ganttchart', 'Group/ user name') + '</b></th><th width="30%"><b>' + t('owncollab_ganttchart', 'Color') + '</b></th></tr></thead>';
     _table.innerHTML += '<tbody></tbody>';
     _table.id = 'userlist';
     _table.width = '100%';
     var _tableRef = _table.getElementsByTagName('tbody')[0];
-    groups.forEach(function(item, index){
+    groups.forEach(function (item, index) {
         var _lineGroup = document.createElement('div'),
             _lineUsers = document.createElement('div'),
             _inputGroup = document.createElement('input'),
@@ -183,7 +183,7 @@ OCGantt.renderUsertable = function(){
         var colorId = 'col_g_' + gid;
         row.insertCell(0).innerHTML = '<b><i>' + gid + '</i></b>';
         row.insertCell(1).innerHTML = '<input type="text" id="' + colorId + '" />';
-        users.forEach(function(item, index){
+        users.forEach(function (item, index) {
             if (deprecatedUsers.indexOf(users[index].uid) !== -1) return;
             var uid = item.uid;
             var _inlineUser = document.createElement('span'),
@@ -213,17 +213,17 @@ OCGantt.renderUsertable = function(){
     OCGantt.renderUserColors();
 };
 
-OCGantt.mapColor = function(task){
+OCGantt.mapColor = function (task) {
     var userStrings = task.resources.split(",");
-    var index = OCGantt.userColors.map(function(o) { return o.id; }).indexOf(userStrings[0]);
-    if (index >= 0){
+    var index = OCGantt.userColors.map(function (o) { return o.id; }).indexOf(userStrings[0]);
+    if (index >= 0) {
         return OCGantt.userColors[index].value;
-    } else if (index < 0){
+    } else if (index < 0) {
         return 'rgb(75, 113, 164)';
     }
 };
 
-OCGantt.initColorPicker = function (target, color){
+OCGantt.initColorPicker = function (target, color) {
     $("[id=" + target + "]").spectrum({
         color: color,
         showPaletteOnly: true,
@@ -231,19 +231,19 @@ OCGantt.initColorPicker = function (target, color){
         change: function (changeColor) {
             var userString2 = $(this).prop("id").replace('col_', '');
             var colorString = changeColor.toRgbString();
-            var index = OCGantt.userColors.map(function(o) { return o.id; }).indexOf(userString2);
+            var index = OCGantt.userColors.map(function (o) { return o.id; }).indexOf(userString2);
             OCGantt.userColors[index].value = colorString;
             $("[id=" + $(this).prop("id") + "]").spectrum("set", colorString);
-            if (userString2.substr(0,2) === 'g_'){
+            if (userString2.substr(0, 2) === 'g_') {
                 OC.AppConfig.setValue('owncollab_ganttchart', 'color_group_' + userString2.substr(2), colorString);
-            } else if (userString2.substr(0,2) === 'u_'){
+            } else if (userString2.substr(0, 2) === 'u_') {
                 OC.AppConfig.setValue('owncollab_ganttchart', 'color_user_' + userString2.substr(2), colorString);
             }
-            var tempTasks = $.grep(arr.data , function (data) { return data.resources != null && data.resources != "" });
+            var tempTasks = $.grep(arr.data, function (data) { return data.resources != null && data.resources != "" });
             $.each(tempTasks, function (id, taskObject) {
                 var resources = taskObject.resources;
                 var obj = taskObject.resources.split(",");
-                if (obj[0] === userString2){
+                if (obj[0] === userString2) {
                     var task = gantt.getTask(taskObject.id);
                     task.color = colorString;
                     taskObject.color = colorString;
@@ -253,46 +253,46 @@ OCGantt.initColorPicker = function (target, color){
         },
         palette: [
             ["rgb(0, 0, 0)", "rgb(67, 67, 67)", "rgb(102, 102, 102)",
-            "rgb(204, 204, 204)", "rgb(217, 217, 217)", "rgb(255, 255, 255)"],
+                "rgb(204, 204, 204)", "rgb(217, 217, 217)", "rgb(255, 255, 255)"],
             ["rgb(152, 0, 0)", "rgb(255, 0, 0)", "rgb(255, 153, 0)", "rgb(255, 255, 0)", "rgb(0, 255, 0)",
-            "rgb(0, 255, 255)", "rgb(74, 134, 232)", "rgb(0, 0, 255)", "rgb(153, 0, 255)", "rgb(255, 0, 255)"],
+                "rgb(0, 255, 255)", "rgb(74, 134, 232)", "rgb(0, 0, 255)", "rgb(153, 0, 255)", "rgb(255, 0, 255)"],
             ["rgb(230, 184, 175)", "rgb(244, 204, 204)", "rgb(252, 229, 205)", "rgb(255, 242, 204)", "rgb(217, 234, 211)",
-            "rgb(208, 224, 227)", "rgb(201, 218, 248)", "rgb(207, 226, 243)", "rgb(217, 210, 233)", "rgb(234, 209, 220)",
-            "rgb(221, 126, 107)", "rgb(234, 153, 153)", "rgb(249, 203, 156)", "rgb(255, 229, 153)", "rgb(182, 215, 168)",
-            "rgb(162, 196, 201)", "rgb(164, 194, 244)", "rgb(159, 197, 232)", "rgb(180, 167, 214)", "rgb(213, 166, 189)",
-            "rgb(204, 65, 37)", "rgb(224, 102, 102)", "rgb(246, 178, 107)", "rgb(255, 217, 102)", "rgb(147, 196, 125)",
-            "rgb(118, 165, 175)", "rgb(109, 158, 235)", "rgb(111, 168, 220)", "rgb(142, 124, 195)", "rgb(194, 123, 160)",
-            "rgb(166, 28, 0)", "rgb(204, 0, 0)", "rgb(230, 145, 56)", "rgb(241, 194, 50)", "rgb(106, 168, 79)",
-            "rgb(69, 129, 142)", "rgb(60, 120, 216)", "rgb(61, 133, 198)", "rgb(103, 78, 167)", "rgb(166, 77, 121)",
-            "rgb(91, 15, 0)", "rgb(102, 0, 0)", "rgb(120, 63, 4)", "rgb(127, 96, 0)", "rgb(39, 78, 19)",
-            "rgb(12, 52, 61)", "rgb(28, 69, 135)", "rgb(7, 55, 99)", "rgb(32, 18, 77)", "rgb(76, 17, 48)"]
+                "rgb(208, 224, 227)", "rgb(201, 218, 248)", "rgb(207, 226, 243)", "rgb(217, 210, 233)", "rgb(234, 209, 220)",
+                "rgb(221, 126, 107)", "rgb(234, 153, 153)", "rgb(249, 203, 156)", "rgb(255, 229, 153)", "rgb(182, 215, 168)",
+                "rgb(162, 196, 201)", "rgb(164, 194, 244)", "rgb(159, 197, 232)", "rgb(180, 167, 214)", "rgb(213, 166, 189)",
+                "rgb(204, 65, 37)", "rgb(224, 102, 102)", "rgb(246, 178, 107)", "rgb(255, 217, 102)", "rgb(147, 196, 125)",
+                "rgb(118, 165, 175)", "rgb(109, 158, 235)", "rgb(111, 168, 220)", "rgb(142, 124, 195)", "rgb(194, 123, 160)",
+                "rgb(166, 28, 0)", "rgb(204, 0, 0)", "rgb(230, 145, 56)", "rgb(241, 194, 50)", "rgb(106, 168, 79)",
+                "rgb(69, 129, 142)", "rgb(60, 120, 216)", "rgb(61, 133, 198)", "rgb(103, 78, 167)", "rgb(166, 77, 121)",
+                "rgb(91, 15, 0)", "rgb(102, 0, 0)", "rgb(120, 63, 4)", "rgb(127, 96, 0)", "rgb(39, 78, 19)",
+                "rgb(12, 52, 61)", "rgb(28, 69, 135)", "rgb(7, 55, 99)", "rgb(32, 18, 77)", "rgb(76, 17, 48)"]
         ]
     });
 }
 
-OCGantt.renderUserColors = function() {
+OCGantt.renderUserColors = function () {
     var groups = OCGantt.groupusers._groupusers;
     var deprecatedUsers = ['collab_user'];
     var colors = OCGantt.userColors;
-    groups.forEach(function(item, index){
+    groups.forEach(function (item, index) {
         var users = item.users,
             gid = item.gid,
-            ccode = $.grep(colors, function (group) { return  group.id == 'g_' + gid }),
+            ccode = $.grep(colors, function (group) { return group.id == 'g_' + gid }),
             ccode1 = 'rgb(75, 113, 164)';
         if (ccode.length != 0) {
             ccode1 = ccode[0].value;
         } else {
             colors.push({
-                id: 'g_' +gid,
+                id: 'g_' + gid,
                 value: ccode1
             });
             OC.AppConfig.setValue('owncollab_ganttchart', 'color_group_' + gid, ccode1);
         }
         OCGantt.initColorPicker('col_g_' + gid, ccode1);
-        users.forEach(function(item, index){
+        users.forEach(function (item, index) {
             if (deprecatedUsers.indexOf(users[index].uid) !== -1) return;
             var uid = item.uid,
-                ccode = $.grep(colors, function (user) { return  user.id == 'u_' + uid }),
+                ccode = $.grep(colors, function (user) { return user.id == 'u_' + uid }),
                 ccode1 = 'rgb(75, 113, 164)';
             if (ccode.length != 0) {
                 ccode1 = ccode[0].value;
@@ -471,133 +471,133 @@ OCGantt.handleZoom = function (tempValue, sliderValue) {
     gantt.render();
 }
 
-OCGantt.renderResources = function(){
-        var fragment = document.createDocumentFragment();
-        var groupusers = OCGantt.groupusers._groupusers;
-        groupusers.forEach(function (item, index){
-            var _lineGroup = document.createElement('div'),
-                _lineUsers = document.createElement('div'),
-                _inputGroup = document.createElement('input'),
-                _inputLabel = document.createElement('label');
-            _inputGroup.name = item['gid'];
-            _inputGroup.type = 'checkbox';
-            _inputGroup.className = 'group';
-            _inputGroup.setAttribute('data-type', 'group');
-            _lineGroup.appendChild(_inputGroup);
-            _inputLabel.appendChild(_inputGroup);
-            _lineGroup.appendChild(_inputLabel);
-            _inputGroup.id = 'g_' + item['gid'];
-            _inputLabel.setAttribute('for', 'g_' + item['gid']);
-            _inputLabel.innerHTML += ' <strong>' + item['gid'] + '</strong>';
-            fragment.appendChild(_lineGroup);
-            item['users'].forEach(function (item, index){
-                var _inlineUser = document.createElement('span'),
-                    _inputUser = document.createElement('input'),
-                    _inputUserLabel = document.createElement('label');
-                _inputUser.name = item['uid'];
-                _inputUser.type = 'checkbox';
-                _inputUser.className = 'user';
-                _inputUser.setAttribute('data-type', 'user');
-                _inputUser.setAttribute('data-gid', item['gid']);
-                _inputUser.id = 'u_' + item['uid'];
-                _inputUserLabel.setAttribute('for', 'u_' + item['uid']);
-                _inputUserLabel.innerHTML += item['displayname'];
-                _inlineUser.appendChild(_inputUser);
-                _inlineUser.appendChild(_inputUserLabel);
-                _lineUsers.appendChild(_inlineUser);
-            });
-            fragment.appendChild(_lineUsers);
+OCGantt.renderResources = function () {
+    var fragment = document.createDocumentFragment();
+    var groupusers = OCGantt.groupusers._groupusers;
+    groupusers.forEach(function (item, index) {
+        var _lineGroup = document.createElement('div'),
+            _lineUsers = document.createElement('div'),
+            _inputGroup = document.createElement('input'),
+            _inputLabel = document.createElement('label');
+        _inputGroup.name = item['gid'];
+        _inputGroup.type = 'checkbox';
+        _inputGroup.className = 'group';
+        _inputGroup.setAttribute('data-type', 'group');
+        _lineGroup.appendChild(_inputGroup);
+        _inputLabel.appendChild(_inputGroup);
+        _lineGroup.appendChild(_inputLabel);
+        _inputGroup.id = 'g_' + item['gid'];
+        _inputLabel.setAttribute('for', 'g_' + item['gid']);
+        _inputLabel.innerHTML += ' <strong>' + item['gid'] + '</strong>';
+        fragment.appendChild(_lineGroup);
+        item['users'].forEach(function (item, index) {
+            var _inlineUser = document.createElement('span'),
+                _inputUser = document.createElement('input'),
+                _inputUserLabel = document.createElement('label');
+            _inputUser.name = item['uid'];
+            _inputUser.type = 'checkbox';
+            _inputUser.className = 'user';
+            _inputUser.setAttribute('data-type', 'user');
+            _inputUser.setAttribute('data-gid', item['gid']);
+            _inputUser.id = 'u_' + item['uid'];
+            _inputUserLabel.setAttribute('for', 'u_' + item['uid']);
+            _inputUserLabel.innerHTML += item['displayname'];
+            _inlineUser.appendChild(_inputUser);
+            _inlineUser.appendChild(_inputUserLabel);
+            _lineUsers.appendChild(_inlineUser);
         });
-        return fragment;
+        fragment.appendChild(_lineUsers);
+    });
+    return fragment;
 }
 
-OCGantt.sortGrid = function (column1){
-    if (Gantt.sortDirection){
+OCGantt.sortGrid = function (column1) {
+    if (Gantt.sortDirection) {
         gantt.sort(column1, false);
-        $(".gantt_grid_head_"+column1+" .fa-sort-asc").addClass("activated");
+        $(".gantt_grid_head_" + column1 + " .fa-sort-asc").addClass("activated");
     } else {
         gantt.sort(column1, true);
-        $(".gantt_grid_head_"+column1+" .fa-sort-desc").addClass("activated");
+        $(".gantt_grid_head_" + column1 + " .fa-sort-desc").addClass("activated");
     }
     Gantt.sortDirection = !Gantt.sortDirection;
 };
 
-OCGantt.initFilterGrid = function (type){
-    switch (type){
+OCGantt.initFilterGrid = function (type) {
+    switch (type) {
         case 'text':
             var top = OCGantt.getBottomByClass('gantt_grid_scale');
             var left = OCGantt.getLeftByClass('gantt_grid_head_text');
             OCGantt.filter.HTML = '<div id="filter-text" class="gantt_cal_light ocgantt_filter_text" style="display: none; top: ' + top + 'px; left: ' + left + 'px;">' +
-                                  '<p>You can either filter by taskname and/ or sub project name</p>' +
-                                  '<div style="width: 100%;">' +
-                                  '<div class="tbl_cell" style="width: 40%;"><label for="filter-text-tasks">Tasks</label></div>' +
-                                  '<div class="tbl_cell" style="width: 50%;"><input type="text" id="filter-text-tasks" name="filter-text-tasks" /></div>' +
-                                  '<div class="tbl_cell" style="width: 10%;"><i id="delete-filter-text-tasks" class="fa fa-trash-o"></i></div>' +
-                                  '</div>' +
-                                  '<div style="width: 100%;">' +
-                                  '<div class="tbl_cell" style="width: 40%;"><label for="filter-text-subprojects">Sub Projects</label></div>' +
-                                  '<div class="tbl_cell" style="width: 50%;"><input type="text" id="filter-text-subprojects" name="filter-text-subprojects" /></div>' +
-                                  '<div class="tbl_cell" style="width: 10%;"><i id="delete-filter-text-subprojects" class="fa fa-trash-o"></i></div>' +
-                                  '</div>' +
-                                  '<div style="width: 100%;">' +
-                                  '<div class="tbl_cell" style="width: 50%;"><input type="button" id="save-text-filter" name="save-text-filter" value="Done" /></div>' +
-                                  '<div class="tbl_cell" style="width: 50%;" align="right"><input type="button" id="close-text-filter" name="close-text-filter" value="Cancel" /></div>' +
-                                  '</div>';
+                '<p>' + t('owncollab_ganttchart', 'You can either filter by taskname and/ or sub project name') + '</p>' +
+                '<div style="width: 100%;">' +
+                '<div class="tbl_cell" style="width: 40%;"><label for="filter-text-tasks">' + t('owncollab_ganttchart', 'Tasks') + '</label></div>' +
+                '<div class="tbl_cell" style="width: 50%;"><input type="text" id="filter-text-tasks" name="filter-text-tasks" /></div>' +
+                '<div class="tbl_cell" style="width: 10%;"><i id="delete-filter-text-tasks" class="fa fa-trash-o"></i></div>' +
+                '</div>' +
+                '<div style="width: 100%;">' +
+                '<div class="tbl_cell" style="width: 40%;"><label for="filter-text-subprojects">' + t('owncollab_ganttchart', 'Sub Projects') + '</label></div>' +
+                '<div class="tbl_cell" style="width: 50%;"><input type="text" id="filter-text-subprojects" name="filter-text-subprojects" /></div>' +
+                '<div class="tbl_cell" style="width: 10%;"><i id="delete-filter-text-subprojects" class="fa fa-trash-o"></i></div>' +
+                '</div>' +
+                '<div style="width: 100%;">' +
+                '<div class="tbl_cell" style="width: 50%;"><input type="button" id="save-text-filter" name="save-text-filter" value="' + t('owncollab_ganttchart', 'Done') + '" /></div>' +
+                '<div class="tbl_cell" style="width: 50%;" align="right"><input type="button" id="close-text-filter" name="close-text-filter" value="' + t('owncollab_ganttchart', 'Cancel') + '" /></div>' +
+                '</div>';
             $("#gantt_chart").append(OCGantt.filter.HTML);
-            $("#delete-filter-text-tasks").click(function(){
+            $("#delete-filter-text-tasks").click(function () {
                 $("#filter-text-tasks").val('');
-                if (OCGantt.filter.value.textTasks){
+                if (OCGantt.filter.value.textTasks) {
                     delete OCGantt.filter.value.textTasks;
                 }
             });
-            $("#delete-filter-text-subprojects").click(function(){
+            $("#delete-filter-text-subprojects").click(function () {
                 $("#filter-text-subprojects").val('');
-                if (OCGantt.filter.value.textSubprojects){
+                if (OCGantt.filter.value.textSubprojects) {
                     delete OCGantt.filter.value.textSubprojects;
                 }
             });
-            $("#close-text-filter").click(function(){
-                if (OCGantt.filter.value.textTasks){
+            $("#close-text-filter").click(function () {
+                if (OCGantt.filter.value.textTasks) {
                     $("#filter-text-tasks").val(OCGantt.filter.value.textTasks);
-                } else if (!OCGantt.filter.value.textTasks){
+                } else if (!OCGantt.filter.value.textTasks) {
                     $("#filter-text-tasks").val('');
                 }
-                if (OCGantt.filter.value.textSubprojects){
+                if (OCGantt.filter.value.textSubprojects) {
                     $("#filter-text-subprojects").val(OCGantt.filter.value.subProjects);
-                } else if (!OCGantt.filter.value.textTasks){
-                $("#filter-text-subprojects").val('');
+                } else if (!OCGantt.filter.value.textTasks) {
+                    $("#filter-text-subprojects").val('');
                 }
-                $("#filter-text").hide("blind", {direction: "vertical"}, 350);
+                $("#filter-text").hide("blind", { direction: "vertical" }, 350);
             });
-            $("#save-text-filter").click(function(){
-                if ($("#filter-text-tasks").val() != ''){
+            $("#save-text-filter").click(function () {
+                if ($("#filter-text-tasks").val() != '') {
                     OCGantt.filter.value['textTasks'] = $("#filter-text-tasks").val();
                 }
-                if ($("#filter-text-subprojects").val() != ''){
+                if ($("#filter-text-subprojects").val() != '') {
                     OCGantt.filter.value['textSubprojects'] = $("#filter-text-subprojects").val();
                 }
                 gantt.refreshData();
-                $("#filter-text").hide("blind", {direction: "vertical"}, 350);
+                $("#filter-text").hide("blind", { direction: "vertical" }, 350);
             });
             break;
         case 'resources':
             var top = OCGantt.getBottomByClass('gantt_grid_scale');
-            if (OCGantt.isAdmin === true){
-                var left = OCGantt.getLeftByClass('gantt_grid_head_buttons')-299;
+            if (OCGantt.isAdmin === true) {
+                var left = OCGantt.getLeftByClass('gantt_grid_head_buttons') - 299;
             } else {
-                var left = $('.gantt_grid').width()-299;
+                var left = $('.gantt_grid').width() - 299;
             }
             var fragmentResources = OCGantt.renderResources();
             OCGantt.filter.HTML = '<div id="filter-resources" class="gantt_cal_light ocgantt_filter_resources" style="display: none; top: ' + top + 'px; left: ' + left + 'px;">' +
-                                  '<p>Please select one or more group/ user you wish to filter for.</p>' +
-                                  '<div contenteditable="true" style="width:calc(100% - 16px); display: none;" name="resources"></div>' +
-                                  '<div id="resources-list" style="width: 100%;">' +
-                                  '</div>' +
-                                  '<div style="width: 100%;">' +
-                                  '<div class="tbl_cell" style="width: 33%;"><input type="button" id="save-resources-filter" name="save-resources-filter" value="Done" /></div>' +
-                                  '<div class="tbl_cell" style="width: 33%;" align="right"><input type="button" id="close-resources-filter" name="close-resources-filter" value="Cancel" /></div>' +
-                                  '<div class="tbl_cell" style="width: 33%;" align="right"><input type="button" id="delete-resources-filter" name="delete-resources-filter" value="Delete" /></div>' +
-                                  '</div>';
+                '<p>' + t('owncollab_ganttchart', 'Please select one or more group/ user you wish to filter for.') + '</p>' +
+                '<div contenteditable="true" style="width:calc(100% - 16px); display: none;" name="resources"></div>' +
+                '<div id="resources-list" style="width: 100%;">' +
+                '</div>' +
+                '<div style="width: 100%;">' +
+                '<div class="tbl_cell" style="width: 33%;"><input type="button" id="save-resources-filter" name="save-resources-filter" value="' + t('owncollab_ganttchart', 'Done') + '" /></div>' +
+                '<div class="tbl_cell" style="width: 33%;" align="right"><input type="button" id="close-resources-filter" name="close-resources-filter" value="' + t('owncollab_ganttchart', 'Cancel') + '" /></div>' +
+                '<div class="tbl_cell" style="width: 33%;" align="right"><input type="button" id="delete-resources-filter" name="delete-resources-filter" value="' + t('owncollab_ganttchart', 'Delete') + '" /></div>' +
+                '</div>';
             $("#gantt_chart").append(OCGantt.filter.HTML);
             $("#resources-list").append(fragmentResources);
             $(".ocgantt_filter_resources :checkbox").change(function () {
@@ -605,202 +605,202 @@ OCGantt.initFilterGrid = function (type){
                 if ($(this).is(':checked') === true) {
                     OCGantt.filter.resourcesList = OCGantt.lbox.addResources(OCGantt.lbox.getForm("filter-resources"), OCGantt.filter.resourcesList, $(this).attr('id'));
                 } else if ($(this).is(':checked') === false) {
-                    OCGantt.filter.resourcesList = OCGantt.lbox.deleteResources(OCGantt.lbox.getForm("filter-resources"),OCGantt.filter.resourcesList, $(this).attr('id'));
+                    OCGantt.filter.resourcesList = OCGantt.lbox.deleteResources(OCGantt.lbox.getForm("filter-resources"), OCGantt.filter.resourcesList, $(this).attr('id'));
                 }
             });
-            $("#close-resources-filter").click(function(){
-                $("#filter-resources").hide("blind", {direction: "vertical"}, 350);
+            $("#close-resources-filter").click(function () {
+                $("#filter-resources").hide("blind", { direction: "vertical" }, 350);
             });
-            $("#delete-resources-filter").click(function(){
+            $("#delete-resources-filter").click(function () {
                 delete OCGantt.filter.value.resources;
                 OCGantt.filter.resourcesList = [];
                 gantt.refreshData();
-                $("#filter-resources").hide("blind", {direction: "vertical"}, 350);
+                $("#filter-resources").hide("blind", { direction: "vertical" }, 350);
             });
-            $("#save-resources-filter").click(function(){
-                if (OCGantt.filter.resourcesList.length != 0){
+            $("#save-resources-filter").click(function () {
+                if (OCGantt.filter.resourcesList.length != 0) {
                     OCGantt.filter.value['resources'] = OCGantt.filter.resourcesList;
-                } else if (OCGantt.filter.resourcesList.length === 0){
+                } else if (OCGantt.filter.resourcesList.length === 0) {
                     delete OCGantt.filter.value.resources;
                 }
                 gantt.refreshData();
-                $("#filter-resources").hide("blind", {direction: "vertical"}, 350);
+                $("#filter-resources").hide("blind", { direction: "vertical" }, 350);
             });
             break;
     }
 }
 
-OCGantt.filterTaskByText = function (id, textfield){
+OCGantt.filterTaskByText = function (id, textfield) {
     var task = gantt.getTask(id);
-    switch (textfield){
+    switch (textfield) {
         case 'textTasks':
-            if (task.text.search(new RegExp(OCGantt.filter.value.textTasks, "i")) >= 0){
+            if (task.text.search(new RegExp(OCGantt.filter.value.textTasks, "i")) >= 0) {
                 return true;
             }
             break;
         case 'textSubprojects':
-            if (task.text.search(new RegExp(OCGantt.filter.value.textSubprojects, "i")) >= 0){
+            if (task.text.search(new RegExp(OCGantt.filter.value.textSubprojects, "i")) >= 0) {
                 return true;
             }
-            break;            
+            break;
     }
     return false;
 };
 
-OCGantt.filterParentByText = function (id){
+OCGantt.filterParentByText = function (id) {
     var parent = gantt.getParent(id);
-    if (parent != 1){
-        if (OCGantt.filterParentByText(parent)){
+    if (parent != 1) {
+        if (OCGantt.filterParentByText(parent)) {
             return true;
         }
     }
-    if (gantt.getTask(parent).text.search(new RegExp(OCGantt.filter.value.textSubprojects, "i")) >= 0){
+    if (gantt.getTask(parent).text.search(new RegExp(OCGantt.filter.value.textSubprojects, "i")) >= 0) {
         return true;
     }
     return false;
 };
 
-OCGantt.filterChildrenByText = function (id){
+OCGantt.filterChildrenByText = function (id) {
     var child = gantt.getChildren(id);
-    for (var i=0; i < child.length; i++){
+    for (var i = 0; i < child.length; i++) {
         var subchildren = gantt.getChildren(child[i]);
-        if (subchildren.length != 0){
-            if (OCGantt.filterChildrenByText(child[i])){
+        if (subchildren.length != 0) {
+            if (OCGantt.filterChildrenByText(child[i])) {
                 return true;
             }
         }
         if ((gantt.getTask(child[i]).type != 'project') && (OCGantt.filter.value.textTasks)) {
-            if (OCGantt.filterTaskByText(child[i], 'textTasks')){
+            if (OCGantt.filterTaskByText(child[i], 'textTasks')) {
                 return true;
             }
         }
         if ((gantt.getTask(child[i]).type === 'project') && (OCGantt.filter.value.textSubprojects)) {
-            if (OCGantt.filterTaskByText(child[i], 'textSubprojects')){
+            if (OCGantt.filterTaskByText(child[i], 'textSubprojects')) {
                 return true;
             }
         }
-        
+
     }
     return false;
 };
 
-OCGantt.filterTaskByResources = function (id){
-    for (var i=0; i< OCGantt.filter.value.resources.length; i++){
+OCGantt.filterTaskByResources = function (id) {
+    for (var i = 0; i < OCGantt.filter.value.resources.length; i++) {
         var taskresources = gantt.getTask(id).resources.split(",");
-        for (var j=0; j< taskresources.length; j++){
-            if (taskresources[j] === OCGantt.filter.value.resources[i]){
+        for (var j = 0; j < taskresources.length; j++) {
+            if (taskresources[j] === OCGantt.filter.value.resources[i]) {
                 return true;
             }
         }
     }
 }
 
-OCGantt.filterChildrenByResources = function (id){
+OCGantt.filterChildrenByResources = function (id) {
     var child = gantt.getChildren(id);
-    for (var i=0; i < child.length; i++){
+    for (var i = 0; i < child.length; i++) {
         var subchildren = gantt.getChildren(child[i]);
-        if (subchildren.length != 0){
-            if (OCGantt.filterChildrenByResources(child[i])){
+        if (subchildren.length != 0) {
+            if (OCGantt.filterChildrenByResources(child[i])) {
                 return true;
             }
         }
-        if (OCGantt.filterTaskByResources(child[i])){
+        if (OCGantt.filterTaskByResources(child[i])) {
             return true;
         }
     }
     return false;
 }
 
-OCGantt.filterParentByResources = function (id){
+OCGantt.filterParentByResources = function (id) {
     var parent = gantt.getParent(id);
-    if (parent != 1){
-        if (OCGantt.filterParentByResources(parent)){
+    if (parent != 1) {
+        if (OCGantt.filterParentByResources(parent)) {
             return true;
         }
     }
-    for (var i=0; i< OCGantt.filter.value.resources.length; i++){
+    for (var i = 0; i < OCGantt.filter.value.resources.length; i++) {
         var taskresources = gantt.getTask(id).resources.split(",");
-        for (var j=0; j< taskresources.length; j++){
-            if (taskresources[j] === OCGantt.filter.value.resources[i]){
+        for (var j = 0; j < taskresources.length; j++) {
+            if (taskresources[j] === OCGantt.filter.value.resources[i]) {
                 return true;
             }
         }
     }
 }
 
-OCGantt.filterGrid = function (id){
+OCGantt.filterGrid = function (id) {
     if (id === 1) {
         return true;
     }
-    if ((OCGantt.filter.value.textTasks) && (!OCGantt.filter.value.textSubprojects) && (!OCGantt.filter.value.resources)){
-        if (gantt.getTask(id).type === 'project'){
-            if (OCGantt.filterChildrenByText(id)){
+    if ((OCGantt.filter.value.textTasks) && (!OCGantt.filter.value.textSubprojects) && (!OCGantt.filter.value.resources)) {
+        if (gantt.getTask(id).type === 'project') {
+            if (OCGantt.filterChildrenByText(id)) {
                 return true;
             }
             return false;
-        } else if (gantt.getTask(id).type != 'project'){
-            if (OCGantt.filterTaskByText(id, 'textTasks')){
+        } else if (gantt.getTask(id).type != 'project') {
+            if (OCGantt.filterTaskByText(id, 'textTasks')) {
                 return true;
             }
             return false;
         }
-    } else if ((!OCGantt.filter.value.textTasks) && (OCGantt.filter.value.textSubprojects) && (!OCGantt.filter.value.resources)){
-        if (gantt.getTask(id).type === 'project'){
-            if ((OCGantt.filterTaskByText(id, 'textSubprojects')) || (OCGantt.filterChildrenByText(id)) || (OCGantt.filterParentByText(id))){
+    } else if ((!OCGantt.filter.value.textTasks) && (OCGantt.filter.value.textSubprojects) && (!OCGantt.filter.value.resources)) {
+        if (gantt.getTask(id).type === 'project') {
+            if ((OCGantt.filterTaskByText(id, 'textSubprojects')) || (OCGantt.filterChildrenByText(id)) || (OCGantt.filterParentByText(id))) {
                 return true;
             }
-        } else if (gantt.getTask(id).type != 'project'){
-            if (OCGantt.filterParentByText(id)){
-                return true;
-            }
-        }
-    } else if ((OCGantt.filter.value.textTasks) && (OCGantt.filter.value.textSubprojects) && (!OCGantt.filter.value.resources)){
-        if (gantt.getTask(id).type === 'project'){
-            if ((OCGantt.filterTaskByText(id, 'textSubprojects')) && (OCGantt.filterChildrenByText(id))){
-            return true;
-            }
-        } else if (gantt.getTask(id).type != 'project'){
-            if ((OCGantt.filterParentByText(id)) &&  (OCGantt.filterTaskByText(id, 'textTasks'))){
+        } else if (gantt.getTask(id).type != 'project') {
+            if (OCGantt.filterParentByText(id)) {
                 return true;
             }
         }
-    } else if ((!OCGantt.filter.value.textTasks) && (!OCGantt.filter.value.textSubprojects) && (OCGantt.filter.value.resources)){
-        if (gantt.getTask(id).type === 'project'){
-            if ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterChildrenByResources(id)) || (OCGantt.filterParentByResources(id))){
+    } else if ((OCGantt.filter.value.textTasks) && (OCGantt.filter.value.textSubprojects) && (!OCGantt.filter.value.resources)) {
+        if (gantt.getTask(id).type === 'project') {
+            if ((OCGantt.filterTaskByText(id, 'textSubprojects')) && (OCGantt.filterChildrenByText(id))) {
                 return true;
             }
-        } else if (gantt.getTask(id).type != 'project'){
-            if ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterParentByResources(id))){
-                return true;
-            }
-        }
-    } else if ((OCGantt.filter.value.textTasks) && (!OCGantt.filter.value.textSubprojects) && (OCGantt.filter.value.resources)){
-        if (gantt.getTask(id).type === 'project'){
-            if ((OCGantt.filterChildrenByText(id)) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterChildrenByResources(id)) || (OCGantt.filterParentByResources(id)))){
-                return true;
-            }
-        } else if (gantt.getTask(id).type != 'project'){
-            if ((OCGantt.filterTaskByText(id, 'textTasks')) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterParentByResources(id)))){
+        } else if (gantt.getTask(id).type != 'project') {
+            if ((OCGantt.filterParentByText(id)) && (OCGantt.filterTaskByText(id, 'textTasks'))) {
                 return true;
             }
         }
-    } else if ((!OCGantt.filter.value.textTasks) && (OCGantt.filter.value.textSubprojects) && (OCGantt.filter.value.resources)){
-        if (gantt.getTask(id).type === 'project'){
-            if (((OCGantt.filterTaskByText(id, 'textSubprojects')) || (OCGantt.filterChildrenByText(id)) || (OCGantt.filterParentByText(id))) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterChildrenByResources(id)) || (OCGantt.filterParentByResources(id)))){
+    } else if ((!OCGantt.filter.value.textTasks) && (!OCGantt.filter.value.textSubprojects) && (OCGantt.filter.value.resources)) {
+        if (gantt.getTask(id).type === 'project') {
+            if ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterChildrenByResources(id)) || (OCGantt.filterParentByResources(id))) {
                 return true;
             }
-        } else if (gantt.getTask(id).type != 'project'){
-            if ((OCGantt.filterParentByText(id)) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterParentByResources(id)))){
+        } else if (gantt.getTask(id).type != 'project') {
+            if ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterParentByResources(id))) {
                 return true;
             }
         }
-    } else if ((OCGantt.filter.value.textTasks) && (OCGantt.filter.value.textSubprojects) && (OCGantt.filter.value.resources)){
-        if (gantt.getTask(id).type === 'project'){
-            if ((OCGantt.filterTaskByText(id, 'textSubprojects')) && (OCGantt.filterChildrenByText(id)) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterChildrenByResources(id)) || (OCGantt.filterParentByResources(id)))){
+    } else if ((OCGantt.filter.value.textTasks) && (!OCGantt.filter.value.textSubprojects) && (OCGantt.filter.value.resources)) {
+        if (gantt.getTask(id).type === 'project') {
+            if ((OCGantt.filterChildrenByText(id)) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterChildrenByResources(id)) || (OCGantt.filterParentByResources(id)))) {
                 return true;
             }
-        } else if (gantt.getTask(id).type != 'project'){
-            if (((OCGantt.filterParentByText(id)) &&  (OCGantt.filterTaskByText(id, 'textTasks'))) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterParentByResources(id)))){
+        } else if (gantt.getTask(id).type != 'project') {
+            if ((OCGantt.filterTaskByText(id, 'textTasks')) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterParentByResources(id)))) {
+                return true;
+            }
+        }
+    } else if ((!OCGantt.filter.value.textTasks) && (OCGantt.filter.value.textSubprojects) && (OCGantt.filter.value.resources)) {
+        if (gantt.getTask(id).type === 'project') {
+            if (((OCGantt.filterTaskByText(id, 'textSubprojects')) || (OCGantt.filterChildrenByText(id)) || (OCGantt.filterParentByText(id))) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterChildrenByResources(id)) || (OCGantt.filterParentByResources(id)))) {
+                return true;
+            }
+        } else if (gantt.getTask(id).type != 'project') {
+            if ((OCGantt.filterParentByText(id)) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterParentByResources(id)))) {
+                return true;
+            }
+        }
+    } else if ((OCGantt.filter.value.textTasks) && (OCGantt.filter.value.textSubprojects) && (OCGantt.filter.value.resources)) {
+        if (gantt.getTask(id).type === 'project') {
+            if ((OCGantt.filterTaskByText(id, 'textSubprojects')) && (OCGantt.filterChildrenByText(id)) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterChildrenByResources(id)) || (OCGantt.filterParentByResources(id)))) {
+                return true;
+            }
+        } else if (gantt.getTask(id).type != 'project') {
+            if (((OCGantt.filterParentByText(id)) && (OCGantt.filterTaskByText(id, 'textTasks'))) && ((OCGantt.filterTaskByResources(id)) || (OCGantt.filterParentByResources(id)))) {
                 return true;
             }
         }
@@ -808,36 +808,36 @@ OCGantt.filterGrid = function (id){
     return false;
 };
 
-OCGantt.copyLinkToClipboard = function(){
+OCGantt.copyLinkToClipboard = function () {
     var copyTextarea = $('#linkText-OCGantt');
     copyTextarea.select();
     try {
         var successful = document.execCommand('copy');
-    } catch (err){
-        gantt.alert('Could not copy the link to your clipboard');
+    } catch (err) {
+        gantt.alert(t('owncollab_ganttchart', 'Could not copy the link to your clipboard'));
     }
 };
 
-OCGantt.lookForChange = function (){
-    if ($(this).prop('checked') === true){
-        if ($(this)[0].id === 'showPassword-OCGantt'){
+OCGantt.lookForChange = function () {
+    if ($(this).prop('checked') === true) {
+        if ($(this)[0].id === 'showPassword-OCGantt') {
             $('#linkPass').show();
         }
-        if ($(this)[0].id === 'expirationCheckbox-OCGantt'){
+        if ($(this)[0].id === 'expirationCheckbox-OCGantt') {
             $('.expirationDateContainer').show();
         }
-        if ($(this)[0].id === 'display-markers-today'){
+        if ($(this)[0].id === 'display-markers-today') {
             gantt.config.show_markers = true;
             gantt.render();
         }
-    } else if ($(this).prop('checked') === false){
-        if ($(this)[0].id === 'showPassword-OCGantt'){
+    } else if ($(this).prop('checked') === false) {
+        if ($(this)[0].id === 'showPassword-OCGantt') {
             $('#linkPass').hide();
         }
-        if ($(this)[0].id === 'expirationCheckbox-OCGantt'){
+        if ($(this)[0].id === 'expirationCheckbox-OCGantt') {
             $('.expirationDateContainer').hide();
         }
-        if ($(this)[0].id === 'display-markers-today'){
+        if ($(this)[0].id === 'display-markers-today') {
             console.log('delete marker');
             gantt.config.show_markers = false;
             gantt.render();
@@ -845,71 +845,71 @@ OCGantt.lookForChange = function (){
     }
 };
 
-OCGantt.initShare = function (){
+OCGantt.initShare = function () {
     $('#recipient-OCGantt').val('');
     $('#linkText-OCGantt').val(window.location.href + 'share/s/' + OCGantt.share._share.token);
     $('#showPassword-OCGantt').on('change', OCGantt.lookForChange);
     $('#expirationCheckbox-OCGantt').on('change', OCGantt.lookForChange);
     $('.fa-copy').on('click', OCGantt.copyLinkToClipboard);
     $('#share-save').on('click', OCGantt.saveShareChanges);
-    if (OCGantt.share._share.passwordSet === 1){
-        if (OCGantt.share._share.passwordSet === 1){
+    if (OCGantt.share._share.passwordSet === 1) {
+        if (OCGantt.share._share.passwordSet === 1) {
             $('#linkPassText-OCGantt').val('********');
         }
         $('#showPassword-OCGantt').prop('checked', true);
         $('#linkPass').show();
-    } else if (OCGantt.share._share.passwordSet === 0){
+    } else if (OCGantt.share._share.passwordSet === 0) {
         $('#showPassword-OCGantt').prop('checked', false);
         $('#linkPass').hide();
     }
-    if (OCGantt.share._share.expiryDate != 0){
+    if (OCGantt.share._share.expiryDate != 0) {
         if (OCGantt.share._share.expiryDate != 0) {
             $('#expirationDate').datepicker('setDate', OCGantt.share._share.expiryDate);
         }
         $('#expirationCheckbox-OCGantt').prop('checked', true);
         $('.expirationDateContainer').show();
-    } else if (OCGantt.share._share.expiryDate === 0){
+    } else if (OCGantt.share._share.expiryDate === 0) {
         $('#expirationCheckbox-OCGantt').prop('checked', false);
         $('.expirationDateContainer').hide();
     }
 };
 
-OCGantt.initDisplay = function(){
+OCGantt.initDisplay = function () {
     $('#display-markers-today').on('change', OCGantt.lookForChange);
 };
 
-OCGantt.saveShareChanges = function(){
+OCGantt.saveShareChanges = function () {
     var statusPasswordCheckbox = undefined;
     var statusExpiryDateCheckbox = undefined;
-    if ($('#showPassword-OCGantt').prop('checked') === true){
+    if ($('#showPassword-OCGantt').prop('checked') === true) {
         statusPasswordCheckbox = 1;
-    } else if ($('#showPassword-OCGantt').prop('checked') === false){
+    } else if ($('#showPassword-OCGantt').prop('checked') === false) {
         statusPasswordCheckbox = 0;
     }
-    if ($('#expirationCheckbox-OCGantt').prop('checked') === true){
+    if ($('#expirationCheckbox-OCGantt').prop('checked') === true) {
         statusExpiryDateCheckbox = 1;
-    } else if ($('#expirationCheckbox-OCGantt').prop('checked') === false){
+    } else if ($('#expirationCheckbox-OCGantt').prop('checked') === false) {
         statusExpiryDateCheckbox = 0;
-    }    
+    }
     OCGantt.share._shareStack = [];
-    if (statusPasswordCheckbox === OCGantt.share._share.passwordSet){
-        if (statusPasswordCheckbox ===1){
-            if (($('#linkPassText-OCGantt').val() != '********') && ($('#linkPassText-OCGantt').val() != '')){
+    if (statusPasswordCheckbox === OCGantt.share._share.passwordSet) {
+        if (statusPasswordCheckbox === 1) {
+            if (($('#linkPassText-OCGantt').val() != '********') && ($('#linkPassText-OCGantt').val() != '')) {
                 OCGantt.share._shareStack.push({
                     type: 'password',
                     value: $('#linkPassText-OCGantt').val()
                 });
             }
         }
-    } else if (statusPasswordCheckbox !== OCGantt.share._share.passwordSet){
-        if (statusPasswordCheckbox ===0){
+    } else if (statusPasswordCheckbox !== OCGantt.share._share.passwordSet) {
+        if (statusPasswordCheckbox === 0) {
             $('#linkPassText-OCGantt').val('');
             OCGantt.share._shareStack.push({
                 type: 'password',
                 value: 0
             });
-        } else if (statusPasswordCheckbox ===1){
-            if (($('#linkPassText-OCGantt').val() != '********') && ($('#linkPassText-OCGantt').val() != '')){
+        } else if (statusPasswordCheckbox === 1) {
+            if (($('#linkPassText-OCGantt').val() != '********') && ($('#linkPassText-OCGantt').val() != '')) {
                 OCGantt.share._shareStack.push({
                     type: 'password',
                     value: $('#linkPassText-OCGantt').val()
@@ -917,22 +917,22 @@ OCGantt.saveShareChanges = function(){
             }
         }
     }
-    if (statusExpiryDateCheckbox === 1){
-        if (($('#expirationDate').val() != '') && (OCGantt.share._share.expiryDate != $('#expirationDate').val())){
+    if (statusExpiryDateCheckbox === 1) {
+        if (($('#expirationDate').val() != '') && (OCGantt.share._share.expiryDate != $('#expirationDate').val())) {
             OCGantt.share._shareStack.push({
                 type: 'shareExpiryDate',
                 value: $('#expirationDate').val()
             });
         }
-    } else if (statusExpiryDateCheckbox === 0){
-        if (OCGantt.share._share.expiryDate != 0){
+    } else if (statusExpiryDateCheckbox === 0) {
+        if (OCGantt.share._share.expiryDate != 0) {
             OCGantt.share._shareStack.push({
                 type: 'shareExpiryDate',
                 value: 0
             });
         }
     }
-    if ($('#recipient-OCGantt').val() != ''){
+    if ($('#recipient-OCGantt').val() != '') {
         OCGantt.share._shareStack.push({
             type: 'recipient',
             value: $('#recipient-OCGantt').val()
@@ -1601,7 +1601,7 @@ OCGantt.clickGridButton = function (id, action) {
                 break;
         }
     } else if ((OCGantt.isAdmin === false) || (OCGantt.readOnly === true)) {
-        gantt.alert('you are not allowed to make changes in the document');
+        gantt.alert(t('owncollab_ganttchart', 'you are not allowed to make changes in the document'));
         return
     }
 }
@@ -1687,13 +1687,13 @@ gantt.showLightbox = function (id) {
         _lineHeaderInputSF.if = 'header_sf';
         _lineHeaderInputFF.if = 'header_ff';
         _lineHeaderBuffer.id = 'header_buffer';
-        _lineHeaderId.innerHTML = '<b>ID</b>';
-        _lineHeaderText.innerHTML = '<b>Name</b>';
-        _lineHeaderInputFS.innerHTML = '<b>FS</b>';
-        _lineHeaderInputSS.innerHTML = '<b>SS</b>';
-        _lineHeaderInputSF.innerHTML = '<b>SF</b>';
-        _lineHeaderInputFF.innerHTML = '<b>FF</b>';
-        _lineHeaderBuffer.innerHTML = '<b>Buffer</b>';
+        _lineHeaderId.innerHTML = '<b>' + t('owncollab_ganttchart', 'ID') + '</b>';
+        _lineHeaderText.innerHTML = '<b>' + t('owncollab_ganttchart', 'Taskname') + '</b>';
+        _lineHeaderInputFS.innerHTML = '<b>' + t('owncollab_ganttchart', 'FS') + '</b>';
+        _lineHeaderInputSS.innerHTML = '<b>' + t('owncollab_ganttchart', 'SS') + '</b>';
+        _lineHeaderInputSF.innerHTML = '<b>' + t('owncollab_ganttchart', 'SF') + '</b>';
+        _lineHeaderInputFF.innerHTML = '<b>' + t('owncollab_ganttchart', 'FF') + '</b>';
+        _lineHeaderBuffer.innerHTML = '<b>' + t('owncollab_ganttchart', 'Buffer') + '</b>';
         _lineHeader.appendChild(_lineHeaderId);
         _lineHeader.appendChild(_lineHeaderText);
         _lineHeader.appendChild(_lineHeaderInputFS);
@@ -1755,7 +1755,7 @@ gantt.showLightbox = function (id) {
         var groupUserArray = task.resources.split(",");
         if (groupUserArray.length >= 1) { resources = groupUserArray; }
         OCGantt.displayResources(groupUserArray, resourcesField);
-        var fragmentResources = OCGantt.renderResources(); 
+        var fragmentResources = OCGantt.renderResources();
         var fragment = document.createDocumentFragment();
         $("#resources-form").append('<div id="resourceslist" style="padding: 5px; overflow-y: scroll;">');
         $("#resources-form div:first-child").append(fragmentResources);
@@ -1773,8 +1773,8 @@ gantt.showLightbox = function (id) {
         });
         $("#links-form div:first-child").append(fragmentLinks);
         $("#links-form").append('<div id="linkbuttons" style="padding: 5px; position: absolute;"><div class="tbl">' +
-            '<div class="tbl_cell"><input type="button" id="save-links" name="save-links" value="Done"></div>' +
-            '<div class="tbl_cell" align="right" ><input type="button" id="close-links" name="close-links" value="Cancel"></div>' +
+            '<div class="tbl_cell"><input type="button" id="save-links" name="save-links" value="' + t('owncollab_ganttchart', 'Done') + '"></div>' +
+            '<div class="tbl_cell" align="right" ><input type="button" id="close-links" name="close-links" value="' + t('owncollab_ganttchart', 'Cancel') + '"></div>' +
             '</div>');
         OCGantt.lbox.keyUpFunction = function (e) {
             if (e.which == 27) {
@@ -1937,11 +1937,11 @@ gantt.showLightbox = function (id) {
         });
         if (task.id == "1") {
             $("#add1").hide();
-            $("label[for='description']").text("Project name");
+            $("label[for='description']").text(t('owncollab_ganttchart', 'Project name'));
         }
         if ((task.id != "1") && (task.type == "project")) {
             $("#dateinput").hide();
-            $("label[for='description']").text("Sub Project name");
+            $("label[for='description']").text(t('owncollab_ganttchart', 'Sub Project name'));
         }
         form.querySelector("[name='resources_hidden']").value = task.resources;
         form.style.display = "block";
@@ -1953,7 +1953,7 @@ gantt.showLightbox = function (id) {
         $("#save-links").click(function () { OCGantt.lbox.save.links(); });
         $("#close-links").click(function () { OCGantt.lbox.cancel.links(); });
     } else if ((OCGantt.isAdmin === false) || (OCGantt.readOnly === true)) {
-        gantt.alert('you are not allowed to make changes in the document');
+        gantt.alert(t('owncollab_ganttchart', 'you are not allowed to make changes in the document'));
         return
     }
 };
@@ -2206,15 +2206,15 @@ OCGantt.lbox.HTML.html = '<div class="gantt_cal_light" id="my-form" style="displ
     '<div class="gantt_cal_ltitle" style="cursor: pointer; font-size: 1.2em; "><b>' +
     '<p name="title"></p></b></div>' +
     '<div style="padding: 5px">' +
-    '<div class="tbl_cell lbox_title"><label for="description">Task text</label></div>' +
+    '<div class="tbl_cell lbox_title"><label for="description">' + t('owncollab_ganttchart', 'Taskname') + '</label></div>' +
     '<input type="text" style="width:calc(100% - 16px);" name="description" value="" />' +
     '<div id="add1">' +
-    '<div class="tbl_cell lbox_title"><label for="resources">Resources</label></div>' +
+    '<div class="tbl_cell lbox_title"><label for="resources">' + t('owncollab_ganttchart', 'Resources') + '</label></div>' +
     '<input type="text" style="display:none;" name="resources_hidden" />' +
     '<div contenteditable="true" style="width:calc(100% - 16px);" name="resources"></div>' +
     '<div class="gantt_cal_light resources" id="resources-form" style="display: none; width:calc(100% - 14px); border-radius: 3px; box-shadow: 0px 4px 8px -3px rgba(0, 0, 0, .8) !important;">' +
     '</div>' +
-    '<div class="tbl_cell lbox_title"><label for="links">Links</label></div>' +
+    '<div class="tbl_cell lbox_title"><label for="links">' + t('owncollab_ganttchart', 'Links') + '</label></div>' +
     '<input type="text" style="display:none;" name="links_hidden" />' +
     '<div contenteditable="true" style="width:calc(100% - 16px);" name="links"></div>' +
     '<div class="gantt_cal_light links" id="links-form" style="display: none; width:calc(100% - 14px); border-radius: 3px; box-shadow: 0px 4px 8px -3px rgba(0, 0, 0, .8) !important; ">' +
@@ -2223,15 +2223,15 @@ OCGantt.lbox.HTML.html = '<div class="gantt_cal_light" id="my-form" style="displ
     '<div id="dateinput">' +
     '<div class="tbl_cell lbox_date_column">' +
     '<div class="tbl">' +
-    '<div class="tbl_cell lbox_title"><label for="startdate">Start</label></div>' +
+    '<div class="tbl_cell lbox_title"><label for="startdate">' + t('owncollab_ganttchart', 'Start') + '</label></div>' +
     '<div class="tbl_cell" style="width: 80px"><input class="datepicker" id="startdate" name="startdate" type="text" style="width: 80px"></div>' +
     '<div class="tbl_cell lbox_title"style="width: 0px"><label for="starttime"></label></div>' +
     '<div class="tbl_cell" style="text-align: left"><input class="timepicker" id="starttime" name="starttime" type="text" style="width: 40px"></div>' +
     '<div class="tbl_cell" style="text-align: left; width: 20px"><input id="milestone" name="milestone" type="checkbox"></div>' +
-    '<div class="tbl_cell lbox_title" style="text-align: left"><label for="milestone">Milestone</label></div>' +
+    '<div class="tbl_cell lbox_title" style="text-align: left"><label for="milestone">' + t('owncollab_ganttchart', 'Milestone') + '</label></div>' +
     '</div>' +
     '<div id="enddateinput" class="tbl">' +
-    '<div class="tbl_cell lbox_title"><label for="enddate">End</label></div>' +
+    '<div class="tbl_cell lbox_title"><label for="enddate">' + t('owncollab_ganttchart', 'End') + '</label></div>' +
     '<div class="tbl_cell" style="width: 80px"><input class="datepicker" id="enddate" name="enddate" type="text" style="width: 80px"></div>' +
     '<div class="tbl_cell lbox_title"style="width: 0px"><label for="endtime"></label></div>' +
     '<div class="tbl_cell" style="text-align: left"><input class="timepicker" id="endtime" name="endtime" type="text" style="width: 40px"></div>' +
@@ -2239,87 +2239,87 @@ OCGantt.lbox.HTML.html = '<div class="gantt_cal_light" id="my-form" style="displ
     '</div>' +
     '</div>' +
     '<div id="progressinput" class="tbl">' +
-    '<div class="tbl_cell lbox_title" style="width: 60px"><label for="progress">Progress</Label></div>' +
+    '<div class="tbl_cell lbox_title" style="width: 60px"><label for="progress">' + t('owncollab_ganttchart', 'Progress') + '</Label></div>' +
     '<div class="tbl_cell style="width: 80px"><input class="gantt_progress" id="progress" name="progress" type="text" style="width: 65px; text-align: right">' +
     '<i class="fa fa-crosshairs fa-align-center gantt_changeprogress" id="changeprogress" name="changeprogress"></i>' +
     '</div>' +
     '</div>' +
     '</div>' +
     '<br>' +
-    '<input type="button" name="save" value="Save">' +
-    '<input type="button" name="close" value="Close">' +
-    '<input type="button" name="delete" value="Delete">' +
+    '<input type="button" name="save" value="' + t('owncollab_ganttchart', 'Save') + '">' +
+    '<input type="button" name="close" value="' + t('owncollab_ganttchart', 'Close') + '">' +
+    '<input type="button" name="delete" value="' + t('owncollab_ganttchart', 'Delete') + '">' +
     '</div>' +
     '</div>';
 
-OCGantt.Share = function(baseUrl){
+OCGantt.Share = function (baseUrl) {
     this._baseUrl = baseUrl;
     this.token;
 }
 
 OCGantt.Share.prototype = {
-    index: function(){
+    index: function () {
         var deferred = $.Deferred();
         var self = this;
-        $.get(this._baseUrl+'/share').done(function (share){
+        $.get(this._baseUrl + '/share').done(function (share) {
             self._share = share;
             deferred.resolve();
         }).fail(function () {
             deferred.reject();
         });
-        return deferred.promise();        
+        return deferred.promise();
     },
-    store: function(){
-        if (OCGantt.share._shareStack.length != 0){
+    store: function () {
+        if (OCGantt.share._shareStack.length != 0) {
             $('#save-share-settings').show();
         } else {
             $('#nothing-to-store').show();
-            setTimeout(function(){
+            setTimeout(function () {
                 $('#nothing-to-store').fadeOut(200);
             }, 2000);
         }
         var baseUrl = this._baseUrl;
-        OCGantt.share._shareStack.forEach(function(item, index){
-            if (item.type === 'shareExpiryDate'){
+        OCGantt.share._shareStack.forEach(function (item, index) {
+            if (item.type === 'shareExpiryDate') {
                 var data = {
                     app: 'owncollab_ganttchart',
                     key: item.type,
                     value: item.value
                 };
-                data.action='setValue';
-                $.post(OC.AppConfig.url, data ).done( function(result){
-                    var index2 = OCGantt.share._shareStack.map(function(e) { return e.name; }).indexOf(item.type);
+                data.action = 'setValue';
+                $.post(OC.AppConfig.url, data).done(function (result) {
+                    var index2 = OCGantt.share._shareStack.map(function (e) { return e.name; }).indexOf(item.type);
                     OCGantt.share._shareStack.splice(index2, 1);
                     OCGantt.share._share.expiryDate = $('#expirationDate').val();
-                    if (OCGantt.share._shareStack.length === 0){
+                    if (OCGantt.share._shareStack.length === 0) {
                         $('#save-share-settings').hide();
                     }
                 }).fail(function () {
                 });
-            } else if (item.type === 'password'){
-                $.post(baseUrl+'/share/setPassword', {password: item.value}).done(function (result){
-                    var index2 = OCGantt.share._shareStack.map(function(e) { return e.name; }).indexOf(item.type);
+            } else if (item.type === 'password') {
+                $.post(baseUrl + '/share/setPassword', { password: item.value }).done(function (result) {
+                    var index2 = OCGantt.share._shareStack.map(function (e) { return e.name; }).indexOf(item.type);
                     OCGantt.share._shareStack.splice(index2, 1);
                     OCGantt.share._share.passwordSet = 1;
-                    if (OCGantt.share._shareStack.length === 0){
+                    if (OCGantt.share._shareStack.length === 0) {
                         $('#save-share-settings').hide();
                     }
                 });
-            } else if (item.type === 'recipient'){
-                $.post(baseUrl+'/share/sendemail', {recipients: item.value}).done(function (result){
-                    var index2 = OCGantt.share._shareStack.map(function(e) { return e.name; }).indexOf(item.type);
+            } else if (item.type === 'recipient') {
+                $.post(baseUrl + '/share/sendemail', { recipients: item.value }).done(function (result) {
+                    var index2 = OCGantt.share._shareStack.map(function (e) { return e.name; }).indexOf(item.type);
                     OCGantt.share._shareStack.splice(index2, 1);
                     OCGantt.share._share.passwordSet = 1;
-                    if (OCGantt.share._shareStack.length === 0){
+                    if (OCGantt.share._shareStack.length === 0) {
                         $('#save-share-settings').hide();
                     }
-                });                    
+                });
             }
         });
     }
 };
 
-    // The object OCGantt.Tasks holds all Tasks
+// The object OCGantt.Tasks holds all Tasks
 OCGantt.Tasks = function (baseUrl) {
     this._baseUrl = baseUrl;
     this._tasks = [];
@@ -2372,7 +2372,7 @@ OCGantt.Tasks.prototype = {
         task.startdate = task.start_date;
         task.enddate = task.end_date;
         task.open = 1;
-        if (task.parent === 0){
+        if (task.parent === 0) {
             task.parent = 1;
         }
         var deferred = $.Deferred();
@@ -2568,7 +2568,7 @@ OCGantt.GroupUsers.prototype = {
 
     // All configs should be assembled in the object OCGantt.config
     OCGantt.config = function () {
-        if (OCGantt.isAdmin === true){
+        if (OCGantt.isAdmin === true) {
             gantt.attachEvent("onAfterTaskUpdate", function (id, move, e) {
                 arr = gantt.serialize();
                 gantt.refreshTask(id);
@@ -2580,14 +2580,14 @@ OCGantt.GroupUsers.prototype = {
                 var colors = OCGantt.userColors,
                     resources = arr.data[index].resources,
                     obj = resources.split(","),
-                    ccode = $.grep(colors, function (user) { return  user.id == obj[0] });
-                if (ccode.length >= 1){
+                    ccode = $.grep(colors, function (user) { return user.id == obj[0] });
+                if (ccode.length >= 1) {
                     arr.data[index].color = ccode[0].value;
                     task.color = ccode[0].value;
-                } else if (ccode.length === 0){
+                } else if (ccode.length === 0) {
                     arr.data[index].color = 'rgb(75, 113, 164)';
                     task.color = 'rgb(75, 113, 164)';
-                }             
+                }
                 OCGantt.tasks.updateActive();
                 gantt.render();
             });
@@ -2751,22 +2751,22 @@ OCGantt.GroupUsers.prototype = {
                 });
                 gantt.attachEvent("onRowDragEnd", function (id, target) {
                     var task = gantt.getTask(id);
-                    if (task.parent){
+                    if (task.parent) {
                         var parenttask = gantt.getTask(task.parent);
-                        if (parenttask.type != "project"){
-                             parenttask.type = "project";
-                             gantt.updateTask(parenttask.id);
+                        if (parenttask.type != "project") {
+                            parenttask.type = "project";
+                            gantt.updateTask(parenttask.id);
                         }
                     }
                     gantt.updateTask(id);
-                    if (target){
+                    if (target) {
                         var sourceIndex = OCGantt.screenOrder.indexOf(id);
                         var targetIndex = OCGantt.screenOrder.indexOf(target);
                         OCGantt.screenOrder.move(sourceIndex, targetIndex);
                         OC.AppConfig.setValue('owncollab_ganttchart', 'screenorder', JSON.stringify(OCGantt.screenOrder));
                     }
                     OCGantt.tempChildren = gantt.getChildren(OCGantt.tempParent);
-                    if (OCGantt.tempChildren.length === 0){
+                    if (OCGantt.tempChildren.length === 0) {
                         var task = gantt.getTask(OCGantt.tempParent);
                         task.type = "task";
                         gantt.updateTask(task.id);
@@ -2778,99 +2778,93 @@ OCGantt.GroupUsers.prototype = {
         }
         gantt.attachEvent("onParse", function () {
             $("#OCGantt-cover").fadeOut();
-            $("#OCGantt-loader").fadeOut();     
-            $(".fa-filter").each(function() {
+            $("#OCGantt-loader").fadeOut();
+            $(".fa-filter").each(function () {
                 OCGantt.initFilterGrid($(this).attr('id'));
             });
-            /*$('.click').click(function(){
-                console.log($(this).data().command);
-                var instruction = $(this).data().command;
-                var F = new Function (instruction);
-                return(F());
-            });*/
         });
-        gantt.attachEvent("onDataRender", function(){
-            if (OCGantt.filter.value.textTasks || OCGantt.filter.value.textSubprojects){
+        gantt.attachEvent("onDataRender", function () {
+            if (OCGantt.filter.value.textTasks || OCGantt.filter.value.textSubprojects) {
                 $(".fa-filter#text").addClass("activated");
             } else {
                 $(".fa-filter#text").removeClass("activated");
             }
-            if (OCGantt.filter.value.resources){
+            if (OCGantt.filter.value.resources) {
                 $(".fa-filter#resources").addClass("activated");
             } else {
                 $(".fa-filter#resources").removeClass("activated");
             }
-            $.each($(".fa-filter"), function(i, e){
+            $.each($(".fa-filter"), function (i, e) {
                 var events = $(e).data("events");
-                if ((!events) || (events.length === 0)){
-                    $(".fa-filter").click(function() {
+                if ((!events) || (events.length === 0)) {
+                    $(".fa-filter").click(function () {
                         var id = $(this).attr('id');
                         $('.ocgantt_filter_resources input:checkbox').prop('checked', false);
-                        if (id === 'resources'){
-                            if (OCGantt.filter.value.resources){
+                        if (id === 'resources') {
+                            if (OCGantt.filter.value.resources) {
                                 OCGantt.filter.resourcesList = OCGantt.filter.value.resources.slice();
                                 OCGantt.lbox.precheckBoxes('ocgantt_filter_resources', OCGantt.filter.value.resources);
                             }
                         }
-                        $("#filter-"+id).toggle("blind", {direction: "vertical"}, 350);
+                        $("#filter-" + id).toggle("blind", { direction: "vertical" }, 350);
                     });
                 }
             });
-            setTimeout(function(){ 
-                $.each($(".click"), function(i, e){
+            setTimeout(function () {
+                $.each($(".click"), function (i, e) {
                     var events = $(e).data("events");
-                    if ((!events) || (events.length === 0)){
-                        $(e).click(function(){
+                    if ((!events) || (events.length === 0)) {
+                        $(e).click(function () {
                             console.log($(this).data().command);
                             console.log($(e).data("events"));
                             var instruction = $(this).data().command;
-                            var F = new Function (instruction);
-                            return(F());
+                            var F = new Function(instruction);
+                            return (F());
                         });
                     }
                 });
             }, 500);
 
-            $('.fa-ban.fa-stack-2x').hover(function(e) {
+            $('.fa-ban.fa-stack-2x').hover(function (e) {
                 $('.fa-sort.fa-stack-2x').trigger(e.type);
             });
-            $('.fa-sort.fa-stack-2x').hover(function(){
-                 $('.fa-sort.fa-stack-2x').toggleClass("hover");
+            $('.fa-sort.fa-stack-2x').hover(function () {
+                $('.fa-sort.fa-stack-2x').toggleClass("hover");
             });
-            $('.fa-ban.fa-stack-2x').click(function(){
+            $('.fa-ban.fa-stack-2x').click(function () {
                 gantt.config.sort = false;
                 OCGantt.init();
             });
         });
-        gantt.attachEvent("onLinkDblClick", function(id,e){
+        gantt.attachEvent("onLinkDblClick", function (id, e) {
             $("#content-wrapper").addClass("blur");
-            setTimeout(function(){
-                $("gantt_popup_button").click(function(){
+            setTimeout(function () {
+                $("gantt_popup_button").click(function () {
                     $("#content-wrapper").removeClass("blur");
                 });
-                $(".gantt_popup_button div").click(function(){
+                $(".gantt_popup_button div").click(function () {
                     $("#content-wrapper").removeClass("blur");
                 });
-                }, 200);
+            }, 200);
             return true;
         });
-        gantt.attachEvent("onTaskCreated", function(task){
+        gantt.attachEvent("onTaskCreated", function (task) {
             var scrollPosition = $(".gantt_ver_scroll").scrollTop();
-            setTimeout(function(){
+            setTimeout(function () {
                 gantt.showTask(task.id);
-                if (scrollPosition < $(".gantt_ver_scroll").scrollTop()){
+                if (scrollPosition < $(".gantt_ver_scroll").scrollTop()) {
                     $(".gantt_ver_scroll").scrollTop($(".gantt_ver_scroll").scrollTop() + 25);
                 }
             }, 300);
             return true;
         });
 
-        gantt.attachEvent("onBeforeTaskDisplay", function(id, task){
-            if (Object.keys(OCGantt.filter.value).length > 0){
-                if (OCGantt.filterGrid(id)){
+        gantt.attachEvent("onBeforeTaskDisplay", function (id, task) {
+            if (Object.keys(OCGantt.filter.value).length > 0) {
+                if (OCGantt.filterGrid(id)) {
                     return true;
                 }
-            } else if (Object.keys(OCGantt.filter.value).length === 0 ){
+            } else if (Object.keys(OCGantt.filter.value).length === 0) {
                 return true;
             }
         });
@@ -2895,14 +2889,14 @@ OCGantt.GroupUsers.prototype = {
         //gantt.config.static_background = true;
         gantt.config.smart_scales = false;
         // Styling
-        gantt.templates.grid_open = function(item) {
-            return "<div class='gantt_tree_icon fa " + 
-            (item.$open ? "fa-caret-down gantt_close" : "fa-caret-right gantt_open") + "'></div>";
+        gantt.templates.grid_open = function (item) {
+            return "<div class='gantt_tree_icon fa " +
+                (item.$open ? "fa-caret-down gantt_close" : "fa-caret-right gantt_open") + "'></div>";
         };
-        gantt.templates.grid_folder = function(item) {
+        gantt.templates.grid_folder = function (item) {
             return "<div class='gantt_tree_icon' style='width: 3px;'></div>";
         };
-        gantt.templates.grid_file = function(item) {
+        gantt.templates.grid_file = function (item) {
             return "<div class='gantt_tree_icon' style='width: 3px;'></div>";
         };
         gantt.config.row_height = 22;
