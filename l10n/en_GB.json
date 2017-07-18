@@ -71,6 +71,18 @@
     "Edit projects": "Edit projects",
     "Edit jobs": "Edit jobs",
     "Edit events": "Edit events",
-    "Welcome! <br>The user {displayname} invited you to ownCollab. Please click the link below to enter: <br>{link}<br><br>If the share is password protected please ask {displayname} to provide the password.": "Welcome! <br>The user {displayname} invited you to ownCollab. Please click the link below to enter: <br>{link}<br><br>If the share is password protected please ask {displayname} to provide the password."
+    "Welcome! <br>The user {displayname} invited you to ownCollab. Please click the link below to enter: <br>{link}<br><br>If the share is password protected please ask {displayname} to provide the password.": "Welcome! <br>The user {displayname} invited you to ownCollab. Please click the link below to enter: <br>{link}<br><br>If the share is password protected please ask {displayname} to provide the password.",
+    "Welcome!":"Welcome!",
+    "The followng steps will guide you through the initial setup of the ownCollab Gantt chart":"The following steps will guide you through the initial setup of the ownCollab Gantt chart",
+    "You will be able to change all the settings afterwards if necessary":"You will be able to change all the settings afterwards if necessary",
+    "Set the project name":"Set the project name",
+    "Please set the project name as first. You can change it later by editing the first task.":"Please set the project name as first. You can change it later by editing the first task.",
+    "Set the start date of the project":"Set the start date of the project",
+    "Please set the start date and time of the project. These values will be adjusted automatically when editing the project.":"Please set the start date and time of the project. These values will be adjusted automatically when editing the project.",
+    "Congratulations!":"Congratulations!",
+    "You have succesfull setup your Gantt chart. Please press <b>finish</b> to start with your Gantt chart.":"You have succesfull setup your Gantt chart. Please press <b>finish</b> to start with your Gantt chart.",
+    "back":"back",
+    "next":"next",
+    "finish":"finish"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

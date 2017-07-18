@@ -153,32 +153,32 @@ startFirstRunWizard = function () {
 if (OCGanttFRW.isAdmin === true){
     OCGanttFRW.pages[0] = {
         html: '<div class="ocgantt-frw wrapper">' +
-              '<div class="ocgantt-frw header"><h1>Welcome!</h1></div>' +
-              '<div class="ocgantt-frw form" style="text-align: center;"><br><p style="font-size: 1.2em;">The following steps will guide you through the initial setup of the ownCollab Gantt chart</p>' +
-              '<p style="font-size: 1.2em;">You will be able to change all the settings afterwards if necessary</p>' +
+              '<div class="ocgantt-frw header"><h1>' + t('owncollab_ganttchart', 'Welcome!') + '</h1></div>' +
+              '<div class="ocgantt-frw form" style="text-align: center;"><br><p style="font-size: 1.2em;">' + t('owncollab_ganttchart', 'The following steps will guide you through the initial setup of the ownCollab Gantt chart') + '</p>' +
+              '<p style="font-size: 1.2em;">' + t('owncollab_ganttchart', 'You will be able to change all the settings afterwards if necessary') + '</p>' +
               '</div>' +
               '</div>',
         active: true
     };
     OCGanttFRW.pages[1] = {
         html: '<div class="ocgantt-frw wrapper">' +
-              '<div class="ocgantt-frw header"><h1>Set the project name</h1></div>' +
+              '<div class="ocgantt-frw header"><h1>' + t('owncollab_ganttchart', 'Set the project name') + '</h1></div>' +
               '<div class="ocgantt-frw media" id="media-frw-1">' +
               '<div class="ocgantt-frw video"><video preload="preload" loop="loop"><source src="' + instanceUrl + 'vid/TUT_change_project_name.mp4"></source></video></div>' +
               '</div>' +
-              '<div class="ocgantt-frw form" style="text-align: center;"><p style="font-size: 1.2em; margin-bottom: 5px; padding-bottom: 5px;">Please set the project name as first. You can change it later by editing the first task.</p>' +
-              '<input type="text" style="width:20%;" id="projectname" name="projectname" value="" placeholder="Project name" />' +
+              '<div class="ocgantt-frw form" style="text-align: center;"><p style="font-size: 1.2em; margin-bottom: 5px; padding-bottom: 5px;">' + t('owncollab_ganttchart', 'Please set the project name as first. You can change it later by editing the first task.') + '</p>' +
+              '<input type="text" style="width:20%;" id="projectname" name="projectname" value="" placeholder="' + t('owncollab_ganttchart', 'Project name') +'" />' +
               '</div>' +
               '</div>',
         active: false
     };
         OCGanttFRW.pages[2] = {
         html: '<div class="ocgantt-frw wrapper">' +
-              '<div class="ocgantt-frw header"><h1>Set the start date of the project</h1></div>' +
+              '<div class="ocgantt-frw header"><h1>' + t('owncollab_ganttchart', 'Set the start date of the project') + '</h1></div>' +
               '<div class="ocgantt-frw media" id="media-frw-2">' +
               '<div class="ocgantt-frw video"><video preload="preload" loop="loop"><source src="' + instanceUrl + 'vid/TUT_move_beginning.mp4"></source></video></div>' +
               '</div>' +
-              '<div class="ocgantt-frw form" style="text-align: center;"><p style="font-size: 1.2em; margin-bottom: 5px; padding-bottom: 5px;">Please set the start date and time of the project. These values will be adjusted automatically when editing the project.</p>' +
+              '<div class="ocgantt-frw form" style="text-align: center;"><p style="font-size: 1.2em; margin-bottom: 5px; padding-bottom: 5px;">' + t('owncollab_ganttchart', 'Please set the start date and time of the project. These values will be adjusted automatically when editing the project.') + '</p>' +
               '<input class="datepicker" id="projectstartdate" name="projectstartdate" type="text" style="width: 80px">' +
               '<input class="timepicker" id="projectstarttime" name="projectstarttime" type="text" style="width: 40px">' +
               '</div>' +
@@ -188,8 +188,8 @@ if (OCGanttFRW.isAdmin === true){
 
     OCGanttFRW.pages[3] = {
         html: '<div class="ocgantt-frw wrapper">' +
-              '<div class="ocgantt-frw header"><h1>Congratulations!</h1></div>' +
-              '<div class="ocgantt-frw form" style="text-align: center;"><p style="font-size: 1.2em; margin-bottom: 5px; padding-bottom: 5px;">You have succesfull setup your Gantt chart. Please press <b>finish</b> to start with your Gantt chart.</p>' +
+              '<div class="ocgantt-frw header"><h1>' + t('owncollab_ganttchart', 'Congratulations!') + '</h1></div>' +
+              '<div class="ocgantt-frw form" style="text-align: center;"><p style="font-size: 1.2em; margin-bottom: 5px; padding-bottom: 5px;">' + t('owncollab_ganttchart', 'You have succesfull setup your Gantt chart. Please press <b>finish</b> to start with your Gantt chart.') + '</p>' +
               '</div>' +
               '</div>',
         active: false
