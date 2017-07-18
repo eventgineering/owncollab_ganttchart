@@ -202,9 +202,9 @@ if (OCGanttFRW.isAdmin === true){
                       '<div class="circleparent"><div class="circle"></div></div>' +
                       '<div id="lightbox" class="gantt_cal_light ocgantt-frw lightbox">'+
                       '<div class="ocgantt-frw counterwrapper" align="center"></div>' +
-                      '<div id="backbutton"><input class="ocgantt-frw btn-left disabled" type="button" name="back" value="back"/></div>' +
-                      '<div id="nextbutton"><input class="ocgantt-frw btn-right enabled" type="button" name="next" value="next"/></div>' +
-                      '<div id="finishbutton" style="display:none"><input class="ocgantt-frw btn-right enabled" type="button" name="finish" value="finish"/></div>' +
+                      '<div id="backbutton"><input class="ocgantt-frw btn-left disabled" type="button" name="back" value="' + t('owncollab_ganttchart', 'back') + '"/></div>' +
+                      '<div id="nextbutton"><input class="ocgantt-frw btn-right enabled" type="button" name="next" value="' + t('owncollab_ganttchart', 'next') + '"/></div>' +
+                      '<div id="finishbutton" style="display:none"><input class="ocgantt-frw btn-right enabled" type="button" name="finish" value="' + t('owncollab_ganttchart', 'finish') + '"/></div>' +
                       '</div>' +
                       '</div>';
 } else if (OCGanttFRW.isAdmin === false){
