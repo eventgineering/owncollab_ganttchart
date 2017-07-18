@@ -80,35 +80,35 @@ OCGantt.columnNames = {
 }
 
 OCGantt.columnLabel = {
-    id: '<div style="width: 30px; display: inline-block; text-align: left; padding-left:2px;">ID</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.id +')"></i>' +
-        '<i class="fa fa-sort-asc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.id +')"></i></span></div>',
+    id: '<div style="width: 30px; display: inline-block; text-align: left; padding-left:2px;">ID</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.id +')"></i>' +
+        '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.id +')"></i></span></div>',
     name: '<div style="width: 110px; display: inline-block; text-align: left; padding-left:2px;">Taskname</div>' +
           '<div style="width: 20px; display: inline-block;"><i class="fa fa-filter" id="text"></i></div>' +
-          '<div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.name +')"></i>' +
-          '<i class="fa fa-sort-asc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.name +')"></i></span></div>',
-    start: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">Start</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.start +')"></i>' +
-           '<i class="fa fa-sort-asc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.start +')"></i></span></div>',
-    end: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">End</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.end +')"></i>' +
-         '<i class="fa fa-sort-asc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.end +')"></i></span></div>',
-    duration: '<div style="width: 60px; display: inline-block; text-align: left; padding-left:2px;">Duration</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.duration +')"></i>' +
-              '<i class="fa fa-sort-asc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.duration +')"></i></span></div>',
+          '<div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.name +')"></i>' +
+          '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.name +')"></i></span></div>',
+    start: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">Start</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.start +')"></i>' +
+           '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.start +')"></i></span></div>',
+    end: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">End</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.end +')"></i>' +
+         '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.end +')"></i></span></div>',
+    duration: '<div style="width: 60px; display: inline-block; text-align: left; padding-left:2px;">Duration</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.duration +')"></i>' +
+              '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.duration +')"></i></span></div>',
     resources: '<div style="width: 60px; display: inline-block; text-align: left; padding-left:2px;">Resources</div>' +
                '<div style="width: 20px; display: inline-block;"><i class="fa fa-filter" id="resources"></i></div>' +
-               '<div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.resources +')"></i>' +
-               '<i class="fa fa-sort-asc fa-stack-2x" onclick="OCGantt.sortGrid('+ OCGantt.columnNames.resources +')"></i></span></div>',
-    buttons: '<span class="fa-stack"><i class="fa fa-sort fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span><i class="fa gantt_button_grid gantt_grid_add fa-plus" style="position: absolute; top: 6px;" onclick="OCGantt.clickGridButton(1, \'add\')"></i>',
+               '<div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.resources +')"></i>' +
+               '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid('+ OCGantt.columnNames.resources +')"></i></span></div>',
+    buttons: '<span class="fa-stack"><i class="fa fa-sort fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span><i class="fa gantt_button_grid gantt_grid_add fa-plus click" style="position: absolute; top: 6px;" data-command="OCGantt.clickGridButton(1, \'add\')"></i>',
 };
 
 OCGantt.buttonsGrid = function(){
         return{
                 name: "buttons", label: OCGantt.columnLabel.buttons, width: OCGantt.columnWidth.buttons, resize: false, template: function (item) {
                         if (item.id === 1){
-                            return ('<i class="fa gantt_button_grid gantt_grid_edit fa-pencil" onclick="OCGantt.clickGridButton(' + item.id + ', \'edit\')"></i>' +
-                            '<i class="fa gantt_button_grid gantt_grid_add fa-plus" onclick="OCGantt.clickGridButton(' + item.id + ', \'add\')"></i>');
+                            return ('<i class="fa gantt_button_grid gantt_grid_edit fa-pencil click" data-command="OCGantt.clickGridButton(' + item.id + ', \'edit\')"></i>' +
+                            '<i class="fa gantt_button_grid gantt_grid_add fa-plus click" data-command="OCGantt.clickGridButton(' + item.id + ', \'add\')"></i>');
                         } else {
-                            return ('<i class="fa gantt_button_grid gantt_grid_edit fa-pencil" onclick="OCGantt.clickGridButton(' + item.id + ', \'edit\')"></i>' +
-                            '<i class="fa gantt_button_grid gantt_grid_add fa-plus" onclick="OCGantt.clickGridButton(' + item.id + ', \'add\')"></i>' +
-                            '<i class="fa gantt_button_grid gantt_grid_delete fa-times" onclick="OCGantt.clickGridButton(' + item.id + ', \'delete\')"></i>');
+                            return ('<i class="fa gantt_button_grid gantt_grid_edit fa-pencil click" data-command="OCGantt.clickGridButton(' + item.id + ', \'edit\')"></i>' +
+                            '<i class="fa gantt_button_grid gantt_grid_add fa-plus click" data-command="OCGantt.clickGridButton(' + item.id + ', \'add\')"></i>' +
+                            '<i class="fa gantt_button_grid gantt_grid_delete fa-times click" data-command="OCGantt.clickGridButton(' + item.id + ', \'delete\')"></i>');
                         }
                 }
         };
@@ -2568,9 +2568,6 @@ OCGantt.GroupUsers.prototype = {
 
     // All configs should be assembled in the object OCGantt.config
     OCGantt.config = function () {
-        gantt.getMarker(OCGantt.markerToday);
-        gantt.renderMarkers();
-        gantt.config.show_markers = false;
         if (OCGantt.isAdmin === true){
             gantt.attachEvent("onAfterTaskUpdate", function (id, move, e) {
                 arr = gantt.serialize();
@@ -2722,6 +2719,9 @@ OCGantt.GroupUsers.prototype = {
         }
         if (OCGantt.dhtmlxversion.dhtmlxversion === "commercial") {
             console.log("You are using the commercial version");
+            gantt.getMarker(OCGantt.markerToday);
+            gantt.renderMarkers();
+            gantt.config.show_markers = false;
             gantt.config.auto_scheduling = true;
             gantt.config.auto_scheduling_strict = true;
             if (OCGantt.isAdmin === true) {
@@ -2782,6 +2782,12 @@ OCGantt.GroupUsers.prototype = {
             $(".fa-filter").each(function() {
                 OCGantt.initFilterGrid($(this).attr('id'));
             });
+            /*$('.click').click(function(){
+                console.log($(this).data().command);
+                var instruction = $(this).data().command;
+                var F = new Function (instruction);
+                return(F());
+            });*/
         });
         gantt.attachEvent("onDataRender", function(){
             if (OCGantt.filter.value.textTasks || OCGantt.filter.value.textSubprojects){
@@ -2810,6 +2816,21 @@ OCGantt.GroupUsers.prototype = {
                     });
                 }
             });
+            setTimeout(function(){ 
+                $.each($(".click"), function(i, e){
+                    var events = $(e).data("events");
+                    if ((!events) || (events.length === 0)){
+                        $(e).click(function(){
+                            console.log($(this).data().command);
+                            console.log($(e).data("events"));
+                            var instruction = $(this).data().command;
+                            var F = new Function (instruction);
+                            return(F());
+                        });
+                    }
+                });
+            }, 500);
+
             $('.fa-ban.fa-stack-2x').hover(function(e) {
                 $('.fa-sort.fa-stack-2x').trigger(e.type);
             });
@@ -2980,48 +3001,6 @@ OCGantt.GroupUsers.prototype = {
             },
         ];
         OCGantt.gridRight();
-	$('.click.export2excel').click(function(){
-        OCGantt.btnAction('export2excel')
-    });
-	$('.click.export2PDF').click(function(){
-        OCGantt.btnAction('export2PDF')
-    });
-	$('.click.export2image').click(function(){
-        OCGantt.btnAction('export2image')
-    });
-	$('.click.export2ical').click(function(){
-        OCGantt.btnAction('export2ical')
-    });
-	$('.click.export2ms').click(function(){
-        OCGantt.btnAction('export2ms')
-    });
-	$('.click.setColors').click(function(){
-        OCGantt.btnAction('setColors')
-    });
-	$('.click.setShare').click(function(){
-        OCGantt.btnAction('setShare')
-    });
-    $('.click.setDisplay').click(function(){
-        OCGantt.btnAction('setDisplay')
-    });
-    $('.click.save').click(function(){
-        OCGantt.btnAction('show', 'sidebar-save', 350, 1000)
-    });
-    $('.click.indent').click(function(){
-        OCGantt.btnAction('indent')
-    });
-    $('.click.outdent').click(function(){
-        OCGantt.btnAction('outdent')
-    });
-    $('.click.undo').click(function(){
-        OCGantt.btnAction('undo')
-    });
-    $('.click.redo').click(function(){
-        OCGantt.btnAction('redo')
-    });
-    $('.click.settings').click(function(){
-        OCGantt.btnAction('show', 'sidebar-settings', 350, 1000)
-    });
     }
 
 
