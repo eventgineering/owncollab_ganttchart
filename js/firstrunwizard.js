@@ -146,7 +146,7 @@ startFirstRunWizard = function () {
     $("#media-frw-1").css('background-image', 'url(' + instanceUrl + 'img/TUT_change_project_name.png)');
     $("#media-frw-2").css('background-image', 'url(' + instanceUrl + 'img/TUT_move_beginning.png)');
     $("#lightbox input").click(function(){
-        OCGanttFRW.switchPages($(this).prop('value'));
+        OCGanttFRW.switchPages($(this).prop('name'));
     });
 }
 
