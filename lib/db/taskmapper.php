@@ -98,6 +98,8 @@ class TaskMapper extends Mapper {
                     $index = TaskMapper::searchIndex($value, $tasks);
                     $newarray[$key] = $tasks[$index];
                 }
+            } else {
+                $newarray = $tasks;
             }
             foreach ($newarray as $key => $task){
                 $task = (array) json_decode(json_encode($task));

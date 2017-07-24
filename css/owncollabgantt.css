@@ -19,6 +19,10 @@
     filter: blur(3px);
 }
 
+
+.ui-timepicker-table td a{
+    width: 2em !important;
+}
 /* Styles for the firstrunwizard */
 
 .ocgantt-frw.overlay {

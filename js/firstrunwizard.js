@@ -128,7 +128,8 @@ OCGanttFRW.getInitialValues = function(){
     var stime = document.querySelector("[name='projectstarttime']").value;
     var smonth = sdate.substr(3, 2) - 1;
     task.start_date = new Date(sdate.substr(6, 4), smonth, sdate.substr(0, 2), stime.substr(0, 2), stime.substr(3, 2));
-    task.type = "task";
+    task.type = "project";
+    task.parent = 0;
     task.open = "1";
     task.end_date = new Date(task.start_date);
     task.end_date = new Date(task.end_date.setDate((task.end_date.getDate())+1));
