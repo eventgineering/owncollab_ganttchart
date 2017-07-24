@@ -58,8 +58,8 @@
 			$('.gantt_task').width(totalTaskWidth);
 			exportHTML += '<div id="gantt_chart" style="width:' + chartWidth + 'px; height: ' + totalHeight + 'px;">' + $('#gantt_chart').html() + '</div></body></html>';
 			// Leave this URL for local testing purposes
-			$.post("http://10.8.10.201/pdfgenerator/pdfgenerator.php", {
-			//$.post("https://pdfgenerator.owncollab.com/rendergantt.php", {
+			//$.post("http://10.8.10.201/pdfgenerator/pdfgenerator.php", {
+			$.post("https://pdfgenerator.owncollab.com/rendergantt.php", {
 				html: exportHTML,
 				papersize: papersize,
 				orientation: orientation,

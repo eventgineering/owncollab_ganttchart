@@ -13,11 +13,16 @@ namespace OCA\OwnCollab_GanttChart\AppInfo;
 
 use OC_Defaults;
 use OCP\AppFramework\App;
+use \OCP\AppFramework\Http;
 
 require_once __DIR__ . '/autoload.php';
 
 $app = new App('owncollab_ganttchart');
 $container = $app->getContainer();
+	$policy = new \OCP\AppFramework\Http\ContentSecurityPolicy();
+	$policy->allowInlineScript(true);
+	//$policy->addAllowedConnectDomain('pdfgenerator.owncollab.com');
+	\OC::$server->getContentSecurityPolicyManager()->addDefaultPolicy($policy);
 
 $container->query('OCP\INavigationManager')->add(function () use ($container) {
 	$urlGenerator = $container->query('OCP\IURLGenerator');

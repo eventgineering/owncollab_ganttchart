@@ -10,13 +10,13 @@ $appName = 'owncollab_ganttchart';
 <div id="sidebar-settings" class="sidebar-left">
     <div id="sidebar-settings-header">
         <div class="tbl">
-            <div class="tbl_cell export_gantt sidebar_header clickbutton colors" data-command="OCGantt.btnAction('setColors')">
+            <div class="tbl_cell export_gantt sidebar_header clickbutton colors" onclick="OCGantt.btnAction('setColors')">
                 <h4><?php p($l->t('Colors'));?></h4>
             </div>
-            <div class="tbl_cell export_gantt sidebar_header clickbutton" data-command="OCGantt.btnAction('setShare')">
+            <div class="tbl_cell export_gantt sidebar_header clickbutton" onclick="OCGantt.btnAction('setShare')">
                 <h4><?php p($l->t('Share'));?></h4>
             </div>
-            <div class="tbl_cell export_gantt sidebar_header clickbutton" data-command="OCGantt.btnAction('setDisplay')">
+            <div class="tbl_cell export_gantt sidebar_header clickbutton" onclick="OCGantt.btnAction('setDisplay')">
                 <h4><?php p($l->t('Display'));?></h4>
             </div>
         </div>

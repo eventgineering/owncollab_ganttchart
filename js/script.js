@@ -78,11 +78,6 @@ var taskId = null;
             function() { $(this).addClass("Hover");},
             function() { $(this).removeClass("Hover");}
         );
-        $(".clickbutton").click(function(){
-            var instruction = $(this).data().command;
-            var F = new Function (instruction);
-            return(F()); 
-        });
         $("#zoomslider").slider({
             value: 1,
             min: 1,
