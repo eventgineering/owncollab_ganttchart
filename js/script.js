@@ -122,6 +122,9 @@ var taskId = null;
             });
         }
         OCGantt.tasks.loadAll().done(function () {
+            if (OCGantt.tasks._tasks.length === 1){
+                OCGantt.tasks._tasks[0].parent = 0;
+            }
             arr.data = OCGantt.tasks._tasks;
             OCGantt.tasksLoaded = true;
         });
