@@ -54,7 +54,7 @@ OCGanttFRW.addPages = function(number){
     var day = startDate.getDate();
     var month = startDate.getMonth()+1;
     var year = startDate.getFullYear();
-    task.start_date = new Date(year + '-' + ('0' + month).slice(-2) + '-' + ('0' + day).slice(-2) + ' ' + ('0' + hour).slice(-2) + ':' + ('0' + minute).slice(-2));
+    task.start_date = new Date(year + '/' + ('0' + month).slice(-2) + '/' + ('0' + day).slice(-2) + ' ' + ('0' + hour).slice(-2) + ':' + ('0' + minute).slice(-2));
     OCGantt.lbox.dateInit(startdateField, task);
     OCGantt.lbox.timeInit(starttimeField, task, 'start_date');
 

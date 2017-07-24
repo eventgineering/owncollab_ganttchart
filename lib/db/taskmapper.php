@@ -77,7 +77,7 @@ class TaskMapper extends Mapper {
     public function findAll() {
         $newarray = [];
         $test = $this->groupUserMapper->findAllUsers();
-        error_log(print_r($test, true) . "\n", 3, "/var/tmp/groupusers.log");
+        //error_log(print_r($test, true) . "\n", 3, "/var/tmp/groupusers.log");
         $usersarray = $this->groupUserMapper->findAllUsers();
         //$usersarray = GroupUserMapper::findAllUsers();
         $usersgroupsarray = TaskMapper::addPrefix($usersarray, 'uid', 'u_', '');
