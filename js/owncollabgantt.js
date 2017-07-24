@@ -10,6 +10,7 @@
 
 // Definition of namespace OCGantt
 var OCGantt = {};
+OCGantt.FRW = 0;
 OCGantt.lbox = {};
 OCGantt.lbox.HTML = {};
 OCGantt.isAdmin = OC.isUserAdmin();
@@ -2382,8 +2383,12 @@ OCGantt.Tasks.prototype = {
         task.startdate = task.start_date;
         task.enddate = task.end_date;
         task.open = 1;
-        if (task.parent === 0) {
-            task.parent = 1;
+        if (OCGantt.FRW === 0){
+            task.parent = 0;
+        } else {
+            if (task.parent === 0) {
+                task.parent = 1;
+            }
         }
         var deferred = $.Deferred();
         var self = this;
