@@ -19,6 +19,7 @@ class Task extends Entity implements JsonSerializable {
     protected $open;
     protected $enddate;
     protected $resources;
+    public $color;
 
     public function jsonSerialize() {
         return [

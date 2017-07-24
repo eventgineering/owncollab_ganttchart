@@ -17,6 +17,7 @@ OCGantt.lbox.resources = {};
 OCGantt.lbox.resources.HTML = {};
 OCGantt.lbox.ActiveOverlay = [];
 OCGantt.tempLinks = [];
+OCGantt.tempTask = [];
 OCGantt.linksToRemove = [];
 OCGantt.caretPos;
 OCGantt.tempDistance = 0;
@@ -80,35 +81,35 @@ OCGantt.columnNames = {
 }
 
 OCGantt.columnLabel = {
-    id: '<div style="width: 30px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'ID') + '</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.id + ')"></i>' +
-    '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.id + ')"></i></span></div>',
+    id: '<div style="width: 30px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'ID') + '</div><div style="width: 20px; display: inline-block;"><span class="fa-stack clickbutton"  data-command="OCGantt.sortGrid(' + OCGantt.columnNames.id + ')"><i class="fa fa-sort-desc fa-stack-2x"></i>' +
+    '<i class="fa fa-sort-asc fa-stack-2x"></i></span></div>',
     name: '<div style="width: 110px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'Taskname') + '</div>' +
     '<div style="width: 20px; display: inline-block;"><i class="fa fa-filter" id="text"></i></div>' +
-    '<div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.name + ')"></i>' +
-    '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.name + ')"></i></span></div>',
-    start: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'Start') + '</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.start + ')"></i>' +
-    '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.start + ')"></i></span></div>',
-    end: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'End') + '</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.end + ')"></i>' +
-    '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.end + ')"></i></span></div>',
-    duration: '<div style="width: 60px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'Duration') + '</div><div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.duration + ')"></i>' +
-    '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.duration + ')"></i></span></div>',
+    '<div style="width: 20px; display: inline-block;"><span class="fa-stack clickbutton" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.name + ')"><i class="fa fa-sort-desc fa-stack-2x"></i>' +
+    '<i class="fa fa-sort-asc fa-stack-2x"></i></span></div>',
+    start: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'Start') + '</div><div style="width: 20px; display: inline-block;"><span class="fa-stack clickbutton" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.start + ')""><i class="fa fa-sort-desc fa-stack-2x"></i>' +
+    '<i class="fa fa-sort-asc fa-stack-2x"></i></span></div>',
+    end: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'End') + '</div><div style="width: 20px; display: inline-block;"><span class="fa-stack clickbutton" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.end + ')"><i class="fa fa-sort-desc fa-stack-2x"></i>' +
+    '<i class="fa fa-sort-asc fa-stack-2x"></i></span></div>',
+    duration: '<div style="width: 60px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'Duration') + '</div><div style="width: 20px; display: inline-block;"><span class="fa-stack clickbutton" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.duration + ')"><i class="fa fa-sort-desc fa-stack-2x"></i>' +
+    '<i class="fa fa-sort-asc fa-stack-2x"></i></span></div>',
     resources: '<div style="width: 60px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'Resources') + '</div>' +
     '<div style="width: 20px; display: inline-block;"><i class="fa fa-filter" id="resources"></i></div>' +
-    '<div style="width: 20px; display: inline-block;"><span class="fa-stack"><i class="fa fa-sort-desc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.resources + ')"></i>' +
-    '<i class="fa fa-sort-asc fa-stack-2x click" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.resources + ')"></i></span></div>',
-    buttons: '<span class="fa-stack"><i class="fa fa-sort fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span><i class="fa gantt_button_grid gantt_grid_add fa-plus click" style="position: absolute; top: 6px;" data-command="OCGantt.clickGridButton(1, \'add\')"></i>',
+    '<div style="width: 20px; display: inline-block;"><span class="fa-stack clickbutton" data-command="OCGantt.sortGrid(' + OCGantt.columnNames.resources + ')"><i class="fa fa-sort-desc fa-stack-2x"></i>' +
+    '<i class="fa fa-sort-asc fa-stack-2x"></i></span></div>',
+    buttons: '<span class="fa-stack"><i class="fa fa-sort fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span><i id="1" class="fa gantt_button_grid gantt_grid_add fa-plus click" style="position: absolute; top: 6px;"></i>',
 };
 
 OCGantt.buttonsGrid = function () {
     return {
         name: "buttons", label: OCGantt.columnLabel.buttons, width: OCGantt.columnWidth.buttons, resize: false, template: function (item) {
             if (item.id === 1) {
-                return ('<i class="fa gantt_button_grid gantt_grid_edit fa-pencil click" data-command="OCGantt.clickGridButton(' + item.id + ', \'edit\')"></i>' +
-                    '<i class="fa gantt_button_grid gantt_grid_add fa-plus click" data-command="OCGantt.clickGridButton(' + item.id + ', \'add\')"></i>');
+                return ('<i id="' + item.id + '" class="fa gantt_button_grid gantt_grid_edit fa-pencil"></i>' +
+                    '<i id="' + item.id + '" class="fa gantt_button_grid gantt_grid_add fa-plus"></i>');
             } else {
-                return ('<i class="fa gantt_button_grid gantt_grid_edit fa-pencil click" data-command="OCGantt.clickGridButton(' + item.id + ', \'edit\')"></i>' +
-                    '<i class="fa gantt_button_grid gantt_grid_add fa-plus click" data-command="OCGantt.clickGridButton(' + item.id + ', \'add\')"></i>' +
-                    '<i class="fa gantt_button_grid gantt_grid_delete fa-times click" data-command="OCGantt.clickGridButton(' + item.id + ', \'delete\')"></i>');
+                return ('<i  id="' + item.id + '"class="fa gantt_button_grid gantt_grid_edit fa-pencil"></i>' +
+                    '<i  id="' + item.id + '"class="fa gantt_button_grid gantt_grid_add fa-plus"></i>' +
+                    '<i  id="' + item.id + '"class="fa gantt_button_grid gantt_grid_delete fa-times"></i>');
             }
         }
     };
@@ -525,107 +526,111 @@ OCGantt.sortGrid = function (column1) {
 OCGantt.initFilterGrid = function (type) {
     switch (type) {
         case 'text':
-            var top = OCGantt.getBottomByClass('gantt_grid_scale');
-            var left = OCGantt.getLeftByClass('gantt_grid_head_text');
-            OCGantt.filter.HTML = '<div id="filter-text" class="gantt_cal_light ocgantt_filter_text" style="display: none; top: ' + top + 'px; left: ' + left + 'px;">' +
-                '<p>' + t('owncollab_ganttchart', 'You can either filter by taskname and/ or sub project name') + '</p>' +
-                '<div style="width: 100%;">' +
-                '<div class="tbl_cell" style="width: 40%;"><label for="filter-text-tasks">' + t('owncollab_ganttchart', 'Tasks') + '</label></div>' +
-                '<div class="tbl_cell" style="width: 50%;"><input type="text" id="filter-text-tasks" name="filter-text-tasks" /></div>' +
-                '<div class="tbl_cell" style="width: 10%;"><i id="delete-filter-text-tasks" class="fa fa-trash-o"></i></div>' +
-                '</div>' +
-                '<div style="width: 100%;">' +
-                '<div class="tbl_cell" style="width: 40%;"><label for="filter-text-subprojects">' + t('owncollab_ganttchart', 'Sub Projects') + '</label></div>' +
-                '<div class="tbl_cell" style="width: 50%;"><input type="text" id="filter-text-subprojects" name="filter-text-subprojects" /></div>' +
-                '<div class="tbl_cell" style="width: 10%;"><i id="delete-filter-text-subprojects" class="fa fa-trash-o"></i></div>' +
-                '</div>' +
-                '<div style="width: 100%;">' +
-                '<div class="tbl_cell" style="width: 50%;"><input type="button" id="save-text-filter" name="save-text-filter" value="' + t('owncollab_ganttchart', 'Done') + '" /></div>' +
-                '<div class="tbl_cell" style="width: 50%;" align="right"><input type="button" id="close-text-filter" name="close-text-filter" value="' + t('owncollab_ganttchart', 'Cancel') + '" /></div>' +
-                '</div>';
-            $("#gantt_chart").append(OCGantt.filter.HTML);
-            $("#delete-filter-text-tasks").click(function () {
-                $("#filter-text-tasks").val('');
-                if (OCGantt.filter.value.textTasks) {
-                    delete OCGantt.filter.value.textTasks;
-                }
-            });
-            $("#delete-filter-text-subprojects").click(function () {
-                $("#filter-text-subprojects").val('');
-                if (OCGantt.filter.value.textSubprojects) {
-                    delete OCGantt.filter.value.textSubprojects;
-                }
-            });
-            $("#close-text-filter").click(function () {
-                if (OCGantt.filter.value.textTasks) {
-                    $("#filter-text-tasks").val(OCGantt.filter.value.textTasks);
-                } else if (!OCGantt.filter.value.textTasks) {
+            if ($("#filter-text").length === 0) {
+                var top = OCGantt.getBottomByClass('gantt_grid_scale');
+                var left = OCGantt.getLeftByClass('gantt_grid_head_text');
+                OCGantt.filter.HTML = '<div id="filter-text" class="gantt_cal_light ocgantt_filter_text" style="display: none; top: ' + top + 'px; left: ' + left + 'px;">' +
+                    '<p>' + t('owncollab_ganttchart', 'You can either filter by taskname and/ or sub project name') + '</p>' +
+                    '<div style="width: 100%;">' +
+                    '<div class="tbl_cell" style="width: 40%;"><label for="filter-text-tasks">' + t('owncollab_ganttchart', 'Tasks') + '</label></div>' +
+                    '<div class="tbl_cell" style="width: 50%;"><input type="text" id="filter-text-tasks" name="filter-text-tasks" /></div>' +
+                    '<div class="tbl_cell" style="width: 10%;"><i id="delete-filter-text-tasks" class="fa fa-trash-o"></i></div>' +
+                    '</div>' +
+                    '<div style="width: 100%;">' +
+                    '<div class="tbl_cell" style="width: 40%;"><label for="filter-text-subprojects">' + t('owncollab_ganttchart', 'Sub Projects') + '</label></div>' +
+                    '<div class="tbl_cell" style="width: 50%;"><input type="text" id="filter-text-subprojects" name="filter-text-subprojects" /></div>' +
+                    '<div class="tbl_cell" style="width: 10%;"><i id="delete-filter-text-subprojects" class="fa fa-trash-o"></i></div>' +
+                    '</div>' +
+                    '<div style="width: 100%;">' +
+                    '<div class="tbl_cell" style="width: 50%;"><input type="button" id="save-text-filter" name="save-text-filter" value="' + t('owncollab_ganttchart', 'Done') + '" /></div>' +
+                    '<div class="tbl_cell" style="width: 50%;" align="right"><input type="button" id="close-text-filter" name="close-text-filter" value="' + t('owncollab_ganttchart', 'Cancel') + '" /></div>' +
+                    '</div>';
+                $("#gantt_chart").append(OCGantt.filter.HTML);
+                $("#delete-filter-text-tasks").click(function () {
                     $("#filter-text-tasks").val('');
-                }
-                if (OCGantt.filter.value.textSubprojects) {
-                    $("#filter-text-subprojects").val(OCGantt.filter.value.subProjects);
-                } else if (!OCGantt.filter.value.textTasks) {
+                    if (OCGantt.filter.value.textTasks) {
+                        delete OCGantt.filter.value.textTasks;
+                    }
+                });
+                $("#delete-filter-text-subprojects").click(function () {
                     $("#filter-text-subprojects").val('');
-                }
-                $("#filter-text").hide("blind", { direction: "vertical" }, 350);
-            });
-            $("#save-text-filter").click(function () {
-                if ($("#filter-text-tasks").val() != '') {
-                    OCGantt.filter.value['textTasks'] = $("#filter-text-tasks").val();
-                }
-                if ($("#filter-text-subprojects").val() != '') {
-                    OCGantt.filter.value['textSubprojects'] = $("#filter-text-subprojects").val();
-                }
-                gantt.refreshData();
-                $("#filter-text").hide("blind", { direction: "vertical" }, 350);
-            });
+                    if (OCGantt.filter.value.textSubprojects) {
+                        delete OCGantt.filter.value.textSubprojects;
+                    }
+                });
+                $("#close-text-filter").click(function () {
+                    if (OCGantt.filter.value.textTasks) {
+                        $("#filter-text-tasks").val(OCGantt.filter.value.textTasks);
+                    } else if (!OCGantt.filter.value.textTasks) {
+                        $("#filter-text-tasks").val('');
+                    }
+                    if (OCGantt.filter.value.textSubprojects) {
+                        $("#filter-text-subprojects").val(OCGantt.filter.value.subProjects);
+                    } else if (!OCGantt.filter.value.textTasks) {
+                        $("#filter-text-subprojects").val('');
+                    }
+                    $("#filter-text").hide("blind", { direction: "vertical" }, 350);
+                });
+                $("#save-text-filter").click(function () {
+                    if ($("#filter-text-tasks").val() != '') {
+                        OCGantt.filter.value['textTasks'] = $("#filter-text-tasks").val();
+                    }
+                    if ($("#filter-text-subprojects").val() != '') {
+                        OCGantt.filter.value['textSubprojects'] = $("#filter-text-subprojects").val();
+                    }
+                    gantt.refreshData();
+                    $("#filter-text").hide("blind", { direction: "vertical" }, 350);
+                });
+            }
             break;
         case 'resources':
-            var top = OCGantt.getBottomByClass('gantt_grid_scale');
-            if (OCGantt.isAdmin === true) {
-                var left = OCGantt.getLeftByClass('gantt_grid_head_buttons') - 299;
-            } else {
-                var left = $('.gantt_grid').width() - 299;
-            }
-            var fragmentResources = OCGantt.renderResources();
-            OCGantt.filter.HTML = '<div id="filter-resources" class="gantt_cal_light ocgantt_filter_resources" style="display: none; top: ' + top + 'px; left: ' + left + 'px;">' +
-                '<p>' + t('owncollab_ganttchart', 'Please select one or more group/ user you wish to filter for.') + '</p>' +
-                '<div contenteditable="true" style="width:calc(100% - 16px); display: none;" name="resources"></div>' +
-                '<div id="resources-list" style="width: 100%;">' +
-                '</div>' +
-                '<div style="width: 100%;">' +
-                '<div class="tbl_cell" style="width: 33%;"><input type="button" id="save-resources-filter" name="save-resources-filter" value="' + t('owncollab_ganttchart', 'Done') + '" /></div>' +
-                '<div class="tbl_cell" style="width: 33%;" align="right"><input type="button" id="close-resources-filter" name="close-resources-filter" value="' + t('owncollab_ganttchart', 'Cancel') + '" /></div>' +
-                '<div class="tbl_cell" style="width: 33%;" align="right"><input type="button" id="delete-resources-filter" name="delete-resources-filter" value="' + t('owncollab_ganttchart', 'Delete') + '" /></div>' +
-                '</div>';
-            $("#gantt_chart").append(OCGantt.filter.HTML);
-            $("#resources-list").append(fragmentResources);
-            $(".ocgantt_filter_resources :checkbox").change(function () {
-                $('input[id=' + $(this).attr('id') + ']').prop('checked', $(this).is(':checked'));
-                if ($(this).is(':checked') === true) {
-                    OCGantt.filter.resourcesList = OCGantt.lbox.addResources(OCGantt.lbox.getForm("filter-resources"), OCGantt.filter.resourcesList, $(this).attr('id'));
-                } else if ($(this).is(':checked') === false) {
-                    OCGantt.filter.resourcesList = OCGantt.lbox.deleteResources(OCGantt.lbox.getForm("filter-resources"), OCGantt.filter.resourcesList, $(this).attr('id'));
+            if ($("#filter-resources").length === 0) {
+                var top = OCGantt.getBottomByClass('gantt_grid_scale');
+                if (OCGantt.isAdmin === true) {
+                    var left = OCGantt.getLeftByClass('gantt_grid_head_buttons') - 299;
+                } else {
+                    var left = $('.gantt_grid').width() - 299;
                 }
-            });
-            $("#close-resources-filter").click(function () {
-                $("#filter-resources").hide("blind", { direction: "vertical" }, 350);
-            });
-            $("#delete-resources-filter").click(function () {
-                delete OCGantt.filter.value.resources;
-                OCGantt.filter.resourcesList = [];
-                gantt.refreshData();
-                $("#filter-resources").hide("blind", { direction: "vertical" }, 350);
-            });
-            $("#save-resources-filter").click(function () {
-                if (OCGantt.filter.resourcesList.length != 0) {
-                    OCGantt.filter.value['resources'] = OCGantt.filter.resourcesList;
-                } else if (OCGantt.filter.resourcesList.length === 0) {
+                var fragmentResources = OCGantt.renderResources();
+                OCGantt.filter.HTML = '<div id="filter-resources" class="gantt_cal_light ocgantt_filter_resources" style="display: none; top: ' + top + 'px; left: ' + left + 'px;">' +
+                    '<p>' + t('owncollab_ganttchart', 'Please select one or more group/ user you wish to filter for.') + '</p>' +
+                    '<div contenteditable="true" style="width:calc(100% - 16px); display: none;" name="resources"></div>' +
+                    '<div id="resources-list" style="width: 100%;">' +
+                    '</div>' +
+                    '<div style="width: 100%;">' +
+                    '<div class="tbl_cell" style="width: 33%;"><input type="button" id="save-resources-filter" name="save-resources-filter" value="' + t('owncollab_ganttchart', 'Done') + '" /></div>' +
+                    '<div class="tbl_cell" style="width: 33%;" align="right"><input type="button" id="close-resources-filter" name="close-resources-filter" value="' + t('owncollab_ganttchart', 'Cancel') + '" /></div>' +
+                    '<div class="tbl_cell" style="width: 33%;" align="right"><input type="button" id="delete-resources-filter" name="delete-resources-filter" value="' + t('owncollab_ganttchart', 'Delete') + '" /></div>' +
+                    '</div>';
+                $("#gantt_chart").append(OCGantt.filter.HTML);
+                $("#filter-resources #resources-list").append(fragmentResources);
+                $(".ocgantt_filter_resources :checkbox").change(function () {
+                    $('input[id=' + $(this).attr('id') + ']').prop('checked', $(this).is(':checked'));
+                    if ($(this).is(':checked') === true) {
+                        OCGantt.filter.resourcesList = OCGantt.lbox.addResources(OCGantt.lbox.getForm("filter-resources"), OCGantt.filter.resourcesList, $(this).attr('id'));
+                    } else if ($(this).is(':checked') === false) {
+                        OCGantt.filter.resourcesList = OCGantt.lbox.deleteResources(OCGantt.lbox.getForm("filter-resources"), OCGantt.filter.resourcesList, $(this).attr('id'));
+                    }
+                });
+                $("#close-resources-filter").click(function () {
+                    $("#filter-resources").hide("blind", { direction: "vertical" }, 350);
+                });
+                $("#delete-resources-filter").click(function () {
                     delete OCGantt.filter.value.resources;
-                }
-                gantt.refreshData();
-                $("#filter-resources").hide("blind", { direction: "vertical" }, 350);
-            });
+                    OCGantt.filter.resourcesList = [];
+                    gantt.refreshData();
+                    $("#filter-resources").hide("blind", { direction: "vertical" }, 350);
+                });
+                $("#save-resources-filter").click(function () {
+                    if (OCGantt.filter.resourcesList.length != 0) {
+                        OCGantt.filter.value['resources'] = OCGantt.filter.resourcesList;
+                    } else if (OCGantt.filter.resourcesList.length === 0) {
+                        delete OCGantt.filter.value.resources;
+                    }
+                    gantt.refreshData();
+                    $("#filter-resources").hide("blind", { direction: "vertical" }, 350);
+                });
+            }
             break;
     }
 }
@@ -1703,7 +1708,7 @@ gantt.showLightbox = function (id) {
         _lineHeader.appendChild(_lineHeaderBuffer);
         fragmentLinks.appendChild(_lineHeader);
         for (var taskArray in arr.data) {
-            if ((arr.data[taskArray]['id'] != 1) && (arr.data[taskArray]['id'] != task.id)) {
+            if ((arr.data[taskArray]['id'] != 1) && (arr.data[taskArray]['id'] != task.id) && (arr.data[taskArray]['id'] != undefined)) {
                 var _lineTask = document.createElement('div'),
                     _lineTaskId = document.createElement('div'),
                     _lineTaskText = document.createElement('div'),
@@ -1984,32 +1989,36 @@ OCGantt.lbox.save = function () {
     if ((task.id != "1") && (task.type == "project")) {
         task.resources = OCGantt.lbox.getForm("my-form").querySelector("[name='resources_hidden']").value;
         var lengthLinksToRemove = OCGantt.linksToRemove.length;
-        if (lengthLinksToRemove != -1) {
-            OCGantt.linksToRemove.forEach(function (item, index) {
-                OCGantt.links._activeLink = OCGantt.linksToRemove[index];
-                gantt.deleteLink(item.id);
-            });
-        }
-        if (OCGantt.tempLinks) {
-            OCGantt.tempLinks.forEach(function (link) {
-                if (link.$new) {
-                    var linkId = gantt.addLink({
-                        source: link.source,
-                        target: link.target,
-                        type: link.type,
-                        lag: link.lag
-                    });
-                    link.active = false;
-                    delete link.$new;
-                } else {
-
-                }
-            });
-        }
         if (task.$new) {
             gantt.addTask(task, task.parent);
             delete task.$new;
         } else {
+            if (lengthLinksToRemove != -1) {
+                OCGantt.linksToRemove.forEach(function (item, index) {
+                    OCGantt.links._activeLink = OCGantt.linksToRemove[index];
+                    gantt.deleteLink(item.id);
+                    OCGantt.tempLinks = [];
+                });
+                if (OCGantt.tempLinks) {
+                    OCGantt.tempLinks.forEach(function (link) {
+                        if (link.$new) {
+                            var linkId = gantt.addLink({
+                                source: link.source,
+                                target: link.target,
+                                type: link.type,
+                                lag: link.lag
+                            });
+                            link.active = false;
+                            delete link.$new;
+                        } else {
+
+                        }
+                    });
+                    OCGantt.tempLinks = [];
+                }
+
+            }
+
             gantt.updateTask(task.id);
         }
     } else if ((task.id != "1") && (task.type != "project")) {
@@ -2022,31 +2031,6 @@ OCGantt.lbox.save = function () {
         task.end_date = new Date(edate.substr(6, 4), smonth, edate.substr(0, 2), etime.substr(0, 2), etime.substr(3, 2));
         task.resources = OCGantt.lbox.getForm("my-form").querySelector("[name='resources_hidden']").value;
         var lengthLinksToRemove = OCGantt.linksToRemove.length;
-        if (lengthLinksToRemove != -1) {
-            OCGantt.linksToRemove.forEach(function (item, index) {
-                OCGantt.links._activeLink = OCGantt.linksToRemove[index];
-                gantt.deleteLink(item.id);
-            });
-        }
-        if (OCGantt.tempLinks) {
-            OCGantt.tempLinks.forEach(function (link) {
-                if (link.$new) {
-                    var linkId = gantt.addLink({
-                        source: link.source,
-                        target: link.target,
-                        type: link.type,
-                        lag: link.lag
-                    });
-                    link.active = false;
-                    delete link.$new;
-                } else {
-                    if (link.$changed) {
-                        gantt.getLink(link.id).lag = link.lag;
-                        gantt.updateLink(link.id);
-                    }
-                }
-            });
-        }
         if (OCGantt.tempTask.type != task.type) {
             if (OCGantt.tempTask.type == "milestone") {
                 task.type = OCGantt.tempTask.type;
@@ -2066,7 +2050,33 @@ OCGantt.lbox.save = function () {
             gantt.updateTask(task.id);
             var index = gantt._undo._undoStack.length - 1;
             gantt._undo._undoStack[index].commands[0].oldValue = tempTask;
-
+            if (lengthLinksToRemove != -1) {
+                OCGantt.linksToRemove.forEach(function (item, index) {
+                    OCGantt.links._activeLink = OCGantt.linksToRemove[index];
+                    gantt.deleteLink(item.id);
+                });
+                OCGantt.tempLinks = [];
+            }
+            if (OCGantt.tempLinks) {
+                OCGantt.tempLinks.forEach(function (link) {
+                    if (link.$new) {
+                        var linkId = gantt.addLink({
+                            source: link.source,
+                            target: link.target,
+                            type: link.type,
+                            lag: link.lag
+                        });
+                        link.active = false;
+                        delete link.$new;
+                    } else {
+                        if (link.$changed) {
+                            gantt.getLink(link.id).lag = link.lag;
+                            gantt.updateLink(link.id);
+                        }
+                    }
+                });
+                OCGantt.tempLinks = [];
+            }
         }
     }
     OCGantt.lbox.getForm("my-form").querySelector("[name='resources']").innerHTML = "";
@@ -2616,6 +2626,22 @@ OCGantt.GroupUsers.prototype = {
                     gantt.changeTaskId(item.id, arr.data[index].id);
                     OCGantt.screenOrder.push(JSON.stringify(item.id));
                     OC.AppConfig.setValue('owncollab_ganttchart', 'screenorder', JSON.stringify(OCGantt.screenOrder));
+                    if (OCGantt.tempLinks) {
+                        OCGantt.tempLinks.forEach(function (link) {
+                            if (link.$new) {
+                                var linkId = gantt.addLink({
+                                    source: link.source,
+                                    target: item.id,
+                                    type: link.type,
+                                    lag: link.lag
+                                });
+                                link.active = false;
+                                delete link.$new;
+                            } else {
+                            }
+                        });
+                        OCGantt.tempLinks = [];
+                    }
                 });
                 // check if the added task has a parent and if this parent is a project
                 if (item.parent != 0) {
@@ -2810,20 +2836,23 @@ OCGantt.GroupUsers.prototype = {
                     });
                 }
             });
-            setTimeout(function () {
-                $.each($(".click"), function (i, e) {
-                    var events = $(e).data("events");
-                    if ((!events) || (events.length === 0)) {
-                        $(e).click(function () {
-                            console.log($(this).data().command);
-                            console.log($(e).data("events"));
-                            var instruction = $(this).data().command;
-                            var F = new Function(instruction);
-                            return (F());
-                        });
-                    }
-                });
-            }, 500);
+            $('.gantt_grid_edit').click(function (el) {
+                var id = $(this).prop('id');
+                OCGantt.clickGridButton(id, 'edit');
+            });
+            $('.gantt_grid_add').click(function (el) {
+                var id = $(this).prop('id');
+                OCGantt.clickGridButton(id, 'add');
+            });
+            $('.gantt_grid_delete').click(function (el) {
+                var id = $(this).prop('id');
+                OCGantt.clickGridButton(id, 'delete');
+            });
+            $(".fa-stack.clickbutton").click(function () {
+                var instruction = $(this).data().command;
+                var F = new Function(instruction);
+                return (F());
+            });
 
             $('.fa-ban.fa-stack-2x').hover(function (e) {
                 $('.fa-sort.fa-stack-2x').trigger(e.type);
@@ -2995,7 +3024,7 @@ OCGantt.GroupUsers.prototype = {
             },
         ];
         OCGantt.gridRight();
-    }
+    };
 
 
 })(OC, window, jQuery);

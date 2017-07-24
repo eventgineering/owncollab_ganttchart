@@ -380,6 +380,60 @@ input[type="button"]:hover.ocgantt-frw.disabled, input[type="button"]:focus.ocga
     display: none !important;
 }
 
+
+gantt_line_wrapper div{
+    background-color:#1D2D44 !important;
+}
+
+.gantt_link_line_up {
+    background-color: #1D2D44 !important;
+}
+
+.gantt_link_line_left {
+    background-color: #1D2D44 !important;
+}
+
+.gantt_link_line_right {
+    background-color: #1D2D44 !important;
+}
+
+.gantt_link_line_down {
+    background-color: #1D2D44 !important;
+}
+
+.gantt_link_arrow_right{
+    border-width:4px 0 4px 6px;
+    border-top-color:transparent!important;
+    border-right-color:transparent!important;
+    border-bottom-color:transparent!important;
+    border-color:#1D2D44;
+    margin-top:-1px}
+
+.gantt_link_arrow_left{
+    border-width:4px 6px 4px 0;
+    margin-top:-1px;
+    border-top-color:transparent!important;
+    border-color:#1D2D44;
+    border-bottom-color:transparent!important;
+    border-left-color:transparent!important
+}
+
+.gantt_link_arrow_up{
+    border-width:0 4px 6px;
+    border-color:#1D2D44;
+    border-top-color:transparent!important;
+    border-right-color:transparent!important;
+    border-left-color:transparent!important
+}
+
+.gantt_link_arrow_down{
+    border-width:4px 6px 0 4px;
+    border-color:#1D2D44;
+    border-right-color:transparent!important;
+    border-bottom-color:transparent!important;
+    border-left-color:transparent!important
+}
+
 /* Styles for buttons */
 gantt_save_btn_set {
 	width: auto;

@@ -6,8 +6,17 @@ use OCP\AppFramework\Db\Mapper;
 
 class GroupUserMapper extends Mapper {
 
+    /** @var IDb */
+	protected $db;
+
+	/**    
+	 * @param GroupUserService $groupUserService
+     */
+
+
     public function __construct(IDb $db) {
         parent::__construct($db, 'group_user', '\OCA\OwnCollab_GanttChart\Db\GroupUser');
+        $this->db = $db;
     }
 
     public function findAllUsers() {

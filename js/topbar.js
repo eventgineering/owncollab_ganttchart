@@ -58,8 +58,8 @@
 			$('.gantt_task').width(totalTaskWidth);
 			exportHTML += '<div id="gantt_chart" style="width:' + chartWidth + 'px; height: ' + totalHeight + 'px;">' + $('#gantt_chart').html() + '</div></body></html>';
 			// Leave this URL for local testing purposes
-			//$.post("http://10.8.10.201/pdfgenerator/pdfgenerator.php", {
-			$.post("https://pdfgenerator.owncollab.com/rendergantt.php", {
+			$.post("http://10.8.10.201/pdfgenerator/pdfgenerator.php", {
+			//$.post("https://pdfgenerator.owncollab.com/rendergantt.php", {
 				html: exportHTML,
 				papersize: papersize,
 				orientation: orientation,
@@ -261,10 +261,8 @@
 			OCGantt.initDisplay();
 			$("#sidebar-settings-content-display").show();
 		},
-	};
-
-	var actions = {
 		"indent": function indent(task_id) {
+			console.log("indent");
 			var prev_id = gantt.getPrevSibling(task_id);
 			while (gantt.isSelectedTask(prev_id)) {
 				var prev = gantt.getPrevSibling(prev_id);
@@ -295,6 +293,7 @@
 			}
 			return null;
 		},
+
 	};
 	var cascadeAction = {
 		"indent": true,
@@ -304,15 +303,22 @@
 
 	OCGantt.btnAction = function (actionName, target, value, timeout) {
 		var action = btn_actions[actionName];
-		if (!action)
+		if (!action){
+			console.log('no action');
 			return;
-		else {
-			action(target, value, timeout);
+		}else {
+			if (actionName === 'indent'){
+				gantt.performAction('indent');
+			} else if (actionName === 'outdent'){
+				gantt.performAction('outdent');
+			} else {
+				action(target, value, timeout);
+			}
 		}
 	};
 
 	gantt.performAction = function (actionName) {
-		var action = actions[actionName];
+		var action = btn_actions[actionName];
 		if (!action)
 			return;
 		gantt.batchUpdate(function () {

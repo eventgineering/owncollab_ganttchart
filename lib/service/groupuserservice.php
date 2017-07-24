@@ -23,6 +23,14 @@ class GroupUserService {
         return $this->mapper->findAll();
     }
 
+    public function findAllUsers(){
+        return $this->mapper->findAllUsers();
+    }
+
+    public function findAllGroups(){
+        return $this->mapper->findAllGroups();
+    }
+
     private function handleException ($e) {
         if ($e instanceof DoesNotExistException ||
             $e instanceof MultipleObjectsReturnedException) {

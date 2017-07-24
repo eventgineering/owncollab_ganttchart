@@ -43,6 +43,14 @@ class GroupUserController extends Controller {
 	return new DataResponse($this->service->findAll());
     }
 
+    public function findAllUsers(){
+        return new DataResponse($this->service->findAllUsers());
+    }
+
+    public function findAllGroups(){
+        return new DataResponse($this->service->findallGroups());
+    }
+
     /**
      * @NoAdminRequired
      *

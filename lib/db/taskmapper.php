@@ -3,12 +3,23 @@ namespace OCA\OwnCollab_GanttChart\Db;
 
 use OCP\IDb;
 use OCP\AppFramework\Db\Mapper;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCA\OwnCollab_GanttChart\Db\GroupUserMapper;
 
 class TaskMapper extends Mapper {
+    /** @var GroupUserMapper */
 
-    public function __construct(IDb $db) {
+	private $groupUserMapper;
+
+	/**
+	 * @param GroupUserMapper $groupUserMapper
+	 */
+
+
+    public function __construct(IDb $db, GroupUserMapper $groupUserMapper) {
         parent::__construct($db, 'owncollab_gantt_tasks', '\OCA\OwnCollab_GanttChart\Db\Task');
+        $this->groupUserMapper = $groupUserMapper;
     }
 
     public function getColors() {
@@ -65,9 +76,13 @@ class TaskMapper extends Mapper {
 
     public function findAll() {
         $newarray = [];
-        $usersarray = GroupUserMapper::findAllUsers();
+        $test = $this->groupUserMapper->findAllUsers();
+        error_log(print_r($test, true) . "\n", 3, "/var/tmp/groupusers.log");
+        $usersarray = $this->groupUserMapper->findAllUsers();
+        //$usersarray = GroupUserMapper::findAllUsers();
         $usersgroupsarray = TaskMapper::addPrefix($usersarray, 'uid', 'u_', '');
-        $groupsarray = GroupUserMapper::findAllGroups();
+        //$groupsarray = GroupUserMapper::findAllGroups();
+        $groupsarray = $this->groupUserMapper->findAllGroups();
         $usersgroupsarray = TaskMapper::addPrefix($groupsarray, 'gid', 'g_', $usersgroupsarray);
         $colors = TaskMapper::getColors();
         $usersgroupsarray = TaskMapper::mapcolors($colors, $usersgroupsarray);
