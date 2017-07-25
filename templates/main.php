@@ -26,6 +26,7 @@ if (is_dir($dirname)){
 } else {
 	vendor_script('owncollab_ganttchart', 'dhtmlxgantt/standard/dhtmlxgantt');
 	vendor_script('owncollab_ganttchart', 'dhtmlxgantt/standard/api');
+	vendor_script('owncollab_ganttchart', 'dhtmlxgantt/standard/ext/dhtmlxgantt_marker');
 	$ganttLangUrl = "dhtmlxgantt/standard/locale/locale_". $lang;
 	vendor_style('owncollab_ganttchart', 'dhtmlxgantt/standard/dhtmlxgantt');
 	$dhtmlxversion = "standard";
