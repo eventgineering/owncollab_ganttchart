@@ -26,7 +26,12 @@ class PdfExportController extends Controller {
         return $randomString;
     }*/
 
-
+    /**
+	 * @PublicPage
+	 * @NoCSRFRequired
+	 * @UseSession
+     */
+     
     public function export(){
         /*if (!is_dir(\OC::$SERVERROOT . '/apps/owncollab_ganttchart/tmp'))
             mkdir(\OC::$SERVERROOT . '/apps/owncollab_ganttchart/tmp');
