@@ -20,8 +20,19 @@ class GroupUserMapper extends Mapper {
     }
 
     public function findAllUsers() {
-        $sqlusers = 'SELECT uid FROM *PREFIX*users';
-        return $this->db->executeQuery($sqlusers)->fetchAll();
+        $version = \OCP\Util::getVersion();
+        if ($version[0] < 10){
+            $sqlusers = 'SELECT uid FROM *PREFIX*users';
+            $users = $this->db->executeQuery($sqlusers)->fetchAll();
+        } else {
+            $sqlusers = 'SELECT user_id FROM *PREFIX*accounts';
+            $users = $this->db->executeQuery($sqlusers)->fetchAll();
+            foreach($users as &$user){
+                $user['uid'] = $user['user_id'];
+                unset($user['user_id']);
+            }
+        }
+        return $users;
     }
 
     public function findAllGroups() {
@@ -39,7 +50,9 @@ class GroupUserMapper extends Mapper {
             $users = $this->db->executeQuery($sqlusers)->fetchAll();
             foreach($users as &$user){
                 $user['uid'] = $user['user_id'];
+                $user['displayname'] = $user['display_name'];
                 unset($user['user_id']);
+                unset($user['display_name']);
             }
         }
         $sqlgroups = 'SELECT gid, uid FROM *PREFIX*group_user';
