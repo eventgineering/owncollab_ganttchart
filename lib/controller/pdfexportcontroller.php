@@ -37,6 +37,7 @@ class PdfExportController extends Controller {
         $ch = curl_init();
         $fields_string = '';
         $url = "https://pdfgenerator.owncollab.com/rendergantt.php";
+        //$url = "http://10.8.10.201/pdfgenerator/pdfgenerator.php";
         $fields = array(
             'html' => $_POST['html'],
             'papersize' => $_POST['papersize'],
