@@ -30,10 +30,20 @@ class GroupUserMapper extends Mapper {
     }
 
     public function findAll() {
+        $version = \OCP\Util::getVersion();
+        if ($version[0] < 10){
+            $sqlusers = 'SELECT uid, displayname FROM *PREFIX*users';
+            $users = $this->db->executeQuery($sqlusers)->fetchAll();
+        } else {
+            $sqlusers = 'SELECT user_id, display_name FROM *PREFIX*accounts';
+            $users = $this->db->executeQuery($sqlusers)->fetchAll();
+            foreach($users as &$user){
+                $user['uid'] = $user['user_id'];
+                unset($user['user_id']);
+            }
+        }
         $sqlgroups = 'SELECT gid, uid FROM *PREFIX*group_user';
-        $sqlusers = 'SELECT uid, displayname FROM *PREFIX*users';
         $groups = $this->db->executeQuery($sqlgroups)->fetchAll();
-        $users = $this->db->executeQuery($sqlusers)->fetchAll();
         $groupusers = array();
 
         foreach ($users as $user){
