@@ -25,6 +25,14 @@
 	};
 
 	function doPdfExport(){
+			var reset = false;
+			if (OCGantt.isAdmin === true){
+				OCGantt.isAdmin = false;
+				console.log("disabling admin mode");
+				reset = true;
+				OCGantt.config();
+				gantt.render();
+			}
 			var papersize = $('#pdf_paper_size').val();
 				orientation = $('#pdf_paper_orientation').val();
 				pdf_header_left = $('#pdf_header_left').val();
@@ -80,6 +88,13 @@
 				$('#save-export').fadeOut(200);
 				$('#exporting-to-pdf').fadeOut(200);
 			});
+			if (reset === true){
+				OCGantt.isAdmin = true;
+				reset = false;
+							OCGantt.config();
+			gantt.render();
+
+			}
 			$('.gantt_grid').outerHeight(gridHeight);
 			$('.gantt_grid_data').outerHeight(gridDataHeight)
 			$('.gantt_task').outerHeight(taskHeight);
