@@ -7,7 +7,7 @@
  * @author andy <info@eventgineering.de>
  * @copyright andy 2016
  */
-var instanceUrl = OC.generateUrl('/apps/owncollab_ganttchart/');
+    var instanceUrl = OC.generateUrl('/apps/owncollab_ganttchart/');
 var arr = {
     data: {},
     links: {},
@@ -78,6 +78,11 @@ var taskId = null;
             function() { $(this).addClass("Hover");},
             function() { $(this).removeClass("Hover");}
         );
+        $(".clickbutton").click(function(){
+            var instruction = $(this).data().command;
+            var F = new Function (instruction);
+            return(F());
+        }); 
         $("#zoomslider").slider({
             value: 1,
             min: 1,

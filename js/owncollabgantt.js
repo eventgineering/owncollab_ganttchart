@@ -2858,7 +2858,6 @@ OCGantt.GroupUsers.prototype = {
                 var F = new Function(instruction);
                 return (F());
             });
-
             $('.fa-ban.fa-stack-2x').hover(function (e) {
                 $('.fa-sort.fa-stack-2x').trigger(e.type);
             });
