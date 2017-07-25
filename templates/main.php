@@ -44,6 +44,7 @@ script('owncollab_ganttchart', 'script');
 style('owncollab_ganttchart', 'main');
 style('owncollab_ganttchart', 'owncollabgantt');
 style('owncollab_ganttchart', 'sharetabview');
+style('owncollab_ganttchart', 'fonts');
 
 ?>
 
