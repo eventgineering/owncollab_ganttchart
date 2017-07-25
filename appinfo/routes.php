@@ -38,5 +38,6 @@ return [
        ['name' => 'share#generateToken', 'url' => '/token/generate', 'verb' => 'POST'],
        ['name' => 'share#getToken', 'url' => '/token/get', 'verb' => 'GET'],
        ['name' => 'share#getExpiryDate', 'url' => '/expirydate/get', 'verb' => 'GET'],
+       ['name' => 'pdfexport#export', 'url' => '/pdfgenerator', 'verb' => 'POST'],
     ]
 ];

@@ -14,6 +14,7 @@ namespace OCA\OwnCollab_GanttChart\AppInfo;
 use OC_Defaults;
 use OCP\AppFramework\App;
 use \OCP\AppFramework\Http;
+use \OCP\AppFramework\Http\Response;
 
 require_once __DIR__ . '/autoload.php';
 
@@ -23,6 +24,8 @@ $container = $app->getContainer();
 	$policy->allowInlineScript(true);
 	//$policy->addAllowedConnectDomain('pdfgenerator.owncollab.com');
 	\OC::$server->getContentSecurityPolicyManager()->addDefaultPolicy($policy);
+$response = new Response();
+$response->addHeader('Access-Control-Allow-Origin', 'pdfgenerator.owncollab.com');
 
 $container->query('OCP\INavigationManager')->add(function () use ($container) {
 	$urlGenerator = $container->query('OCP\IURLGenerator');

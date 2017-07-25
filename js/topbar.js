@@ -57,9 +57,11 @@
 			$('.gantt_data_area').outerHeight(totalHeight - $('.gantt_task_scale').outerHeight(true));
 			$('.gantt_task').width(totalTaskWidth);
 			exportHTML += '<div id="gantt_chart" style="width:' + chartWidth + 'px; height: ' + totalHeight + 'px;">' + $('#gantt_chart').html() + '</div></body></html>';
+			var url = OC.generateUrl('/apps/owncollab_ganttchart/pdfgenerator');
 			// Leave this URL for local testing purposes
 			//$.post("http://10.8.10.201/pdfgenerator/pdfgenerator.php", {
-			$.post("https://pdfgenerator.owncollab.com/rendergantt.php", {
+			//$.post("https://pdfgenerator.owncollab.com/rendergantt.php", {
+			$.post(url, {
 				html: exportHTML,
 				papersize: papersize,
 				orientation: orientation,
