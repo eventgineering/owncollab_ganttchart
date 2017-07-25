@@ -25,14 +25,6 @@
 	};
 
 	function doPdfExport(){
-			var reset = false;
-			if (OCGantt.isAdmin === true){
-				OCGantt.isAdmin = false;
-				console.log("disabling admin mode");
-				reset = true;
-				OCGantt.config();
-				gantt.render();
-			}
 			var papersize = $('#pdf_paper_size').val();
 				orientation = $('#pdf_paper_orientation').val();
 				pdf_header_left = $('#pdf_header_left').val();
