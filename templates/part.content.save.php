@@ -10,23 +10,23 @@ $appName = 'owncollab_ganttchart';
 <div id="sidebar-save" class="sidebar-left">
     <div id="sidebar-export">
         <div class="tbl">
-            <div class="tbl_cell export_gantt sidebar_header clickbutton export_excel"  onclick="OCGantt.btnAction('export2excel')" >
+            <div class="tbl_cell export_gantt sidebar_header clickbutton export_excel"  data-command="OCGantt.btnAction('export2excel')" >
                 <h4><?php p($l->t('Excel'))?></h4>
 		    <img src="<?php p($this->image_path($appName,'ms_excel.png'))?>" alt="<?php p($l->t('Export to Excel'));?>">
             </div>
-            <div class="tbl_cell export_gantt sidebar_header clickbutton export_pdf" onclick="OCGantt.btnAction('export2PDF')">
+            <div class="tbl_cell export_gantt sidebar_header clickbutton export_pdf" data-command="OCGantt.btnAction('export2PDF')">
                 <h4><?php p($l->t('PDF'));?></h4>
                 <img src="<?php p($this->image_path($appName,'application-pdf.png'))?>" alt="<?php p($l->t('Export to PDF'))?>">
             </div>
-            <div class="tbl_cell export_gantt sidebar_header clickbutton export_img" onclick="OCGantt.btnAction('export2image')">
+            <div class="tbl_cell export_gantt sidebar_header clickbutton export_img" data-command="OCGantt.btnAction('export2image')">
                 <h4><?php p($l->t('Image'));?></h4>
                 <img src="<?php p($this->image_path($appName,'image.png'))?>" alt="<?php p($l->t('Export to Image'));?>">
             </div>
-            <div class="tbl_cell export_gantt sidebar_header clickbutton export_ical" onclick="OCGantt.btnAction('export2ical')">
+            <div class="tbl_cell export_gantt sidebar_header clickbutton export_ical" data-command="OCGantt.btnAction('export2ical')">
                 <h4><?php p($l->t('iCalendar'));?></h4>
                 <img src="<?php p($this->image_path($appName,'ical.png'))?>" alt="<?php p($l->t('Export to iCal-File'))?>">
             </div>
-            <div class="tbl_cell export_gantt sidebar_header clickbutton export_mc" onclick="OCGantt.btnAction('export2ms')">
+            <div class="tbl_cell export_gantt sidebar_header clickbutton export_mc" data-command="OCGantt.btnAction('export2ms')">
                 <h4><?php p($l->t('MS Project'));?></h4>
                 <img src="<?php p($this->image_path($appName,'ms_project.png'))?>" alt="<?php p($l->t('Export to MS Project'));?>">
             </div>
