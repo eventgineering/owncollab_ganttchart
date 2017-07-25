@@ -35,7 +35,7 @@
 				pdf_footer_right = $('#pdf_footer_right').val();
 			var styleSheetList = [].slice.call(document.styleSheets);
 			//var newWindow = window.open('', '_blank');
-			var exportHTML = '<html><head>';
+			var exportHTML = '<!DOCTYPE html><html><head>';
 			styleSheetList.forEach(function (item) {
 				exportHTML += '<link rel="stylesheet" href="' + item.href + '">';
 			});

@@ -88,7 +88,7 @@ OCGantt.columnLabel = {
     '<div style="width: 20px; display: inline-block;"><i class="fa fa-filter" id="text"></i></div>' +
     '<div style="width: 20px; display: inline-block;"><span class="fa-stack clickbutton" onclick="OCGantt.sortGrid(' + OCGantt.columnNames.name + ')"><i class="fa fa-sort-desc fa-stack-2x"></i>' +
     '<i class="fa fa-sort-asc fa-stack-2x"></i></span></div>',
-    start: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'Start') + '</div><div style="width: 20px; display: inline-block;"><span class="fa-stack clickbutton" onclick="OCGantt.sortGrid(' + OCGantt.columnNames.start + ')""><i class="fa fa-sort-desc fa-stack-2x"></i>' +
+    start: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'Start') + '</div><div style="width: 20px; display: inline-block;"><span class="fa-stack clickbutton" onclick="OCGantt.sortGrid(' + OCGantt.columnNames.start + ')"><i class="fa fa-sort-desc fa-stack-2x"></i>' +
     '<i class="fa fa-sort-asc fa-stack-2x"></i></span></div>',
     end: '<div style="width: 100px; display: inline-block; text-align: left; padding-left:2px;">' + t('owncollab_ganttchart', 'End') + '</div><div style="width: 20px; display: inline-block;"><span class="fa-stack clickbutton" onclick="OCGantt.sortGrid(' + OCGantt.columnNames.end + ')"><i class="fa fa-sort-desc fa-stack-2x"></i>' +
     '<i class="fa fa-sort-asc fa-stack-2x"></i></span></div>',
