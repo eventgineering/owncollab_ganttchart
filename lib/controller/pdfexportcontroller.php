@@ -36,8 +36,13 @@ class PdfExportController extends Controller {
         $dataFile = $path.'data.' . $randomValue . '.txt';*/
         $ch = curl_init();
         $fields_string = '';
+<<<<<<< HEAD
         $url = "https://pdfgenerator.owncollab.com/rendergantt.php";
         //$url = "http://10.8.10.201/pdfgenerator/pdfgenerator.php";
+=======
+        //$url = "https://pdfgenerator.owncollab.com/rendergantt.php";
+        $url = "http://10.8.10.201/pdfgenerator/pdfgenerator.php";
+>>>>>>> bd20dea6c3bbb897ee92d976e0d5f65a41d4cf5e
         $fields = array(
             'html' => $_POST['html'],
             'papersize' => $_POST['papersize'],
