@@ -2583,6 +2583,30 @@ OCGantt.GroupUsers.prototype = {
 
     // All configs should be assembled in the object OCGantt.config
     OCGantt.config = function () {
+        gantt.config.font_width_ratio = 7;
+        gantt.templates.rightside_text = function rightSideTextTemplate(start, end, task) {
+            if (getTaskFitValue(task) === "right") {
+                return task.text;
+            }
+            return "";
+        };
+        gantt.templates.task_text = function taskTextTemplate(start, end, task){
+            if (getTaskFitValue(task) === "center") {
+                return task.text;
+            }
+            return "";
+        };
+        function getTaskFitValue(task){
+            var taskStartPos = gantt.posFromDate(task.start_date),
+                taskEndPos = gantt.posFromDate(task.end_date);
+            var width = taskEndPos - taskStartPos;
+            var textWidth = (task.text || "").length * gantt.config.font_width_ratio;
+            if(width < textWidth){
+                    return "right";
+            } else {
+                return "center";
+            }
+        };
         if (OCGantt.isAdmin === true) {
             gantt.attachEvent("onAfterTaskUpdate", function (id, move, e) {
                 arr = gantt.serialize();
