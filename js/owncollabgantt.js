@@ -2859,7 +2859,7 @@ OCGantt.GroupUsers.prototype = {
                 OCGantt.initFilterGrid($(this).attr('id'));
             });
         });
-        gantt.attachEvent("onGanttRender"), function(){
+        gantt.attachEvent("onGanttRender", function(){
             var height = $('.gantt_data_area').height();
             $('.gantt_grid_data').height(height);
         });
