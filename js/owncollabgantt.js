@@ -139,6 +139,19 @@ OCGantt.init = function () {
     setTimeout(OCGantt.init, 50);
 };
 
+OCGantt.gridButtonHandler = function(){
+    var id = $(this).prop('id');
+    if ($(this).hasClass("gantt_grid_edit")){
+        OCGantt.clickGridButton(id, 'edit');
+    }
+    if ($(this).hasClass("gantt_grid_add")){
+        OCGantt.clickGridButton(id, 'add');
+    }
+    if ($(this).hasClass("gantt_grid_delete")){
+        OCGantt.clickGridButton(id, 'delete');
+    }
+};
+
 OCGantt.testUserColors = function (length) {
     if (OCGantt.usergroupsLoaded) {
         if (OCGantt.userColors.length === length) {
@@ -2846,6 +2859,9 @@ OCGantt.GroupUsers.prototype = {
                 OCGantt.initFilterGrid($(this).attr('id'));
             });
         });
+        gantt.attachEvent("onBeforeDataRender", function(){
+            $('.gantt_button_grid').off('click', OCGantt.gridButtonHandler);            
+        })
         gantt.attachEvent("onDataRender", function () {
             if (OCGantt.filter.value.textTasks || OCGantt.filter.value.textSubprojects) {
                 $(".fa-filter#text").addClass("activated");
@@ -2873,18 +2889,7 @@ OCGantt.GroupUsers.prototype = {
                     });
                 }
             });
-            $('.gantt_grid_edit').click(function (el) {
-                var id = $(this).prop('id');
-                OCGantt.clickGridButton(id, 'edit');
-            });
-            $('.gantt_grid_add').click(function (el) {
-                var id = $(this).prop('id');
-                OCGantt.clickGridButton(id, 'add');
-            });
-            $('.gantt_grid_delete').click(function (el) {
-                var id = $(this).prop('id');
-                OCGantt.clickGridButton(id, 'delete');
-            });
+            $('.gantt_button_grid').on('click', OCGantt.gridButtonHandler);
             $(".fa-stack.clickbutton").click(function () {
                 var instruction = $(this).data().command;
                 var F = new Function(instruction);
