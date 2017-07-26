@@ -133,7 +133,7 @@ var taskId = null;
         OCGantt.links.loadAll().done(function () {
             arr.links = OCGantt.links._links;
             if (OCGantt.links._links.length != 0){
-                for (i = 0; i < arr.links.length; i++) {
+                for (var i = 0; i < arr.links.length; i++) {
                     if (arr.links[i].lag != "0"){
                         arr.links[i].lag = parseInt(arr.links[i].lag);
                     }

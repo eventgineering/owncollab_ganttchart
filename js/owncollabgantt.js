@@ -1270,6 +1270,9 @@ OCGantt.lbox.precheckLinks = function (links, id) {
 }
 
 OCGantt.lbox.convertLagsToDay = function (links, id) {
+    if (links.length === 0){
+        return;
+    }
     var lag = "";
     for (i = 0; i < links.length; i++) {
         if ((links[i].target == id) && (links[i].lag != 0)) {
@@ -2488,6 +2491,7 @@ OCGantt.Links.prototype = {
         return deferred.promise();
     },
     create: function (link) {
+        console.log(link);
         var deferred = $.Deferred();
         var self = this;
         $.ajax({
@@ -2498,7 +2502,7 @@ OCGantt.Links.prototype = {
         }).done(function (link) {
             link.source = link.source.toString();
             link.target = link.target.toString();
-            link.lag = 0;
+            //link.lag = 0;
             self._links.push(link);
             //self._activeLink = link;
             self.load(link.id);
@@ -2650,6 +2654,7 @@ OCGantt.GroupUsers.prototype = {
                 arr.data[index].parent = item.parent;
                 arr.data[index].text = item.text;
                 arr.data[index].duration = item.duration;
+                arr.data[index].resources = item.resources;
                 arr.data[index].open = "1";
                 OCGantt.tasks.create(arr.data[index]).done(function () {
                     gantt.changeTaskId(item.id, arr.data[index].id);
@@ -2658,6 +2663,7 @@ OCGantt.GroupUsers.prototype = {
                     if (OCGantt.tempLinks) {
                         OCGantt.tempLinks.forEach(function (link) {
                             if (link.$new) {
+                                console.log(link);
                                 var linkId = gantt.addLink({
                                     source: link.source,
                                     target: item.id,
@@ -2753,9 +2759,11 @@ OCGantt.GroupUsers.prototype = {
                 var index = arr.links.length - 1;
                 arr.links[index].source = item.source;
                 arr.links[index].target = item.target;
-                arr.links[index].type = item.type;
+                arr.links[index].type = parseInt(item.type);
                 if (!item.lag) {
                     arr.links[index].lag = 0;
+                } else {
+                    arr.links[index].lag = item.lag
                 }
                 OCGantt.links.create(arr.links[index]).done(function () {
                     gantt.changeLinkId(item.id, arr.links[index].id);
