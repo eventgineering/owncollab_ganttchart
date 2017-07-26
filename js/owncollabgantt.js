@@ -2492,7 +2492,6 @@ OCGantt.Links.prototype = {
         return deferred.promise();
     },
     create: function (link) {
-        console.log(link);
         var deferred = $.Deferred();
         var self = this;
         $.ajax({
@@ -2646,6 +2645,7 @@ OCGantt.GroupUsers.prototype = {
                 gantt.render();
             });
             gantt.attachEvent("onAfterTaskAdd", function (id, item) {
+                console.log(item);
                 var tmpstart = OCGantt.DateToStr(item.start_date);
                 var tmpend = OCGantt.DateToStr(item.end_date);
                 arr = gantt.serialize();
@@ -2664,7 +2664,6 @@ OCGantt.GroupUsers.prototype = {
                     if (OCGantt.tempLinks) {
                         OCGantt.tempLinks.forEach(function (link) {
                             if (link.$new) {
-                                console.log(link);
                                 var linkId = gantt.addLink({
                                     source: link.source,
                                     target: item.id,
