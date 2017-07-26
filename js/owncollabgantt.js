@@ -1929,6 +1929,7 @@ gantt.showLightbox = function (id) {
         form.querySelector("[name='title']").innerHTML = task.id + ": " + task.text;
         input.focus();
         input.value = task.text;
+        input.select();
         OCGantt.lbox.setProgress(OCGantt.tempTask.progress, "progress", "%");
         $("#changeprogress").mousedown(function (event) {
             $(document).disableSelection();
