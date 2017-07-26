@@ -2859,9 +2859,10 @@ OCGantt.GroupUsers.prototype = {
                 OCGantt.initFilterGrid($(this).attr('id'));
             });
         });
-        gantt.attachEvent("onBeforeDataRender", function(){
-            $('.gantt_button_grid').off('click', OCGantt.gridButtonHandler);            
-        })
+        gantt.attachEvent("onGanttRender"), function(){
+            var height = $('.gantt_data_area').height();
+            $('.gantt_grid_data').height(height);
+        });
         gantt.attachEvent("onDataRender", function () {
             if (OCGantt.filter.value.textTasks || OCGantt.filter.value.textSubprojects) {
                 $(".fa-filter#text").addClass("activated");
@@ -2889,6 +2890,7 @@ OCGantt.GroupUsers.prototype = {
                     });
                 }
             });
+            $('.gantt_button_grid').off('click', OCGantt.gridButtonHandler);
             $('.gantt_button_grid').on('click', OCGantt.gridButtonHandler);
             $(".fa-stack.clickbutton").click(function () {
                 var instruction = $(this).data().command;
