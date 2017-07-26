@@ -26,9 +26,10 @@
 
 	function doPdfExport(){
 			var config = {};
-			conf.scale_unit = gantt.config.scale_unit;
+			config.width = gantt.config.min_column_width;
+			config.scale_unit = gantt.config.scale_unit;
 			config.date_scale = gantt.config.date_scale;
-			config.templates.date_scale = gantt.templates.date_scale;
+			config.t_date_scale = gantt.templates.date_scale;
 			config.step = gantt.config.step;
 			config.subscales = gantt.config.subscales;
 			config.start_date = new Date($('#pdf_start_date').datepicker('getDate'));
@@ -39,13 +40,14 @@
 				console.log("disabling admin mode");
 				reset = true;
 				OCGantt.config();
-				gantt.config.scale_unit = conf.scale_unit;
+				gantt.config.scale_unit = config.scale_unit;
 				gantt.config.date_scale = config.date_scale;
-				gantt.templates.date_scale = config.templates.date_scale;
+				gantt.templates.date_scale = config.t_date_scale;
 				gantt.config.step = config.step;
 				gantt.config.subscales = config.subscales;
 				gantt.config.start_date = config.start_date;
-				config.end_date = config.end_date;
+				gantt.config.end_date = config.end_date;
+				gantt.config.min_column_width = config.width;
 				gantt.render();
 			}
 			var papersize = $('#pdf_paper_size').val();
@@ -107,6 +109,14 @@
 				OCGantt.isAdmin = true;
 				reset = false;
 				OCGantt.config();
+				gantt.config.scale_unit = config.scale_unit;
+				gantt.config.date_scale = config.date_scale;
+				gantt.templates.date_scale = config.t_date_scale;
+				gantt.config.step = config.step;
+				gantt.config.subscales = config.subscales;
+				gantt.config.start_date = config.start_date;
+				gantt.config.end_date = config.end_date;
+				gantt.config.min_column_width = config.width;
 				gantt.render();
 			}
 			$('.gantt_grid').outerHeight(gridHeight);
