@@ -47,10 +47,6 @@
 				gantt.config.start_date = config.start_date;
 				config.end_date = config.end_date;
 				gantt.render();
-				setTimeout(function () {
-					var chartWidth = $('.gantt_grid').width() + $('.gantt_task_scale').width();
-					checkWidth(chartWidth);
-				}, 200);
 			}
 			var papersize = $('#pdf_paper_size').val();
 				orientation = $('#pdf_paper_orientation').val();
@@ -110,9 +106,8 @@
 			if (reset === true){
 				OCGantt.isAdmin = true;
 				reset = false;
-							OCGantt.config();
-			gantt.render();
-
+				OCGantt.config();
+				gantt.render();
 			}
 			$('.gantt_grid').outerHeight(gridHeight);
 			$('.gantt_grid_data').outerHeight(gridDataHeight)
@@ -124,6 +119,10 @@
 	function exportToPDF() {
 		$('#save-export').show();
 		$('#exporting-to-pdf').show();
+		setTimeout(function () {
+			var chartWidth = $('.gantt_grid').width() + $('.gantt_task_scale').width();
+			checkWidth(chartWidth);
+		}, 200);
 		newWindow = window.open('', '_blank');
 	};
 
