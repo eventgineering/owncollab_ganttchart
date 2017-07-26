@@ -39,5 +39,6 @@ return [
        ['name' => 'share#getToken', 'url' => '/token/get', 'verb' => 'GET'],
        ['name' => 'share#getExpiryDate', 'url' => '/expirydate/get', 'verb' => 'GET'],
        ['name' => 'pdfexport#export', 'url' => '/pdfgenerator', 'verb' => 'POST'],
+       ['name' => 'imageexport#export', 'url' => '/imagegenerator', 'verb' => 'POST'],
     ]
 ];

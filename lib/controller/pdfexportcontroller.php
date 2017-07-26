@@ -45,6 +45,7 @@ class PdfExportController extends Controller {
         //$url = "http://10.8.10.201/pdfgenerator/pdfgenerator.php";
         $fields = array(
             'html' => $_POST['html'],
+            'type' => 'pdf',
             'papersize' => $_POST['papersize'],
             'orientation' => $_POST['orientation'],
             'pdf_header_left' => $_POST['pdf_header_left'],

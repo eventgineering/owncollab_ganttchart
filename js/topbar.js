@@ -13,16 +13,122 @@
 		return chartWidth;
 	}
 
-	function checkWidth(chartWidth){
+	function checkWidth(chartWidth, type){
 		if (chartWidth < 20000){
-			doPdfExport();
-			return;
+			if (type === 'pdf'){
+				doPdfExport();
+				return;
+			}
+			if (type === 'image'){
+				doImageExport();
+				return;
+			}
 		}
 		setTimeout(function(){
 			chartWidth = updateWidth(chartWidth);			
 			checkWidth(chartWidth);
 		}, 50);
 	};
+
+	function doImageExport(){
+			var config = {};
+			config.width = gantt.config.min_column_width;
+			config.scale_unit = gantt.config.scale_unit;
+			config.date_scale = gantt.config.date_scale;
+			config.t_date_scale = gantt.templates.date_scale;
+			config.step = gantt.config.step;
+			config.subscales = gantt.config.subscales;
+			config.start_date = gantt.config.start_date;
+			config.end_date = gantt.config.end_date;
+			config.width_id = $('.gantt_grid_head_id').width();
+			config.width_text = $('.gantt_grid_head_text').width();
+			config.width_start_date = $('.gantt_grid_head_start_date').width();
+			config.width_end_date = $('.gantt_grid_head_end_date').width();
+			config.width_duration = $('.gantt_grid_head_duration').width();
+			config.width_resources = $('.gantt_grid_head_resources').width();
+			var reset = false;
+			if (OCGantt.isAdmin === true){
+				OCGantt.isAdmin = false;
+				console.log("disabling admin mode");
+				reset = true;
+				OCGantt.columnWidth = {
+    				id: config.width_id,
+    				name: config.width_text,
+    				start: config.width_start_date,
+    				end: config.width_end_date,
+    				duration: config.width_duration,
+    				resources: config.width_resources,
+    				buttons: 75
+				};
+				OCGantt.config();
+				gantt.config.scale_unit = config.scale_unit;
+				gantt.config.date_scale = config.date_scale;
+				gantt.templates.date_scale = config.t_date_scale;
+				gantt.config.step = config.step;
+				gantt.config.subscales = config.subscales;
+				gantt.config.start_date = config.start_date;
+				gantt.config.end_date = config.end_date;
+				gantt.config.min_column_width = config.width;
+				gantt.render();
+			}
+			var styleSheetList = [].slice.call(document.styleSheets);
+			//var newWindow = window.open('', '_blank');
+			var exportHTML = '<!DOCTYPE html><html><head><meta http-equiv="content-type" content="text/html; charset=utf-8">';
+			styleSheetList.forEach(function (item) {
+				exportHTML += '<link rel="stylesheet" href="' + item.href + '">';
+			});
+			exportHTML += '</head><body>';
+			var chartWidth = $('.gantt_grid').width() + $('.gantt_task_scale').width();
+			var totalTaskWidth = $('.gantt_task_scale').width();
+			var taskWidth = $('.gantt_task').width();
+			var totalHeight = $('.gantt_grid_scale').outerHeight(true);
+			$(".gantt_grid_data").children().each(function () {
+				totalHeight += $(this).outerHeight(true);
+			});
+			var gridHeight = $('.gantt_grid').outerHeight(true);
+			var gridDataHeight = $('.gantt_grid_data').outerHeight(true);
+			var taskHeight = $('.gantt_task').outerHeight(true);
+			var taskDataHeight = $('.gantt_data_area').outerHeight(true);
+			$('.gantt_grid').outerHeight(totalHeight);
+			$('.gantt_grid_data').outerHeight(totalHeight - $('.gantt_grid_scale').outerHeight(true));
+			$('.gantt_task').outerHeight(totalHeight);
+			$('.gantt_data_area').outerHeight(totalHeight - $('.gantt_task_scale').outerHeight(true));
+			$('.gantt_task').width(totalTaskWidth);
+			exportHTML += '<div id="gantt_chart" style="width:' + chartWidth + 'px; height: ' + totalHeight + 'px;">' + encodeURI($('#gantt_chart').html()) + '</div></body></html>';
+			var url = OC.generateUrl('/apps/owncollab_ganttchart/imagegenerator');
+			// Leave this URL for local testing purposes
+			//$.post("http://10.8.10.201/pdfgenerator/pdfgenerator.php", {
+			//$.post("https://pdfgenerator.owncollab.com/rendergantt.php", {
+			$.post(url, {
+				html: exportHTML,
+				width: chartWidth,
+				height: totalHeight,
+			}, function (data, status) {
+				$(this).target = "_blank";
+				newWindow.location = data;
+			}).done(function(){
+			});
+			if (reset === true){
+				OCGantt.isAdmin = true;
+				reset = false;
+				OCGantt.config();
+				gantt.config.scale_unit = config.scale_unit;
+				gantt.config.date_scale = config.date_scale;
+				gantt.templates.date_scale = config.t_date_scale;
+				gantt.config.step = config.step;
+				gantt.config.subscales = config.subscales;
+				gantt.config.start_date = config.start_date;
+				gantt.config.end_date = config.end_date;
+				gantt.config.min_column_width = config.width;
+				gantt.render();
+			}
+			$('.gantt_grid').outerHeight(gridHeight);
+			$('.gantt_grid_data').outerHeight(gridDataHeight)
+			$('.gantt_task').outerHeight(taskHeight);
+			$('.gantt_data_area').outerHeight(taskDataHeight);
+			$('.gantt_task').width(taskWidth);
+	};
+
 
 	function doPdfExport(){
 			var config = {};
@@ -146,10 +252,19 @@
 		$('#exporting-to-pdf').show();
 		setTimeout(function () {
 			var chartWidth = $('.gantt_grid').width() + $('.gantt_task_scale').width();
-			checkWidth(chartWidth);
+			checkWidth(chartWidth, 'pdf');
 		}, 200);
 		newWindow = window.open('', '_blank');
 	};
+
+	function exportToImage() {
+		setTimeout(function () {
+			var chartWidth = $('.gantt_grid').width() + $('.gantt_task_scale').width();
+			checkWidth(chartWidth, 'image');
+		}, 200);
+		newWindow = window.open('', '_blank');
+	};
+
 
 	var btn_actions = {
 		"toggle": function toggle(target, value) {
@@ -230,6 +345,7 @@
 		},
 		"export2image": function export2image() {
 			if (OCGantt.dhtmlxversion.dhtmlxversion === "commercial") {
+				exportToImage();
 			} else if (OCGantt.dhtmlxversion.dhtmlxversion === "standard") {
 				gantt.exportToPNG();
 			}
