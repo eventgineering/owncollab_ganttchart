@@ -34,11 +34,26 @@
 			config.subscales = gantt.config.subscales;
 			config.start_date = new Date($('#pdf_start_date').datepicker('getDate'));
 			config.end_date = new Date($('#pdf_end_date').datepicker('getDate'));
+			config.width_id = $('.gantt_grid_head_id').width();
+			config.width_text = $('.gantt_grid_head_text').width();
+			config.width_start_date = $('.gantt_grid_head_start_date').width();
+			config.width_end_date = $('.gantt_grid_head_end_date').width();
+			config.width_duration = $('.gantt_grid_head_duration').width();
+			config.width_resources = $('.gantt_grid_head_resources').width();
 			var reset = false;
 			if (OCGantt.isAdmin === true){
 				OCGantt.isAdmin = false;
 				console.log("disabling admin mode");
 				reset = true;
+				OCGantt.columnWidth = {
+    				id: config.width_id,
+    				name: config.width_text,
+    				start: config.width_start_date,
+    				end: config.width_end_date,
+    				duration: config.width_duration,
+    				resources: config.width_resources,
+    				buttons: 75
+				};
 				OCGantt.config();
 				gantt.config.scale_unit = config.scale_unit;
 				gantt.config.date_scale = config.date_scale;
