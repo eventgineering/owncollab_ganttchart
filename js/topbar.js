@@ -60,7 +60,7 @@
 				pdf_footer_right = $('#pdf_footer_right').val();
 			var styleSheetList = [].slice.call(document.styleSheets);
 			//var newWindow = window.open('', '_blank');
-			var exportHTML = '<!DOCTYPE html><html><head>';
+			var exportHTML = '<!DOCTYPE html><html><head><meta http-equiv="content-type" content="text/html; charset=utf-8">';
 			styleSheetList.forEach(function (item) {
 				exportHTML += '<link rel="stylesheet" href="' + item.href + '">';
 			});
@@ -81,7 +81,7 @@
 			$('.gantt_task').outerHeight(totalHeight);
 			$('.gantt_data_area').outerHeight(totalHeight - $('.gantt_task_scale').outerHeight(true));
 			$('.gantt_task').width(totalTaskWidth);
-			exportHTML += '<div id="gantt_chart" style="width:' + chartWidth + 'px; height: ' + totalHeight + 'px;">' + $('#gantt_chart').html() + '</div></body></html>';
+			exportHTML += '<div id="gantt_chart" style="width:' + chartWidth + 'px; height: ' + totalHeight + 'px;">' + encodeURI($('#gantt_chart').html()) + '</div></body></html>';
 			var url = OC.generateUrl('/apps/owncollab_ganttchart/pdfgenerator');
 			// Leave this URL for local testing purposes
 			//$.post("http://10.8.10.201/pdfgenerator/pdfgenerator.php", {

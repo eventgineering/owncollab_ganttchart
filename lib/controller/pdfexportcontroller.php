@@ -67,7 +67,7 @@ class PdfExportController extends Controller {
         $output = curl_exec($ch);
         curl_close($ch);
         //$output = "https://pdfgenerator.owncollab.com/" . system('curl -k --request POST "' . $url . '" --data "@' . $dataFile . '"');
-        error_log(print_r($output, true) . "\n", 3, "/var/tmp/output.log");
+        //error_log(print_r($output, true) . "\n", 3, "/var/tmp/output.log");
         //echo $output;
         return $output;
     }
