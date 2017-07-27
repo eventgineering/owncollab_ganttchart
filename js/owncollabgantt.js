@@ -2601,6 +2601,7 @@ OCGantt.GroupUsers.prototype = {
     // All configs should be assembled in the object OCGantt.config
     OCGantt.config = function () {
         gantt.config.font_width_ratio = 7;
+        gantt.config.link_line_width = 1;
         gantt.templates.leftside_text = function leftSideTextTemplate(start, end, task) {
             if (getTaskFitValue(task) === "left") {
                 return task.text;
