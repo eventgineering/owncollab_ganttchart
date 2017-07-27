@@ -981,9 +981,9 @@ OCGantt.lbox.dateInit = function (datefield, task, datefield2) {
     if (datefield.id == 'pdf_start_date') {
         $(datefield).datepicker('setDate', task.start_date);
     }
-    if (datefield.id == 'pdf_end_date') {
-        $(datefield).datepicker('setDate', task.end_date);
-    }
+    //if (datefield.id == 'pdf_end_date') {
+    //    $(datefield).datepicker('setDate', task.end_date);
+    //}
     $(datefield).click(function () {
         this.setSelectionRange(0, 2);
     });
@@ -2601,6 +2601,12 @@ OCGantt.GroupUsers.prototype = {
     // All configs should be assembled in the object OCGantt.config
     OCGantt.config = function () {
         gantt.config.font_width_ratio = 7;
+        gantt.templates.leftside_text = function leftSideTextTemplate(start, end, task) {
+            if (getTaskFitValue(task) === "left") {
+                return task.text;
+            }
+            return "";
+        };
         gantt.templates.rightside_text = function rightSideTextTemplate(start, end, task) {
             if (getTaskFitValue(task) === "right") {
                 return task.text;
@@ -2616,10 +2622,17 @@ OCGantt.GroupUsers.prototype = {
         function getTaskFitValue(task){
             var taskStartPos = gantt.posFromDate(task.start_date),
                 taskEndPos = gantt.posFromDate(task.end_date);
+
             var width = taskEndPos - taskStartPos;
             var textWidth = (task.text || "").length * gantt.config.font_width_ratio;
             if(width < textWidth){
+                var ganttLastDate = gantt.getState().max_date;
+                var ganttEndPos = gantt.posFromDate(ganttLastDate);
+                if(ganttEndPos - taskEndPos < textWidth){
+                    return "left"
+                } else {
                     return "right";
+                }
             } else {
                 return "center";
             }
@@ -2658,7 +2671,6 @@ OCGantt.GroupUsers.prototype = {
                 gantt.render();
             });
             gantt.attachEvent("onAfterTaskAdd", function (id, item) {
-                console.log(item);
                 var tmpstart = OCGantt.DateToStr(item.start_date);
                 var tmpend = OCGantt.DateToStr(item.end_date);
                 arr = gantt.serialize();
