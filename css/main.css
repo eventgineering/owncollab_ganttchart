@@ -392,7 +392,8 @@ b, strong { font-weight: 600 !important }
     bottom: 0px !important;
     color: #1c2c42 !important;;
     background-color: rgba(255,255,255,0.5) !important;
-
+    margin-left: 20px !important;
+    padding-left: 0px !important;
     /*font-weight: bold;*/
 }
 
@@ -400,6 +401,8 @@ b, strong { font-weight: 600 !important }
     bottom: 0px !important;
     color: #1c2c42 !important;;
     background-color: rgba(255,255,255,0.5) !important;
+    margin-right: 20px !important;
+    padding-right: 0px !important;
 
 
 .gantt_modal_box{
