@@ -397,12 +397,12 @@ gantt_line_wrapper div{
 
 .gantt_link_line_left {
     background-color: #1D2D44 !important;
-    width: 1px !important;
+    height: 1px !important;
 }
 
 .gantt_link_line_right {
     background-color: #1D2D44 !important;
-    width: 1px !important;    
+    height: 1px !important;    
 }
 
 .gantt_link_line_down {
